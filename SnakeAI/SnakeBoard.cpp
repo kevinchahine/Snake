@@ -3,7 +3,7 @@
 SnakeBoard::SnakeBoard(
 	const SnakeBoard::index& nRows, 
 	const SnakeBoard::index& nCols) :
-	boost::multi_array<uint8_t, 2>(boost::extents[nRows][nCols]),
+	boost::multi_array<CELL, 2>(boost::extents[nRows][nCols]),
 	nRows(nRows),
 	nCols(nCols)
 {}
@@ -35,6 +35,15 @@ void SnakeBoard::print(cv::Mat& image) const
 				topLeftOfCell + cv::Point(CELL_WIDTH - 16, CELL_HEIGHT - 16),
 				color,
 				-1);
+		}
+	}
+}
+
+void SnakeBoard::clear()
+{
+	for (SnakeBoard::index row = 0; row < nRows; row++) {
+		for (SnakeBoard::index col = 0; col < nCols; col++) {
+			(*this)[row][col] = CELL::EMPTY;
 		}
 	}
 }
