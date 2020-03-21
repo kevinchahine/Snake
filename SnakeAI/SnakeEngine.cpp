@@ -18,7 +18,7 @@ void SnakeEngine::reset()
 	apple.moveRandom();
 }
 
-void SnakeEngine::update()
+SnakeEngine::GAME_STATE SnakeEngine::update()
 {
 	image = cv::Mat::zeros(board.getNRows() * 40, board.getNCols() * 40, CV_8UC3);
 
@@ -48,6 +48,10 @@ void SnakeEngine::update()
 				snake.moveUpFast();
 			}
 		}
+		else {
+			std::cout << "Hit wall\n";
+			return GAME_STATE::GAME_OVER;
+		}
 		break;
 
 	case 's':	
@@ -61,6 +65,10 @@ void SnakeEngine::update()
 			else {
 				snake.moveDownFast();
 			}
+		}
+		else {
+			std::cout << "Hit wall\n";
+			return GAME_STATE::GAME_OVER;
 		}
 		break;
 
@@ -76,6 +84,10 @@ void SnakeEngine::update()
 				snake.moveLeftFast();
 			}
 		}
+		else {
+			std::cout << "Hit wall\n";
+			return GAME_STATE::GAME_OVER;
+		}
 		break;
 
 	case 'd':	
@@ -90,9 +102,37 @@ void SnakeEngine::update()
 				snake.moveRightFast();
 			}
 		}
+		else {
+			std::cout << "Hit wall\n";
+			return GAME_STATE::GAME_OVER;
+		}
 		break;
+	}
+
+	// Did we bit our selves?
+	if (snake.bitItself()) {
+		std::cout << "Ouch. Game over\n";
+		return GAME_STATE::GAME_OVER;
+	}
+
+	// Did we win? Did we cover every cell?
+	if (snake.size() == board.num_elements()) {
+		// Yes we won.
+		std::cout << "Congratulations you won.\n";
+		return GAME_STATE::WON;
+	}
+
+	// Did we eat the apple?
+	if (snake.head() == apple) {
+		// Yes. We need to move it to a random location not on the snake itself.
+		do
+		{
+			apple.moveRandom();
+		} while (snake == apple);
 	}
 
 	cv::imshow("Snake AI", image);
 	cv::waitKey(1);
+
+	return GAME_STATE::CONTINUE;
 }

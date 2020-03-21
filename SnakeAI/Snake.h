@@ -30,6 +30,13 @@ public:
 	Snake& operator=(const Snake&) = default;
 	Snake& operator=(Snake&&) noexcept = default;
 
+	// Returns true iff posision is somewhere on the snakes body.
+	bool operator==(const Position& position) const;
+
+	// Returns true iff snake bit itself.
+	// Meaning the head hits one of its tail cells.
+	bool bitItself() const;
+
 	const Position& head() const;
 
 	const Position& neck() const;

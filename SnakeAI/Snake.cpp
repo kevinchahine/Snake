@@ -1,9 +1,43 @@
 #include "Snake.h"
 
+#include <algorithm>
+
 Snake::Snake(size_t boardHeight, size_t boardWidth) :
 	boardHeight(boardHeight),
 	boardWidth(boardWidth)
 {
+}
+
+bool Snake::operator==(const Position& position) const
+{
+	// iterate over the snakes body
+	for (const auto& snakeCell : (*this)) {
+		// If position matches one of the snakes cells,
+		// then return true.
+		if (snakeCell == position) {
+			return true;
+		}
+	}
+
+	// We didn't find a cell that matches with position
+	return false;
+}
+
+bool Snake::bitItself() const
+{
+	// Iterator to the tip of the snakes tail
+	const auto tailIter = this->begin();
+
+	// Iterator to one past the snakes neck. (or the head)
+	const auto headIter = prev(this->end());
+
+	// See if a cell on the snake, from its tail to its neck (Not including its head)
+	// equals its head.
+	auto biteMarkCellIter = std::find(tailIter, headIter, head());
+
+	// Snake bit itself if the bite march is somewhere before its head.
+	// The snake can't really bite its own head
+	return biteMarkCellIter != headIter;
 }
 
 const Position& Snake::head() const

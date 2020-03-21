@@ -11,12 +11,14 @@ int main()
 	srand(time(NULL));
 
 	try {
-		SnakeEngine engine{ 10, 15 };
+		SnakeEngine engine{ 3, 3 };
 
 		engine.init();
 
-		while (true) {
-			engine.update();
+		SnakeEngine::GAME_STATE gameState = SnakeEngine::GAME_STATE::CONTINUE;
+
+		while (gameState == SnakeEngine::GAME_STATE::CONTINUE) {
+			gameState = engine.update();
 		}
 	}
 	catch (std::exception & e) {
@@ -24,7 +26,8 @@ int main()
 			<< e.what() << '\n';
 	}
 
-	//cout << "Press any key to continue . . .";
-	//cin.get();
+	cout << "Press any key to continue . . .";
+	cin.get();
+	cin.get();
 	return 0;
 }
