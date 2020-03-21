@@ -1,20 +1,23 @@
 #include <iostream>
+#include <stdlib.h>
+#include <time.h>
 using namespace std;
 
-#include <opencv2/opencv.hpp>
-
-#include "SnakeBoard.h"
+#include "SnakeEngine.h"
 
 int main()
 {
+	// Initialize random number generator
+	srand(time(NULL));
+
 	try {
-		cv::Mat img = cv::Mat::zeros(500, 500, CV_8UC3);
-		
-		SnakeBoard board(10, 10);
-		board.print(img);
-		
-		cv::imshow("Snake AI", img);
-		cv::waitKey(2000);
+		SnakeEngine engine{ 10, 15 };
+
+		engine.init();
+
+		while (true) {
+			engine.update();
+		}
 	}
 	catch (std::exception & e) {
 		cout << "Exception caught in " << __FUNCTION__ << ": "

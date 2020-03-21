@@ -26,13 +26,28 @@ void SnakeBoard::print(cv::Mat& image) const
 
 	for (SnakeBoard::index row = 0; row < nRows; row++) {
 		for (SnakeBoard::index col = 0; col < nCols; col++) {
-			cv::Point topLeftOfCell(CELL_WIDTH * col + 8, CELL_HEIGHT * row + 8);
+			cv::Point topLeftOfCell(CELL_WIDTH * col + 2, CELL_HEIGHT * row + 2);
+			
 			cv::Scalar color{ 0, 255, 0 };
+			
+			switch ((*this)[row][col]) {
+			case CELL::EMPTY:	color = cellColor;	break;
+			case CELL::HEAD:	color = headColor;	break;
+			case CELL::TAIL:	color = tailColor;	break;
+			case CELL::APPLE:	color = appleColor;	break;
+			default:
+				std::stringstream ss;
+				ss << "Unknown cell value at (" 
+					<< row << ", " << col << ") equals "
+					<< static_cast<int>((*this)[row][col]);
+
+					throw std::exception(ss.str().c_str());
+			}
 
 			cv::rectangle(
 				image,
 				topLeftOfCell,
-				topLeftOfCell + cv::Point(CELL_WIDTH - 16, CELL_HEIGHT - 16),
+				topLeftOfCell + cv::Point(CELL_WIDTH - 4, CELL_HEIGHT - 4),
 				color,
 				-1);
 		}
@@ -47,3 +62,29 @@ void SnakeBoard::clear()
 		}
 	}
 }
+
+void SnakeBoard::paste(const Apple& apple)
+{
+	(*this)(apple) = CELL::APPLE;
+}
+
+void SnakeBoard::paste(const Snake& snake)
+{
+	for (const auto& snakeElement : snake)
+	{
+		(*this)(snakeElement) = CELL::TAIL;
+	}
+
+	(*this)(snake.head()) = CELL::HEAD;
+}
+
+const SnakeBoard::index& SnakeBoard::getNRows() const
+{
+	return nRows;
+}
+
+const SnakeBoard::index& SnakeBoard::getNCols() const
+{
+	return nCols;
+}
+
