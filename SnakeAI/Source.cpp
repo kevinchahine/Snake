@@ -3,7 +3,10 @@
 #include <time.h>
 using namespace std;
 
-#include "SnakeEngine.h"
+#include "SnakeInterface.h"
+#include "ControllerBase.h"
+#include "UserController.h"
+#include "AIController.h"
 
 int main()
 {
@@ -11,15 +14,12 @@ int main()
 	srand(time(NULL));
 
 	try {
-		SnakeEngine engine{ 3, 3 };
+		SnakeInterface gameInterface{ 10, 10 };
 
-		engine.init();
+		gameInterface.setController(std::make_unique<AIController>(gameInterface.engine));
+		//gameInterface.setController(std::make_unique<UserController>());
 
-		SnakeEngine::GAME_STATE gameState = SnakeEngine::GAME_STATE::CONTINUE;
-
-		while (gameState == SnakeEngine::GAME_STATE::CONTINUE) {
-			gameState = engine.update();
-		}
+		gameInterface.start();
 	}
 	catch (std::exception & e) {
 		cout << "Exception caught in " << __FUNCTION__ << ": "

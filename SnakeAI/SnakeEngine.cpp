@@ -1,10 +1,13 @@
 #include "SnakeEngine.h"
 
 SnakeEngine::SnakeEngine(size_t boardHeight, size_t boardWidth) :
+	currGameState{ GAME_STATE::CONTINUE },
 	board{ boardHeight, boardWidth },
 	snake{ boardHeight, boardWidth },
 	apple{ boardHeight, boardWidth }
-{}
+{
+	init();
+}
 
 void SnakeEngine::init()
 {
@@ -13,29 +16,21 @@ void SnakeEngine::init()
 
 void SnakeEngine::reset()
 {
+	currGameState = GAME_STATE::CONTINUE;
 	board.clear();
 	snake.resetHeadRandom();
 	apple.moveRandom();
 }
 
-SnakeEngine::GAME_STATE SnakeEngine::update()
+SnakeEngine::GAME_STATE SnakeEngine::update(char controlInput)
 {
-	image = cv::Mat::zeros(board.getNRows() * 40, board.getNCols() * 40, CV_8UC3);
-
 	board.clear();
 	board.paste(snake);
 	board.paste(apple);
-	board.print(image);
+
+	controlInput = tolower(controlInput);
 	
-	cv::imshow("Snake AI", image);
-	cv::waitKey(1);
-
-	std::cout << "Enter move: ";
-	char input;
-	std::cin >> input;
-	input = tolower(input);
-
-	switch (input) {
+	switch (controlInput) {
 	case 'w':	
 		// Can we move UP?
 		if (snake.isMoveUpValid()) {
@@ -50,7 +45,8 @@ SnakeEngine::GAME_STATE SnakeEngine::update()
 		}
 		else {
 			std::cout << "Hit wall\n";
-			return GAME_STATE::GAME_OVER;
+			currGameState = GAME_STATE::GAME_OVER;
+			return currGameState;
 		}
 		break;
 
@@ -68,7 +64,8 @@ SnakeEngine::GAME_STATE SnakeEngine::update()
 		}
 		else {
 			std::cout << "Hit wall\n";
-			return GAME_STATE::GAME_OVER;
+			currGameState = GAME_STATE::GAME_OVER;
+			return currGameState;
 		}
 		break;
 
@@ -86,7 +83,8 @@ SnakeEngine::GAME_STATE SnakeEngine::update()
 		}
 		else {
 			std::cout << "Hit wall\n";
-			return GAME_STATE::GAME_OVER;
+			currGameState = GAME_STATE::GAME_OVER;
+			return currGameState;
 		}
 		break;
 
@@ -104,7 +102,8 @@ SnakeEngine::GAME_STATE SnakeEngine::update()
 		}
 		else {
 			std::cout << "Hit wall\n";
-			return GAME_STATE::GAME_OVER;
+			currGameState = GAME_STATE::GAME_OVER;
+			return currGameState;
 		}
 		break;
 	}
@@ -112,27 +111,27 @@ SnakeEngine::GAME_STATE SnakeEngine::update()
 	// Did we bit our selves?
 	if (snake.bitItself()) {
 		std::cout << "Ouch. Game over\n";
-		return GAME_STATE::GAME_OVER;
+		currGameState = GAME_STATE::GAME_OVER;
+		return currGameState;
 	}
 
 	// Did we win? Did we cover every cell?
 	if (snake.size() == board.num_elements()) {
 		// Yes we won.
 		std::cout << "Congratulations you won.\n";
-		return GAME_STATE::WON;
+		currGameState = GAME_STATE::WON;
+		return currGameState;
 	}
 
 	// Did we eat the apple?
 	if (snake.head() == apple) {
-		// Yes. We need to move it to a random location not on the snake itself.
-		do
-		{
+		// Yes. We need to move apple to a random location 
+		// but not on the snake itself. 
+		// TODO: This will not be efficient for big boards.
+		do {
 			apple.moveRandom();
 		} while (snake == apple);
 	}
 
-	cv::imshow("Snake AI", image);
-	cv::waitKey(1);
-
-	return GAME_STATE::CONTINUE;
+	return currGameState;
 }
