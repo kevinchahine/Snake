@@ -1,28 +1,14 @@
 #include "AIController.h"
 
-AIController::AIController(SnakeEngine& engine) :
-	engine(engine) {}
+AIController::AIController(SnakeEngine& engine, std::unique_ptr<SolverBase>&& solverPtr) :
+	engine(engine),
+	solverPtr(std::move(solverPtr)) {}
 
 char AIController::getInput()
 {
-	cv::waitKey(400);
+	cv::waitKey(200);
 	
-	// Can we move UP?
-	if (engine.snake.isMoveUpValid()) {
-		return 'w';
-	}
-	// Can we move DOWN?
-	if (engine.snake.isMoveDownValid()) {
-		return 's';
-	}
-	// Can we move LEFT?
-	if (engine.snake.isMoveLeftValid()) {
-		return 'a';
-	}
-	// Can we move RIGHT?
-	if (engine.snake.isMoveRightValid()) {
-		return 'd';
-	}
+	char selectedMove = solverPtr->solve();
 		
-	return 'x';
+	return selectedMove;
 }

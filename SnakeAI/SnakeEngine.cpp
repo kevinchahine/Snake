@@ -32,7 +32,7 @@ SnakeEngine::GAME_STATE SnakeEngine::update(char controlInput)
 	
 	switch (controlInput) {
 	case 'w':	
-		// Can we move UP?
+		// Can we direction UP?
 		if (snake.isMoveUpValid()) {
 			// Yes. Did we eat an apple?
 			if (snake.head().upOne() == apple) {
@@ -51,7 +51,7 @@ SnakeEngine::GAME_STATE SnakeEngine::update(char controlInput)
 		break;
 
 	case 's':	
-		// Can we move DOWN?
+		// Can we direction DOWN?
 		if (snake.isMoveDownValid()) {
 			// Yes. Did we eat an apple?
 			if (snake.head().downOne() == apple) {
@@ -70,7 +70,7 @@ SnakeEngine::GAME_STATE SnakeEngine::update(char controlInput)
 		break;
 
 	case 'a':	
-		// Can we move LEFT?
+		// Can we direction LEFT?
 		if (snake.isMoveLeftValid()) {
 			// Yes. Did we eat an apple?
 			if (snake.head().leftOne() == apple) {
@@ -89,7 +89,7 @@ SnakeEngine::GAME_STATE SnakeEngine::update(char controlInput)
 		break;
 
 	case 'd':	
-		// Can we move RIGHT?
+		// Can we direction RIGHT?
 		if (snake.isMoveRightValid()) {
 			// Yes. Did we eat an apple?
 			if (snake.head().rightOne() == apple) {
@@ -125,7 +125,7 @@ SnakeEngine::GAME_STATE SnakeEngine::update(char controlInput)
 
 	// Did we eat the apple?
 	if (snake.head() == apple) {
-		// Yes. We need to move apple to a random location 
+		// Yes. We need to direction apple to a random location 
 		// but not on the snake itself. 
 		// TODO: This will not be efficient for big boards.
 		do {

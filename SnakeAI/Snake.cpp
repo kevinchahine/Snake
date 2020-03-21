@@ -80,7 +80,7 @@ void Snake::resetHeadAt(Position headStartingPosition)
 	this->push_back(headStartingPosition);
 }
 
-bool Snake::isMoveUpValid()
+bool Snake::isMoveUpValid() const
 {
 	Position headPosition = head();
 
@@ -91,7 +91,7 @@ bool Snake::isMoveUpValid()
 		headPosition.row() != neckPosition.row() + 1;
 }
 
-bool Snake::isMoveDownValid()
+bool Snake::isMoveDownValid() const
 {
 	Position headPosition = head();
 
@@ -102,7 +102,7 @@ bool Snake::isMoveDownValid()
 		headPosition.row() != neckPosition.row() - 1;
 }
 
-bool Snake::isMoveLeftValid()
+bool Snake::isMoveLeftValid() const
 {
 	Position headPosition = head();
 
@@ -113,7 +113,7 @@ bool Snake::isMoveLeftValid()
 		headPosition.col() != neckPosition.col() + 1;
 }
 
-bool Snake::isMoveRightValid()
+bool Snake::isMoveRightValid() const
 {
 	Position headPosition = head();
 
@@ -122,6 +122,18 @@ bool Snake::isMoveRightValid()
 	return
 		headPosition.col() < boardWidth - 1 &&
 		headPosition.col() != neckPosition.col() - 1;
+}
+
+bool Snake::isMoveValid(char direction) const
+{
+	switch (direction)
+	{
+	case 'w':	return isMoveUpValid();
+	case 's':	return isMoveDownValid();
+	case 'a':	return isMoveLeftValid();
+	case 'd':	return isMoveRightValid();
+	default:	throw std::exception("Received invalid direction");
+	}
 }
 
 void Snake::moveUpFast()
@@ -160,6 +172,18 @@ void Snake::moveRightFast()
 	this->pop_front();
 }
 
+void Snake::moveFast(char direction)
+{
+	switch (direction)
+	{
+	case 'w':	return moveUpFast();
+	case 'd':	return moveRightFast();
+	case 's':	return moveDownFast();
+	case 'a':	return moveLeftFast();
+	default:	throw std::exception("Received invalid direction");
+	}
+}
+
 void Snake::moveUpValid()
 {
 	if (isMoveUpValid())
@@ -182,6 +206,18 @@ void Snake::moveRightValid()
 {
 	if (isMoveRightValid())
 		moveRightFast();
+}
+
+void Snake::moveValid(char direction)
+{
+	switch (direction)
+	{
+	case 'w':	return moveUpValid();
+	case 'd':	return moveRightValid();
+	case 's':	return moveDownValid();
+	case 'a':	return moveLeftValid();
+	default:	throw std::exception("Received invalid direction");
+	}
 }
 
 void Snake::growUpFast()
@@ -224,6 +260,18 @@ void Snake::growRightFast()
 	this->push_back(headPosition);
 }
 
+void Snake::growFast(char direction)
+{
+	switch (direction)
+	{
+	case 'w':	return growUpFast();
+	case 'd':	return growRightFast();
+	case 's':	return growDownFast();
+	case 'a':	return growLeftFast();
+	default:	throw std::exception("Received invalid direction");
+	}
+}
+
 void Snake::growUpValid()
 {
 	if (isMoveUpValid())
@@ -246,4 +294,16 @@ void Snake::growRightValid()
 {
 	if (isMoveRightValid())
 		growRightFast();
+}
+
+void Snake::growValid(char direction)
+{
+	switch (direction)
+	{
+	case 'w':	return growUpValid();
+	case 'd':	return growRightValid();
+	case 's':	return growDownValid();
+	case 'a':	return growLeftValid();
+	default:	throw std::exception("Received invalid direction");
+	}
 }

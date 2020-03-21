@@ -5,17 +5,17 @@
 
 #include "Position.h"
 
-/*	
+/*
 	begin()						end()
 
-              |-- Head is actually at the BACK of the queue
-		      v 
+			  |-- Head is actually at the BACK of the queue
+			  v
 	  T T T T H
 	  ^
 	  |-- Tail is at the FRONT of the queue
 
 	  T T T T H
-	    T T T T H	<-- Push back the new head and pop the old tail
+		T T T T H	<-- Push back the new head and pop the old tail
 
 	Head is at the rbegin()
 */
@@ -45,30 +45,35 @@ public:
 
 	void resetHeadAt(Position headStartingPosition);
 
-	bool isMoveUpValid();
-	bool isMoveDownValid();
-	bool isMoveLeftValid();
-	bool isMoveRightValid();
+	bool isMoveUpValid() const;
+	bool isMoveDownValid() const;
+	bool isMoveLeftValid() const;
+	bool isMoveRightValid() const;
+	bool isMoveValid(char direction) const;
 
 	void moveUpFast();
 	void moveDownFast();
 	void moveLeftFast();
 	void moveRightFast();
+	void moveFast(char direction);
 
 	void moveUpValid();
 	void moveDownValid();
 	void moveLeftValid();
 	void moveRightValid();
+	void moveValid(char direction);
 
 	void growUpFast();
 	void growDownFast();
 	void growLeftFast();
 	void growRightFast();
+	void growFast(char direction);
 
 	void growUpValid();
 	void growDownValid();
 	void growLeftValid();
 	void growRightValid();
+	void growValid(char direction);
 
 private:
 	size_t boardHeight;

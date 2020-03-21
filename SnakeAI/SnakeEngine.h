@@ -21,6 +21,11 @@ public:
 	};
 public:
 	SnakeEngine(size_t boardWidth, size_t boardHeight);
+	SnakeEngine(const SnakeEngine&) = default;
+	SnakeEngine(SnakeEngine&&) noexcept = default;
+	~SnakeEngine() noexcept = default;
+	SnakeEngine& operator=(const SnakeEngine&) = default;
+	SnakeEngine& operator=(SnakeEngine&&) noexcept = default;
 
 	void init();
 
