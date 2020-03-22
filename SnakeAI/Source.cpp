@@ -22,8 +22,8 @@ int main()
 
 		std::unique_ptr<SolverBase> solverPtr =
 			//std::make_unique<DefaultSolver>(gameInterface.engine);
-			//std::make_unique<RandomSolver>(gameInterface.engine);
-			std::make_unique<AStarSolver>(gameInterface.engine);
+			std::make_unique<RandomSolver>(gameInterface.engine);
+			//std::make_unique<AStarSolver>(gameInterface.engine);
 
 		gameInterface.setController(std::make_unique<AIController>(gameInterface.engine, std::move(solverPtr)));
 		//gameInterface.setController(std::make_unique<UserController>());
