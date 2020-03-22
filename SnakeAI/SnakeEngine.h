@@ -27,6 +27,9 @@ public:
 	SnakeEngine& operator=(const SnakeEngine&) = default;
 	SnakeEngine& operator=(SnakeEngine&&) noexcept = default;
 
+	bool operator==(const SnakeEngine& left) const;
+	bool operator<(const SnakeEngine& left) const;
+
 	void init();
 
 	void reset();

@@ -9,6 +9,11 @@ SnakeEngine::SnakeEngine(size_t boardHeight, size_t boardWidth) :
 	init();
 }
 
+bool SnakeEngine::operator==(const SnakeEngine& left) const
+{
+	return snake == left.snake && apple == left.apple;
+}
+
 void SnakeEngine::init()
 {
 	reset();

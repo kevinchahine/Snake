@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Solvers">
+      <UniqueIdentifier>{4ac1715d-bc8e-42ea-a9c6-604f204f9887}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers">
+      <UniqueIdentifier>{0fbe8507-3243-4d32-bbd9-25ec65eada45}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -33,32 +39,32 @@
     <ClCompile Include="Apple.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ControllerBase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UserController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AIController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SnakeInterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SolverBase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RandomSolver.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="AStarSolver.cpp">
+      <Filter>Solvers</Filter>
     </ClCompile>
     <ClCompile Include="DefaultSolver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AStarSolver.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Solvers</Filter>
     </ClCompile>
     <ClCompile Include="DepthFirstSearchSolver.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Solvers</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomSolver.cpp">
+      <Filter>Solvers</Filter>
+    </ClCompile>
+    <ClCompile Include="SolverBase.cpp">
+      <Filter>Solvers</Filter>
+    </ClCompile>
+    <ClCompile Include="AIController.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerBase.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="UserController.cpp">
+      <Filter>Controllers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -77,32 +83,35 @@
     <ClInclude Include="Apple.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ControllerBase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UserController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AIController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SnakeInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SolverBase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RandomSolver.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="AStarSolver.h">
+      <Filter>Solvers</Filter>
     </ClInclude>
     <ClInclude Include="DefaultSolver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AStarSolver.h">
-      <Filter>Header Files</Filter>
+      <Filter>Solvers</Filter>
     </ClInclude>
     <ClInclude Include="DepthFirstSearchSolver.h">
-      <Filter>Header Files</Filter>
+      <Filter>Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomSolver.h">
+      <Filter>Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="SolverBase.h">
+      <Filter>Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="AIController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerBase.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="UserController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Solvers.hpp">
+      <Filter>Solvers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

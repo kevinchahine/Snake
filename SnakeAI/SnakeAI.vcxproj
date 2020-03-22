@@ -155,6 +155,7 @@
     <ClInclude Include="SnakeEngine.h" />
     <ClInclude Include="SnakeInterface.h" />
     <ClInclude Include="SolverBase.h" />
+    <ClInclude Include="Solvers.hpp" />
     <ClInclude Include="UserController.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
