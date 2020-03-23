@@ -16,8 +16,10 @@ int main()
 	srand(time(NULL));
 
 	try {
-		SnakeInterface gameInterface{ 10, 10 };
-
+		const size_t N_ROWS = 8;
+		const size_t N_COLS = 8;
+		SnakeInterface gameInterface{ N_ROWS, N_COLS };
+		
 		std::unique_ptr<SolverBase> solverPtr =
 			//std::make_unique<DefaultSolver>(gameInterface.engine);
 			//std::make_unique<RandomSolver>(gameInterface.engine);
@@ -34,7 +36,7 @@ int main()
 			<< e.what() << '\n';
 	}
 
-	cv::waitKey(1000);
+	cv::waitKey(000);
 	//cout << "Press any key to continue . . .";
 	//cin.get();
 	//cin.get();

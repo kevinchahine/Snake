@@ -8,20 +8,20 @@ char RandomSolver::solve()
 	std::vector<char> validMoves;
 	validMoves.reserve(4);
 
-	// Determine which moves are valid.
-	if (engine.snake.isMoveUpValid()) {
+	// Determine which moves are safe.
+	if (this->isMoveUpSafe()) {
 		validMoves.push_back('w');
 	}
 
-	if (engine.snake.isMoveDownValid()) {
+	if (this->isMoveDownSafe()) {
 		validMoves.push_back('s');
 	}
 
-	if (engine.snake.isMoveLeftValid()) {
+	if (this->isMoveLeftSafe()) {
 		validMoves.push_back('a');
 	}
 
-	if (engine.snake.isMoveRightValid()) {
+	if (this->isMoveRightSafe()) {
 		validMoves.push_back('d');
 	}
 

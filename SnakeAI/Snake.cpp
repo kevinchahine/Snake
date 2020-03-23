@@ -42,7 +42,16 @@ bool Snake::bitItself() const
 
 const Position& Snake::head() const
 {
-	// back is actually the head
+	try {
+		// back is actually the head
+		auto& h = this->back();
+		return h;
+	}
+	catch (std::exception & e) {
+		std::cout << e.what() << '\n';
+
+	}
+
 	return this->back();
 }
 

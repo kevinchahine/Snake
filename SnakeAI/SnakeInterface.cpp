@@ -13,15 +13,21 @@ void SnakeInterface::start()
 	cv::waitKey(1);
 
 	while (engine.currGameState == SnakeEngine::GAME_STATE::CONTINUE) {
-		image = cv::Mat::zeros(engine.board.getNRows() * 40, engine.board.getNCols() * 40, CV_8UC3);
-		
+		clock_t start = clock();
+		cv::rectangle(image, cv::Point(0, 0), cv::Point(image.rows, image.cols), cv::Scalar(0, 0, 0));
+
+		std::cout << "1.) " << clock() - start << '\t';
+
 		char input = controllerPtr->getInput();
+		std::cout << clock() - start << '\t';
 
 		engine.update(input);
+		std::cout << clock() - start << '\t';
 
 		engine.board.print(image);
 		cv::imshow("Snake AI", image);
-		cv::waitKey(1);
+		//cv::waitKey(1);
+		std::cout << clock() - start << '\n';
 	}
 }
 

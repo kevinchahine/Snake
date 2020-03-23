@@ -6,7 +6,7 @@ AIController::AIController(SnakeEngine& engine, std::unique_ptr<SolverBase>&& so
 
 char AIController::getInput()
 {
-	cv::waitKey(200);
+	cv::waitKey(50);
 	
 	char selectedMove = solverPtr->solve();
 		
