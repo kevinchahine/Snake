@@ -14,8 +14,8 @@ void Apple::moveRandom()
 void Apple::moveTo(size_t row, size_t col)
 {
 	// Limit out of bounds values.
-	row = (row > boardHeight ? boardHeight - 1 : row);
-	col = (col > boardWidth ? boardWidth - 1 : col);
+	row = (row >= boardHeight ? boardHeight - 1 : row);
+	col = (col >= boardWidth ? boardWidth - 1 : col);
 
 	this->row(row);
 	this->col(col);

@@ -6,6 +6,9 @@ Snake::Snake(size_t boardHeight, size_t boardWidth) :
 	boardHeight(boardHeight),
 	boardWidth(boardWidth)
 {
+	resetHeadAt(Position(0, 0));
+
+	//growDownFast();
 }
 
 bool Snake::operator==(const Position& position) const

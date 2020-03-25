@@ -1,5 +1,10 @@
 #include "Position.h"
 
+Position::Position() :
+	std::array<index, 2> { { 0, 0 } }
+{
+}
+
 Position::Position(int row, int col) :
 	std::array<index, 2> { { row, col} }
 {

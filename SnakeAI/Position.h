@@ -10,7 +10,7 @@ using index = boost::multi_array<uint8_t, 2>::index;
 class Position : public std::array<index, 2>
 {
 public:
-	Position() = default;
+	Position();
 	Position(int row, int col);
 	Position(const Position&) = default;
 	Position(Position&&) noexcept = default;
