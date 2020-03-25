@@ -7,8 +7,9 @@
 class AStarSolver : public SolverBase
 {
 public:
-	AStarSolver(const SnakeEngine& engine);
+	AStarSolver(const SnakeState& gameState);
 
+	virtual void reset() override;
 	virtual char solve() override;
 
 	static int calcManhattanDist(const Position& p1, const Position& p2);

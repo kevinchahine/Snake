@@ -1,56 +1,61 @@
 #include "AStarSolver.h"
 
-AStarSolver::AStarSolver(const SnakeEngine& engine) :
-	SolverBase(engine) {}
+AStarSolver::AStarSolver(const SnakeState& gameState) :
+	SolverBase(gameState) {}
+
+void AStarSolver::reset()
+{
+
+}
 
 char AStarSolver::solve()
 {
-	const Snake& snake = engine.snake;
-	const Apple& apple = engine.apple;
-	const Position& head = snake.head();
+	//const Snake& snake = gameState.snake;
+	//const Apple& apple = gameState.apple;
+	//const Position& head = snake.head();
 
-	// Find shortest path to apple and avoid hitting tail
-	
-	// 1.) Find all valid moves
-	std::priority_queue<Move, std::vector<Move>, std::greater<Move>> validMoves;
-	
-	// Determine which moves are valid.
-	if (engine.snake.isMoveUpValid()) {
-		int manhattanDist = calcManhattanDist(head.upOne(), apple);
-		
-		validMoves.push(Move('w', manhattanDist));
-	}
+	//// Find shortest path to apple and avoid hitting tail
+	//
+	//// 1.) Find all valid moves
+	//std::priority_queue<Move, std::vector<Move>, std::greater<Move>> validMoves;
+	//
+	//// Determine which moves are valid.
+	//if (gameState.snake.isMoveUpLegal()) {
+	//	int manhattanDist = calcManhattanDist(head.upOne(), apple);
+	//	
+	//	validMoves.push(Move('w', manhattanDist));
+	//}
 
-	if (engine.snake.isMoveDownValid()) {
-		int manhattanDist = calcManhattanDist(head.downOne(), apple);
-		
-		validMoves.push(Move('s', manhattanDist));
-	}
+	//if (gameState.snake.isMoveDownLegal()) {
+	//	int manhattanDist = calcManhattanDist(head.downOne(), apple);
+	//	
+	//	validMoves.push(Move('s', manhattanDist));
+	//}
 
-	if (engine.snake.isMoveLeftValid()) {
-		int manhattanDist = calcManhattanDist(head.leftOne(), apple);
-		
-		validMoves.push(Move('a', manhattanDist));
-	}
+	//if (gameState.snake.isMoveLeftLegal()) {
+	//	int manhattanDist = calcManhattanDist(head.leftOne(), apple);
+	//	
+	//	validMoves.push(Move('a', manhattanDist));
+	//}
 
-	if (engine.snake.isMoveRightValid()) {
-		int manhattanDist = calcManhattanDist(head.rightOne(), apple);
-		
-		validMoves.push(Move('d', manhattanDist));
-	}
+	//if (gameState.snake.isMoveRightLegal()) {
+	//	int manhattanDist = calcManhattanDist(head.rightOne(), apple);
+	//	
+	//	validMoves.push(Move('d', manhattanDist));
+	//}
 
-	// Copy current state into another solver which will do a recursive solve call 
-	SnakeEngine nextMovesEngine(engine);
-	AStarSolver nextMovesSolver(nextMovesEngine);
-	
-	// Try each valid direction in order of least manhattan distance
-	while (validMoves.empty() == false) {
-		const auto& move = validMoves.top();
-		
-		nextMovesEngine.snake.moveValid(move.direction);
+	//// Copy current state into another solver which will do a recursive solve call 
+	//SnakeState nextMovesEngine(gameState);
+	//AStarSolver nextMovesSolver(nextMovesEngine);
+	//
+	//// Try each valid direction in order of least manhattan distance
+	//while (validMoves.empty() == false) {
+	//	const auto& move = validMoves.top();
+	//	
+	//	nextMovesEngine.snake.moveIfLegal(move.direction);
 
-		validMoves.pop();
-	}
+	//	validMoves.pop();
+	//}
 
 	return 'd';
 }

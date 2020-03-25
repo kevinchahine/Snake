@@ -19,27 +19,12 @@
     <Filter Include="Controllers">
       <UniqueIdentifier>{0fbe8507-3243-4d32-bbd9-25ec65eada45}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine">
+      <UniqueIdentifier>{4f7b6e24-5632-4ba1-a936-da098f9d329d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SnakeBoard.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Snake.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Position.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SnakeEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Apple.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SnakeInterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AStarSolver.cpp">
@@ -66,26 +51,26 @@
     <ClCompile Include="UserController.cpp">
       <Filter>Controllers</Filter>
     </ClCompile>
+    <ClCompile Include="Apple.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Position.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Snake.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="SnakeBoard.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="SnakeState.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="SnakeInterface.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SnakeBoard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Snake.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Position.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SnakeEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Apple.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SnakeInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AStarSolver.h">
       <Filter>Solvers</Filter>
     </ClInclude>
@@ -112,6 +97,24 @@
     </ClInclude>
     <ClInclude Include="Solvers.hpp">
       <Filter>Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="Apple.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Position.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Snake.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="SnakeBoard.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="SnakeState.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="SnakeInterface.h">
+      <Filter>GameEngine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

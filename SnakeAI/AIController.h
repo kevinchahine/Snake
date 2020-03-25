@@ -3,18 +3,18 @@
 #include <memory>
 
 #include "ControllerBase.h"
-#include "SnakeEngine.h"
+#include "SnakeState.h"
 #include "SolverBase.h"
 
 class AIController : public ControllerBase
 {
 public:
-	AIController(SnakeEngine& engine, std::unique_ptr<SolverBase> && solverPtr);
+	AIController(SnakeState& gameState, std::unique_ptr<SolverBase> && solverPtr);
 
 	virtual char getInput() override;
 
 private:
-	SnakeEngine& engine;
+	SnakeState& gameState;
 
 	std::unique_ptr<SolverBase> solverPtr;
 };

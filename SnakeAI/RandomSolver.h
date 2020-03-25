@@ -9,7 +9,9 @@
 class RandomSolver : public SolverBase
 {
 public:
-	RandomSolver(const SnakeEngine& engine);
+	RandomSolver(const SnakeState& gameState);
+
+	virtual void reset() override;
 
 	virtual char solve() override;
 };

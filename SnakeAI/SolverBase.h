@@ -2,22 +2,17 @@
 
 #include <iostream>
 
-#include "SnakeEngine.h"
+#include "SnakeState.h"
 
 class SolverBase
 {
 public:
-	SolverBase(const SnakeEngine& engine);
+	SolverBase(const SnakeState& gameState);
 
+	virtual void reset() = 0;
 	virtual char solve() = 0;
-
-	bool isMoveUpSafe() const;
-	bool isMoveDownSafe() const;
-	bool isMoveLeftSafe() const;
-	bool isMoveRightSafe() const;
-	bool isMoveSafe(char move) const;
-
+	
 protected:
-	const SnakeEngine & engine;
+	const SnakeState & gameState;
 };
 

@@ -1,24 +1,28 @@
 #include "DefaultSolver.h"
 
-DefaultSolver::DefaultSolver(const SnakeEngine& engine) :
-	SolverBase(engine) {}
+DefaultSolver::DefaultSolver(const SnakeState& gameState) :
+	SolverBase(gameState) {}
+
+void DefaultSolver::reset()
+{
+}
 
 char DefaultSolver::solve()
 {
 	// Can we direction UP?
-	if (engine.snake.isMoveUpValid()) {
+	if (gameState.isMoveUpLegal()) {
 		return 'w';
 	}
 	// Can we direction DOWN?
-	if (engine.snake.isMoveDownValid()) {
+	if (gameState.isMoveDownLegal()) {
 		return 's';
 	}
 	// Can we direction LEFT?
-	if (engine.snake.isMoveLeftValid()) {
+	if (gameState.isMoveLeftLegal()) {
 		return 'a';
 	}
 	// Can we direction RIGHT?
-	if (engine.snake.isMoveRightValid()) {
+	if (gameState.isMoveRightLegal()) {
 		return 'd';
 	}
 }

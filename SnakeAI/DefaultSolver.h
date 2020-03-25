@@ -5,7 +5,10 @@
 class DefaultSolver : public SolverBase
 {
 public:
-	DefaultSolver(const SnakeEngine& engine);
+	DefaultSolver(const SnakeState& gameState);
+
+	// Clears any data that might be used in solve.
+	virtual void reset() override;
 
 	virtual char solve() override;
 };

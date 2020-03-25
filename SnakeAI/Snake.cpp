@@ -33,8 +33,17 @@ bool Snake::bitItself() const
 
 	// See if a cell on the snake, from its tail to its neck (Not including its head)
 	// equals its head.
-	auto biteMarkCellIter = std::find(tailIter, headIter, head());
 
+	auto iter = tailIter;
+	for (iter = tailIter; iter != headIter; iter++) {
+		if (*iter == head()) {
+			std::cout << "Ouyi\n";
+			break;
+		}
+	}
+
+	auto biteMarkCellIter = iter;
+	
 	// Snake bit itself if the bite march is somewhere before its head.
 	// The snake can't really bite its own head
 	return biteMarkCellIter != headIter;
@@ -42,24 +51,29 @@ bool Snake::bitItself() const
 
 const Position& Snake::head() const
 {
-	try {
-		// back is actually the head
-		auto& h = this->back();
-		return h;
-	}
-	catch (std::exception & e) {
-		std::cout << e.what() << '\n';
-
+	// back is actually the head
+	if (this->empty()) {
+		throw std::exception("Snake is empty and has no head");
 	}
 
 	return this->back();
 }
 
-const Position& Snake::neck() const
+const Position & Snake::neck() const
 {
 	auto it = std::next(rbegin());
 
-	return Position(*it);
+	return *it;
+}
+
+const Position& Snake::tailTip() const
+{
+	// front is actually the tail
+	if (this->empty()) {
+		throw std::exception("Snake is empty and has no tail");
+	}
+
+	return this->front();
 }
 
 void Snake::resetHeadRandom()
@@ -89,10 +103,9 @@ void Snake::resetHeadAt(Position headStartingPosition)
 	this->push_back(headStartingPosition);
 }
 
-bool Snake::isMoveUpValid() const
+bool Snake::isMoveUpLegal() const
 {
 	Position headPosition = head();
-
 	Position neckPosition = neck();
 	
 	return
@@ -100,10 +113,9 @@ bool Snake::isMoveUpValid() const
 		headPosition.row() != neckPosition.row() + 1;
 }
 
-bool Snake::isMoveDownValid() const
+bool Snake::isMoveDownLegal() const
 {
 	Position headPosition = head();
-
 	Position neckPosition = neck();
 
 	return
@@ -111,10 +123,9 @@ bool Snake::isMoveDownValid() const
 		headPosition.row() != neckPosition.row() - 1;
 }
 
-bool Snake::isMoveLeftValid() const
+bool Snake::isMoveLeftLegal() const
 {
 	Position headPosition = head();
-
 	Position neckPosition = neck();
 
 	return
@@ -122,10 +133,9 @@ bool Snake::isMoveLeftValid() const
 		headPosition.col() != neckPosition.col() + 1;
 }
 
-bool Snake::isMoveRightValid() const
+bool Snake::isMoveRightLegal() const
 {
 	Position headPosition = head();
-
 	Position neckPosition = neck();
 
 	return
@@ -133,16 +143,27 @@ bool Snake::isMoveRightValid() const
 		headPosition.col() != neckPosition.col() - 1;
 }
 
-bool Snake::isMoveValid(char direction) const
+bool Snake::isMoveLegal(char direction) const
 {
 	switch (direction)
 	{
-	case 'w':	return isMoveUpValid();
-	case 's':	return isMoveDownValid();
-	case 'a':	return isMoveLeftValid();
-	case 'd':	return isMoveRightValid();
+	case 'w':	return isMoveUpLegal();
+	case 's':	return isMoveDownLegal();
+	case 'a':	return isMoveLeftLegal();
+	case 'd':	return isMoveRightLegal();
 	default:	throw std::exception("Received invalid direction");
 	}
+}
+
+char Snake::getAnyLegalMove() const
+{
+	if (isMoveUpLegal()) return 'w';
+	if (isMoveDownLegal()) return 's';
+	if (isMoveLeftLegal()) return 'a';
+	if (isMoveRightLegal()) return 'd';
+
+	// --- We should never be able to reach this point. There should always be a valid move.
+	throw std::exception("Snake::getAnyValidMove(): No moves are valid.");
 }
 
 void Snake::moveUpFast()
@@ -193,38 +214,38 @@ void Snake::moveFast(char direction)
 	}
 }
 
-void Snake::moveUpValid()
+void Snake::moveUpIfLegal()
 {
-	if (isMoveUpValid())
+	if (isMoveUpLegal())
 		moveUpFast();
 }
 
-void Snake::moveDownValid()
+void Snake::moveDownIfLegal()
 {
-	if (isMoveDownValid())
+	if (isMoveDownLegal())
 		moveDownFast();
 }
 
-void Snake::moveLeftValid()
+void Snake::moveLeftIfLegal()
 {
-	if (isMoveLeftValid())
+	if (isMoveLeftLegal())
 		moveLeftFast();
 }
 
-void Snake::moveRightValid()
+void Snake::moveRightIfLegal()
 {
-	if (isMoveRightValid())
+	if (isMoveRightLegal())
 		moveRightFast();
 }
 
-void Snake::moveValid(char direction)
+void Snake::moveIfLegal(char direction)
 {
 	switch (direction)
 	{
-	case 'w':	return moveUpValid();
-	case 'd':	return moveRightValid();
-	case 's':	return moveDownValid();
-	case 'a':	return moveLeftValid();
+	case 'w':	return moveUpIfLegal();
+	case 'd':	return moveRightIfLegal();
+	case 's':	return moveDownIfLegal();
+	case 'a':	return moveLeftIfLegal();
 	default:	throw std::exception("Received invalid direction");
 	}
 }
@@ -281,38 +302,38 @@ void Snake::growFast(char direction)
 	}
 }
 
-void Snake::growUpValid()
+void Snake::growUpIfLegal()
 {
-	if (isMoveUpValid())
+	if (isMoveUpLegal())
 		growUpFast();
 }
 
-void Snake::growDownValid()
+void Snake::growDownIfLegal()
 {
-	if (isMoveDownValid())
+	if (isMoveDownLegal())
 		growDownFast();
 }
 
-void Snake::growLeftValid()
+void Snake::growLeftIfLegal()
 {
-	if (isMoveLeftValid())
+	if (isMoveLeftLegal())
 		growLeftFast();
 }
 
-void Snake::growRightValid()
+void Snake::growRightIfLegal()
 {
-	if (isMoveRightValid())
+	if (isMoveRightLegal())
 		growRightFast();
 }
 
-void Snake::growValid(char direction)
+void Snake::growIfLegal(char direction)
 {
 	switch (direction)
 	{
-	case 'w':	return growUpValid();
-	case 'd':	return growRightValid();
-	case 's':	return growDownValid();
-	case 'a':	return growLeftValid();
+	case 'w':	return growUpIfLegal();
+	case 'd':	return growRightIfLegal();
+	case 's':	return growDownIfLegal();
+	case 'a':	return growLeftIfLegal();
 	default:	throw std::exception("Received invalid direction");
 	}
 }
