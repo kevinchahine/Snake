@@ -31,6 +31,7 @@ public:
 
 	bool operator==(const SnakeState& left) const;
 	bool operator<(const SnakeState& left) const;
+	size_t operator()() const;
 
 	void init();
 
@@ -54,7 +55,7 @@ public:
 	bool isMoveLegal(char direction) const;
 	char getAnyLegalMove() const;
 
-	// === A Safe move will not move into the snakes tail, back up nor hit the walls ===
+	// === A Safe move will not move into the snakes tail ===
 	bool isMoveUpSafe() const;
 	bool isMoveDownSafe() const;
 	bool isMoveLeftSafe() const;
@@ -74,7 +75,7 @@ public:
 	void moveRightIfLegal();
 	void moveIfLegal(char direction);
 	
-	void moveApple();
+	void moveAppleRandomly();
 
 protected:
 	GAME_STATE gameState;

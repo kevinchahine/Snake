@@ -22,6 +22,9 @@ class SnakeBoard : public boost::multi_array<CELL, 2>
 public:
 	SnakeBoard(const SnakeBoard::index & nRows, const SnakeBoard::index & nCols);
 
+	// Calculates the hashvalue of the board
+	size_t hashValue() const;
+
 	void print(std::ostream& os = std::cout) const;
 
 	void print(cv::Mat& image) const;
@@ -36,9 +39,6 @@ public:
 	const SnakeBoard::index& getNCols() const;
 
 private:
-	SnakeBoard::index nRows;
-	SnakeBoard::index nCols;
-
 	cv::Scalar cellColor = cv::Scalar{ 129, 129, 129 };
 	cv::Scalar headColor = cv::Scalar{ 0, 180, 0 };
 	cv::Scalar tailColor = cv::Scalar{ 0, 128, 0 };

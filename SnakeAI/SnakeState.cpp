@@ -14,6 +14,13 @@ bool SnakeState::operator==(const SnakeState& left) const
 	return snake == left.snake && apple == left.apple;
 }
 
+size_t SnakeState::operator()() const
+{
+	// return the hash value (functor) of board.
+	// make sure board is up to date with the snake and apple
+	return board.hashValue();
+}
+
 void SnakeState::init()
 {
 	reset();
@@ -23,10 +30,14 @@ void SnakeState::reset()
 {
 	gameState = GAME_STATE::CONTINUE;
 	board.clear();
-	snake.resetHeadRandom();
-	apple.moveRandom();
 
+	// --- Place snake in a random position ---
+	snake.resetHeadRandom();
 	board.paste(snake);
+
+	// --- Place apple in a random position ---
+	// --- Will make sure it doesn't get placed on snake ---
+	moveAppleRandomly();
 	board.paste(apple);
 }
 
@@ -143,7 +154,6 @@ bool SnakeState::isMoveUpSafe() const
 	Position head = snake.head();
 
 	return
-		isMoveUpLegal() &&
 		board(head.upOne()) != CELL::TAIL;
 }
 
@@ -152,7 +162,6 @@ bool SnakeState::isMoveDownSafe() const
 	Position head = snake.head();
 
 	return
-		isMoveDownLegal() &&
 		board(head.downOne()) != CELL::TAIL;
 }
 
@@ -161,7 +170,6 @@ bool SnakeState::isMoveLeftSafe() const
 	Position head = snake.head();
 
 	return
-		isMoveLeftLegal() &&
 		board(head.leftOne()) != CELL::TAIL;
 }
 
@@ -170,7 +178,6 @@ bool SnakeState::isMoveRightSafe() const
 	Position head = snake.head();
 
 	return
-		isMoveRightLegal() &&
 		board(head.rightOne()) != CELL::TAIL;
 }
 
@@ -197,7 +204,7 @@ void SnakeState::moveUpFast()
 	if (snake.head().upOne() == apple) {
 		snake.growUpFast();
 		std::cout << "Yum apples---\n";
-		moveApple();
+		moveAppleRandomly();
 	}
 	else {
 		snake.moveUpFast();
@@ -217,7 +224,7 @@ void SnakeState::moveDownFast()
 	if (snake.head().downOne() == apple) {
 		std::cout << "Yum apples---\n";
 		snake.growDownFast();
-		moveApple();
+		moveAppleRandomly();
 	}
 	else {
 		snake.moveDownFast();
@@ -237,7 +244,7 @@ void SnakeState::moveLeftFast()
 	if (snake.head().leftOne() == apple) {
 		std::cout << "Yum apples---\n";
 		snake.growLeftFast();
-		moveApple();
+		moveAppleRandomly();
 	}
 	else {
 		snake.moveLeftFast();
@@ -257,7 +264,7 @@ void SnakeState::moveRightFast()
 	if (snake.head().rightOne() == apple) {
 		std::cout << "Yum apples---\n";
 		snake.growRightFast();
-		moveApple();
+		moveAppleRandomly();
 	}
 	else {
 		snake.moveRightFast();
@@ -326,7 +333,7 @@ void SnakeState::moveIfLegal(char direction)
 	}
 }
 
-void SnakeState::moveApple()
+void SnakeState::moveAppleRandomly()
 {
 	// --- Remove apple from cell, but only if it is occupied by an apple ---
 	// This way in case cell is occupied by the snake's head, we won't

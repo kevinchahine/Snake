@@ -3,16 +3,46 @@
 SnakeBoard::SnakeBoard(
 	const SnakeBoard::index& nRows, 
 	const SnakeBoard::index& nCols) :
-	boost::multi_array<CELL, 2>(boost::extents[nRows][nCols]),
-	nRows(nRows),
-	nCols(nCols)
+	boost::multi_array<CELL, 2>(boost::extents[nRows][nCols])
 {}
+
+size_t SnakeBoard::hashValue() const
+{
+	size_t hashValue = 0;
+
+	// Calculate the hash value based on the value of every cell in the board
+	// There are 4 possible values each cell can have:
+	//	CELL::EMPTY = 0,
+	//	CELL::HEAD = 1,
+	//	CELL::TAIL = 2,
+	//	CELL::APPLE = 3
+	// The hash value is calculated as:
+	// Assume r is the row index
+	// Assume c is the column index
+	//	Sum of every cell C 
+
+	const size_t NROWS = this->getNRows();
+	const size_t NCOLS = this->getNCols();
+
+	for (size_t row = 0; row < NROWS; row++) {
+		for (size_t col = 0; col < NCOLS; col++) {
+			size_t cellIndex = (row * NCOLS + col + 1);	// Add 1 to row and col so that <0, 0> doesn't get zeroed out
+			size_t cellValue = static_cast<size_t>((*this)[row][col]);
+			hashValue += cellIndex * cellValue;
+		}
+	}
+
+	return hashValue;
+}
 
 void SnakeBoard::print(std::ostream& os) const
 {
-	for (SnakeBoard::index row = 0; row < nRows; row++) {
-		for (SnakeBoard::index col = 0; col < nCols; col++) {
-			os << static_cast<int>((*this)[row][col]);
+	const size_t NROWS = this->getNRows();
+	const size_t NCOLS = this->getNCols();
+
+	for (SnakeBoard::index row = 0; row < NROWS; row++) {
+		for (SnakeBoard::index col = 0; col < NCOLS; col++) {
+			os << static_cast<int>((*this)[row][col]) << ' ';
 		}
 		os << '\n';
 	}
@@ -21,11 +51,14 @@ void SnakeBoard::print(std::ostream& os) const
 
 void SnakeBoard::print(cv::Mat& image) const
 {
-	const size_t CELL_WIDTH = image.cols / nCols;
-	const size_t CELL_HEIGHT = image.rows / nRows;
+	const size_t NROWS = this->getNRows();
+	const size_t NCOLS = this->getNCols();
 
-	for (SnakeBoard::index row = 0; row < nRows; row++) {
-		for (SnakeBoard::index col = 0; col < nCols; col++) {
+	const size_t CELL_WIDTH = image.cols / NROWS;
+	const size_t CELL_HEIGHT = image.rows / NCOLS;
+
+	for (SnakeBoard::index row = 0; row < NROWS; row++) {
+		for (SnakeBoard::index col = 0; col < NCOLS; col++) {
 			cv::Point topLeftOfCell(CELL_WIDTH * col + 2, CELL_HEIGHT * row + 2);
 			
 			cv::Scalar color{ 0, 255, 0 };
@@ -56,8 +89,11 @@ void SnakeBoard::print(cv::Mat& image) const
 
 void SnakeBoard::clear()
 {
-	for (SnakeBoard::index row = 0; row < nRows; row++) {
-		for (SnakeBoard::index col = 0; col < nCols; col++) {
+	const size_t NROWS = this->getNRows();
+	const size_t NCOLS = this->getNCols();
+
+	for (SnakeBoard::index row = 0; row < NROWS; row++) {
+		for (SnakeBoard::index col = 0; col < NCOLS; col++) {
 			(*this)[row][col] = CELL::EMPTY;
 		}
 	}
@@ -80,11 +116,11 @@ void SnakeBoard::paste(const Snake& snake)
 
 const SnakeBoard::index& SnakeBoard::getNRows() const
 {
-	return nRows;
+	return this->shape()[0];
 }
 
 const SnakeBoard::index& SnakeBoard::getNCols() const
 {
-	return nCols;
+	return this->shape()[1];
 }
 
