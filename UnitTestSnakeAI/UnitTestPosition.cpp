@@ -34,6 +34,20 @@ namespace UnitTestSnakeAI
 			Assert::IsTrue(copyP.col() == 2);
 		}
 
+		TEST_METHOD(EqualToOperator)
+		{
+			Position a{ 4, 4 };
+			Position b{ 5, 5 };
+			Position c{ 4, 6 };
+			Position d{ 6, 4 };
+			Position e{ 4, 4 };
+
+			Assert::IsFalse(a == b);
+			Assert::IsFalse(a == c);
+			Assert::IsFalse(a == d);
+			Assert::IsTrue(a == e);
+		}
+
 		TEST_METHOD(MovementFunctions)
 		{
 			Position pos{ 3, 3 };

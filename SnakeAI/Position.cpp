@@ -10,6 +10,13 @@ Position::Position(int row, int col) :
 {
 }
 
+bool Position::operator==(const Position& position) const
+{
+	return 
+		(*this)[0] == position[0] && 
+		(*this)[1] == position[1];
+}
+
 Position Position::upOne() const
 {
 	return Position(row() - 1, col());
@@ -50,3 +57,9 @@ void Position::col(const index& col)
 	(*this)[1] = col;
 }
 
+std::ostream & operator<<(std::ostream& os, const Position& position)
+{
+	os << '<' << position.row() << ", " << position.col() << '>';
+
+	return os;
+}

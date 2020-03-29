@@ -6,24 +6,24 @@ Snake::Snake(size_t boardHeight, size_t boardWidth) :
 	boardHeight(boardHeight),
 	boardWidth(boardWidth)
 {
-	resetHeadAt(Position(0, 0));
+	this->push_back(Position(0, 0));
+	this->push_back(Position(0, 1));
 
-	//growDownFast();
+	//resetHeadAt(Position(0, 0));
 }
 
 bool Snake::operator==(const Position& position) const
 {
-	// iterate over the snakes body
-	for (const auto& snakeCell : (*this)) {
-		// If position matches one of the snakes cells,
-		// then return true.
-		if (snakeCell == position) {
-			return true;
-		}
+	return this->isOnSnake(position);
+}
+
+std::ostream& operator<<(std::ostream& os, const Snake& snake)
+{
+	for (int i = 0; i < snake.size(); i++) {
+		os << snake[i] << ' ';
 	}
 
-	// We didn't find a cell that matches with position
-	return false;
+	return os;
 }
 
 bool Snake::bitItself() const
@@ -52,6 +52,19 @@ bool Snake::bitItself() const
 	return biteMarkCellIter != headIter;
 }
 
+bool Snake::isOnSnake(const Position& position) const
+{
+	//auto it = find(this->begin(), this->end(), position);
+	//return it != this->end();
+
+	for (size_t i = 0; i < this->size(); i++) {
+		if ((*this)[i] == position)
+			return true;
+	}
+
+	return false;
+}
+
 const Position& Snake::head() const
 {
 	// back is actually the head
@@ -64,9 +77,9 @@ const Position& Snake::head() const
 
 const Position & Snake::neck() const
 {
-	auto it = std::next(rbegin());
+	const size_t size = this->size();
 
-	return *it;
+	return (*this)[size - 2];
 }
 
 const Position& Snake::tailTip() const
@@ -102,8 +115,26 @@ void Snake::resetHeadRandom()
 
 void Snake::resetHeadAt(Position headStartingPosition)
 {
+	// 'headStartingPosition' is to long to spell every time
+	Position& p = headStartingPosition;
+
+	// Remove the snake completely
 	this->clear();
-	this->push_back(headStartingPosition);
+
+	// Place head at starting position
+	this->push_back(p);
+	
+	// Place its neck/tail somewhere near its head
+	if (p.row() > 0)					this->push_front(p.upOne());
+	else if (p.row() < boardHeight - 1)	this->push_front(p.downOne());
+	else if (p.col() > 0)				this->push_front(p.leftOne());
+	else if (p.col() < boardWidth - 1)	this->push_front(p.rightOne());
+	else {
+		std::stringstream ss;
+		ss << "error in : " << __FUNCTION__ << " line " << __LINE__
+			<< ": headStartingPosition = " << headStartingPosition << '\n';
+		throw std::exception(ss.str().c_str());
+	}
 }
 
 bool Snake::isMoveUpLegal() const
@@ -253,6 +284,20 @@ void Snake::moveIfLegal(char direction)
 	}
 }
 
+void Snake::moveAnyLegal()
+{
+	if (isMoveUpLegal())			moveUpFast();
+	else if (isMoveDownLegal())		moveDownFast();
+	else if (isMoveLeftLegal())		moveLeftFast();
+	else if (isMoveRightLegal())	moveRightFast();
+	else {
+		std::stringstream ss;
+		ss << __FUNCTION__ << " line " << __LINE__
+			<< ": No move is legal";
+		throw std::exception(ss.str().c_str());
+	}
+}
+
 void Snake::growUpFast()
 {
 	Position headPosition = head();
@@ -338,5 +383,19 @@ void Snake::growIfLegal(char direction)
 	case 's':	return growDownIfLegal();
 	case 'a':	return growLeftIfLegal();
 	default:	throw std::exception("Received invalid direction");
+	}
+}
+
+void Snake::growAnyLegal()
+{
+	if (isMoveUpLegal())			growUpFast();
+	else if (isMoveDownLegal())		growDownFast();
+	else if (isMoveLeftLegal())		growLeftFast();
+	else if (isMoveRightLegal())	growRightFast();
+	else {
+		std::stringstream ss;
+		ss << __FUNCTION__ << " line " << __LINE__
+			<< ": No move is legal";
+		throw std::exception(ss.str().c_str());
 	}
 }

@@ -19,6 +19,8 @@ public:
 	Position& operator=(const Position&) = default;
 	Position& operator=(Position&&) noexcept = default;
 
+	bool operator==(const Position & position) const;
+
 	Position upOne() const;
 	Position downOne() const;
 	Position leftOne() const;
@@ -30,6 +32,6 @@ public:
 	index col() const;
 	void col(const index& col);
 
-
+	friend std::ostream & operator<<(std::ostream & os, const Position & position);
 };
 
