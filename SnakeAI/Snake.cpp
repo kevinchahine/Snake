@@ -8,8 +8,6 @@ Snake::Snake(size_t boardHeight, size_t boardWidth) :
 {
 	this->push_back(Position(0, 0));
 	this->push_back(Position(0, 1));
-
-	//resetHeadAt(Position(0, 0));
 }
 
 bool Snake::operator==(const Position& position) const
@@ -54,9 +52,6 @@ bool Snake::bitItself() const
 
 bool Snake::isOnSnake(const Position& position) const
 {
-	//auto it = find(this->begin(), this->end(), position);
-	//return it != this->end();
-
 	for (size_t i = 0; i < this->size(); i++) {
 		if ((*this)[i] == position)
 			return true;
@@ -185,7 +180,8 @@ bool Snake::isMoveLegal(char direction) const
 	case 's':	return isMoveDownLegal();
 	case 'a':	return isMoveLeftLegal();
 	case 'd':	return isMoveRightLegal();
-	default:	throw std::exception("Received invalid direction");
+	default:	return false;
+	//default:	throw std::exception("Received invalid direction");
 	}
 }
 
@@ -280,7 +276,7 @@ void Snake::moveIfLegal(char direction)
 	case 'd':	return moveRightIfLegal();
 	case 's':	return moveDownIfLegal();
 	case 'a':	return moveLeftIfLegal();
-	default:	throw std::exception("Received invalid direction");
+	//default:	throw std::exception("Received invalid direction");
 	}
 }
 
@@ -302,7 +298,7 @@ void Snake::growUpFast()
 {
 	Position headPosition = head();
 
-	headPosition.row(headPosition.row() - 1);
+	headPosition = headPosition.upOne();
 
 	// Move head up one cell
 	this->push_back(headPosition);
@@ -312,7 +308,7 @@ void Snake::growDownFast()
 {
 	Position headPosition = head();
 
-	headPosition.row(headPosition.row() + 1);
+	headPosition = headPosition.downOne();
 
 	// Move head up one cell
 	this->push_back(headPosition);
@@ -322,7 +318,7 @@ void Snake::growLeftFast()
 {
 	Position headPosition = head();
 
-	headPosition.col(headPosition.col() - 1);
+	headPosition = headPosition.leftOne();
 
 	// Move head left one cell
 	this->push_back(headPosition);
@@ -332,7 +328,7 @@ void Snake::growRightFast()
 {
 	Position headPosition = head();
 
-	headPosition.col(headPosition.col() + 1);
+	headPosition = headPosition.rightOne();
 
 	// Move head right one cell
 	this->push_back(headPosition);

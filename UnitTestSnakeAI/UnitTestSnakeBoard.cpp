@@ -3,7 +3,7 @@
 
 #include <sstream>
 
-#include <SnakeAI/SnakeState.h>
+#include <SnakeAI/SnakeBoard.h>
 
 using namespace std;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -43,14 +43,6 @@ namespace UnitTestSnakeAI
 			Assert::IsTrue(board.getNCols() == 6);
 		}
 
-		TEST_METHOD(HashValue1)
-		{
-			SnakeBoard board(4, 4);
-
-			/*
-				
-			*/
-		}
 		TEST_METHOD(HashValue)
 		{
 			SnakeBoard board(4, 4);
@@ -85,6 +77,56 @@ namespace UnitTestSnakeAI
 			Logger::WriteMessage(ss.str().c_str());
 
 			Assert::IsTrue(board.hashValue() == expectedHashValue);
+		}
+
+		TEST_METHOD(Clear)
+		{
+			SnakeBoard board(4, 4);
+
+			// Place a snakes tail on every cell
+			for (SnakeBoard::index row = 0; row < board.getNRows(); row++) {
+				for (SnakeBoard::index col = 0; col < board.getNCols(); col++) {
+					board[row][col] = CELL::TAIL;
+				}
+			}
+
+			// Clear the board making every cell empty
+			board.clear();
+
+			// Make sure every cell is empty
+			bool isEveryCellEmpty = true;
+			for (SnakeBoard::index row = 0; row < board.getNRows(); row++) {
+				for (SnakeBoard::index col = 0; col < board.getNCols(); col++) {
+					if (board[row][col] != CELL::EMPTY) {
+						isEveryCellEmpty = false;
+					}
+				}
+			}
+			Assert::IsTrue(isEveryCellEmpty);
+		}
+
+		TEST_METHOD(Paste)
+		{
+			SnakeBoard board(4, 4);
+			Apple apple(4, 4);
+			Snake snake(4, 4);
+
+			apple.moveTo(1, 2);
+			snake.resetHeadAt(Position(0, 0));
+			snake.growRightFast();
+			snake.moveRightFast();
+
+			board.paste(apple);
+			board.paste(snake);
+
+			stringstream ss;
+			board.print(ss);
+			Logger::WriteMessage(ss.str().c_str());
+
+			Assert::IsTrue(board[1][2] == CELL::APPLE);
+			Assert::IsTrue(board[0][0] == CELL::TAIL);
+			Assert::IsTrue(board[0][1] == CELL::TAIL);
+			Assert::IsTrue(board[0][2] == CELL::HEAD);
 		}
 	};
 }

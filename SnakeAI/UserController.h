@@ -8,8 +8,12 @@ class UserController : public ControllerBase
 {
 public:
 	UserController();
+	virtual ~UserController() noexcept;
 
 	virtual char getInput() override;
+	
+	// Stops ongoing thread
+	void terminate();
 
 private:
 	void initAsyncOp();
@@ -17,6 +21,7 @@ private:
 private:
 	std::thread myThread;
 	bool messageIsIn = false;
-	char input = NULL;
+	char input = 'p';
+	bool stopFlag = false;
 };
 

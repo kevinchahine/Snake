@@ -5,19 +5,26 @@ SnakeInterface::SnakeInterface(size_t boardWidth, size_t boardHeight) :
 {
 }
 
-void SnakeInterface::start()
+void SnakeInterface::run()
 {
 	image = cv::Mat::zeros(gameState.getNRows() * 40, gameState.getNCols() * 40, CV_8UC3);
 	gameState.getSnakeBoard().print(image);
 	cv::imshow("Snake AI", image);
 	cv::waitKey(1);
 
-	while (gameState.getGameState() == SnakeState::GAME_STATE::CONTINUE) {
+	// --- Wait until user makes a (valid) move to start the game ---
+	char input = NULL;
+	do {
+		input = controllerPtr->getInput();
+	} while (!gameState.isMoveLegal(input) || !gameState.isMoveSafe(input));
+	
+	// --- Continue with game until its state becomes GAME_OVER or WIN ---
+	while (gameState.getCurrentState() == SnakeState::GAME_STATE::CONTINUE) {
 		cv::rectangle(image, cv::Point(0, 0), cv::Point(image.rows, image.cols), cv::Scalar(0, 0, 0));
 
 		char input = controllerPtr->getInput();
 		
-		gameState.update(input);
+		gameState.moveSnake(input);
 		
 		gameState.getSnakeBoard().print(image);
 		cv::imshow("Snake AI", image);

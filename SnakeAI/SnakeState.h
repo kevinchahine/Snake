@@ -37,13 +37,13 @@ public:
 
 	void reset();
 
-	GAME_STATE update(char controlInput);
+	GAME_STATE moveSnake(char controlInput);
 
 	const SnakeBoard::index& getNRows() const;
 	const SnakeBoard::index& getNCols() const;
 
 	GAME_STATE calcGameState();
-	GAME_STATE getGameState() const;
+	GAME_STATE getCurrentState() const;
 
 	const SnakeBoard& getSnakeBoard() const;
 

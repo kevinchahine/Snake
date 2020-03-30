@@ -106,9 +106,9 @@ void SnakeBoard::paste(const Apple& apple)
 
 void SnakeBoard::paste(const Snake& snake)
 {
-	for (const auto& snakeElement : snake)
+	for (const auto& positionOnSnake : snake)
 	{
-		(*this)(snakeElement) = CELL::TAIL;
+		(*this)(positionOnSnake) = CELL::TAIL;
 	}
 
 	(*this)(snake.head()) = CELL::HEAD;

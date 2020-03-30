@@ -29,7 +29,7 @@ int main()
 		gameInterface.setController(std::make_unique<AIController>(gameInterface.gameState, std::move(solverPtr)));
 		//gameInterface.setController(std::make_unique<UserController>());
 
-		gameInterface.start();
+		gameInterface.run();
 	}
 	catch (std::exception & e) {
 		cout << "Exception caught in " << __FUNCTION__ << ": "

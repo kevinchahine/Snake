@@ -179,6 +179,7 @@
     <ClCompile Include="UnitTestSnake.cpp" />
     <ClCompile Include="UnitTestSnakeAI.cpp" />
     <ClCompile Include="UnitTestSnakeBoard.cpp" />
+    <ClCompile Include="UnitTestSnakeState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />

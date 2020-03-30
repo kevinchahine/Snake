@@ -11,7 +11,12 @@ SnakeState::SnakeState(size_t boardHeight, size_t boardWidth) :
 
 bool SnakeState::operator==(const SnakeState& left) const
 {
-	return snake == left.snake && apple == left.apple;
+	return board.hashValue() == board.hashValue();
+}
+
+bool SnakeState::operator<(const SnakeState& left) const
+{
+	return board.hashValue() < left.board.hashValue();
 }
 
 size_t SnakeState::operator()() const
@@ -41,7 +46,7 @@ void SnakeState::reset()
 	board.paste(apple);
 }
 
-SnakeState::GAME_STATE SnakeState::update(char controlInput)
+SnakeState::GAME_STATE SnakeState::moveSnake(char controlInput)
 {
 	switch (tolower(controlInput)) {
 	case 'w':	this->moveUpIfLegal();		break;
@@ -105,7 +110,7 @@ SnakeState::GAME_STATE SnakeState::calcGameState()
 	return GAME_STATE();
 }
 
-SnakeState::GAME_STATE SnakeState::getGameState() const
+SnakeState::GAME_STATE SnakeState::getCurrentState() const
 {
 	return this->gameState;
 }
@@ -189,11 +194,12 @@ bool SnakeState::isMoveSafe(char direction) const
 	case 's':	return isMoveDownSafe();
 	case 'a':	return isMoveLeftSafe();
 	case 'd':	return isMoveRightSafe();
-	default:
+	default:	return false;
+	/*default:
 		std::stringstream ss;
 		ss << __FUNCTION__ << ": parameter direction = " << direction
 			<< " is not a possible move.";
-		throw std::exception(ss.str().c_str());
+		throw std::exception(ss.str().c_str());*/
 	}
 }
 
@@ -337,12 +343,13 @@ void SnakeState::moveAppleRandomly()
 {
 	// --- Remove apple from cell, but only if it is occupied by an apple ---
 	// This way in case cell is occupied by the snake's head, we won't
-	// accidentally remove its head 
+	// accidentally remove its head.
 	if (board(apple) == CELL::APPLE) {
 		board(apple) = CELL::EMPTY;
 	}
 
 	// move apple to a random location
+	// BUG: what if apple ends up on the snakes tail.
 	apple.moveRandom();
 
 	// Place the apple on the board.

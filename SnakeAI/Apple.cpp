@@ -1,6 +1,7 @@
 #include "Apple.h"
 
 Apple::Apple(size_t boardHeight, size_t boardWidth) :
+	Position(0, 0),
 	boardHeight(boardHeight),
 	boardWidth(boardWidth)
 {}

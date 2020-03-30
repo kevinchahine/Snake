@@ -15,7 +15,7 @@ class SnakeInterface
 public:
 	SnakeInterface(size_t boardWidth, size_t boardHeight);
 
-	void start();
+	void run();
 
 	void setController(std::unique_ptr<ControllerBase>&& controllerPtr);
 
