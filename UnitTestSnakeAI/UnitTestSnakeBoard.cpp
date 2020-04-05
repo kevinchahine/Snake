@@ -15,7 +15,7 @@ namespace UnitTestSnakeAI
 	public:
 		TEST_METHOD(Constructors)
 		{
-			SnakeBoard board(4, 5);
+			Board board(4, 5);
 
 			Assert::IsTrue(board.getNRows() == 4);
 			Assert::IsTrue(board.getNCols() == 5);
@@ -37,7 +37,7 @@ namespace UnitTestSnakeAI
 
 		TEST_METHOD(Dimentions)
 		{
-			SnakeBoard board{ 4, 6 };
+			Board board{ 4, 6 };
 
 			Assert::IsTrue(board.getNRows() == 4);
 			Assert::IsTrue(board.getNCols() == 6);
@@ -45,7 +45,7 @@ namespace UnitTestSnakeAI
 
 		TEST_METHOD(HashValue)
 		{
-			SnakeBoard board(4, 4);
+			Board board(4, 4);
 
 			Assert::IsTrue(board.hashValue() == 0);
 
@@ -81,11 +81,11 @@ namespace UnitTestSnakeAI
 
 		TEST_METHOD(Clear)
 		{
-			SnakeBoard board(4, 4);
+			Board board(4, 4);
 
 			// Place a snakes tail on every cell
-			for (SnakeBoard::index row = 0; row < board.getNRows(); row++) {
-				for (SnakeBoard::index col = 0; col < board.getNCols(); col++) {
+			for (Board::index row = 0; row < board.getNRows(); row++) {
+				for (Board::index col = 0; col < board.getNCols(); col++) {
 					board[row][col] = CELL::TAIL;
 				}
 			}
@@ -95,8 +95,8 @@ namespace UnitTestSnakeAI
 
 			// Make sure every cell is empty
 			bool isEveryCellEmpty = true;
-			for (SnakeBoard::index row = 0; row < board.getNRows(); row++) {
-				for (SnakeBoard::index col = 0; col < board.getNCols(); col++) {
+			for (Board::index row = 0; row < board.getNRows(); row++) {
+				for (Board::index col = 0; col < board.getNCols(); col++) {
 					if (board[row][col] != CELL::EMPTY) {
 						isEveryCellEmpty = false;
 					}
@@ -107,7 +107,7 @@ namespace UnitTestSnakeAI
 
 		TEST_METHOD(Paste)
 		{
-			SnakeBoard board(4, 4);
+			Board board(4, 4);
 			Apple apple(4, 4);
 			Snake snake(4, 4);
 

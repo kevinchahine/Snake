@@ -1,12 +1,12 @@
 #include "SnakeBoard.h"
 
-SnakeBoard::SnakeBoard(
-	const SnakeBoard::index& nRows, 
-	const SnakeBoard::index& nCols) :
+Board::Board(
+	const Board::index& nRows, 
+	const Board::index& nCols) :
 	boost::multi_array<CELL, 2>(boost::extents[nRows][nCols])
 {}
 
-size_t SnakeBoard::hashValue() const
+size_t Board::hashValue() const
 {
 	size_t hashValue = 0;
 
@@ -35,13 +35,13 @@ size_t SnakeBoard::hashValue() const
 	return hashValue;
 }
 
-void SnakeBoard::print(std::ostream& os) const
+void Board::print(std::ostream& os) const
 {
 	const size_t NROWS = this->getNRows();
 	const size_t NCOLS = this->getNCols();
 
-	for (SnakeBoard::index row = 0; row < NROWS; row++) {
-		for (SnakeBoard::index col = 0; col < NCOLS; col++) {
+	for (Board::index row = 0; row < NROWS; row++) {
+		for (Board::index col = 0; col < NCOLS; col++) {
 			os << static_cast<int>((*this)[row][col]) << ' ';
 		}
 		os << '\n';
@@ -49,7 +49,7 @@ void SnakeBoard::print(std::ostream& os) const
 	os << '\n';
 }
 
-void SnakeBoard::print(cv::Mat& image) const
+void Board::print(cv::Mat& image) const
 {
 	const size_t NROWS = this->getNRows();
 	const size_t NCOLS = this->getNCols();
@@ -57,8 +57,8 @@ void SnakeBoard::print(cv::Mat& image) const
 	const size_t CELL_WIDTH = image.cols / NROWS;
 	const size_t CELL_HEIGHT = image.rows / NCOLS;
 
-	for (SnakeBoard::index row = 0; row < NROWS; row++) {
-		for (SnakeBoard::index col = 0; col < NCOLS; col++) {
+	for (Board::index row = 0; row < NROWS; row++) {
+		for (Board::index col = 0; col < NCOLS; col++) {
 			cv::Point topLeftOfCell(CELL_WIDTH * col + 2, CELL_HEIGHT * row + 2);
 			
 			cv::Scalar color{ 0, 255, 0 };
@@ -87,24 +87,24 @@ void SnakeBoard::print(cv::Mat& image) const
 	}
 }
 
-void SnakeBoard::clear()
+void Board::clear()
 {
 	const size_t NROWS = this->getNRows();
 	const size_t NCOLS = this->getNCols();
 
-	for (SnakeBoard::index row = 0; row < NROWS; row++) {
-		for (SnakeBoard::index col = 0; col < NCOLS; col++) {
+	for (Board::index row = 0; row < NROWS; row++) {
+		for (Board::index col = 0; col < NCOLS; col++) {
 			(*this)[row][col] = CELL::EMPTY;
 		}
 	}
 }
 
-void SnakeBoard::paste(const Apple& apple)
+void Board::paste(const Apple& apple)
 {
 	(*this)(apple) = CELL::APPLE;
 }
 
-void SnakeBoard::paste(const Snake& snake)
+void Board::paste(const Snake& snake)
 {
 	for (const auto& positionOnSnake : snake)
 	{
@@ -114,17 +114,17 @@ void SnakeBoard::paste(const Snake& snake)
 	(*this)(snake.head()) = CELL::HEAD;
 }
 
-const SnakeBoard::index& SnakeBoard::getNRows() const
+const Board::index& Board::getNRows() const
 {
 	return this->shape()[0];
 }
 
-const SnakeBoard::index& SnakeBoard::getNCols() const
+const Board::index& Board::getNCols() const
 {
 	return this->shape()[1];
 }
 
-size_t SnakeBoard::getNCells() const
+size_t Board::getNCells() const
 {
 	return this->num_elements();
 }

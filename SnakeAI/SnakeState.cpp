@@ -63,12 +63,12 @@ SnakeState::GAME_STATE SnakeState::moveSnake(char controlInput)
 	return gameState;
 }
 
-const SnakeBoard::index& SnakeState::getNRows() const
+const Board::index& SnakeState::getNRows() const
 {
 	return board.getNRows();
 }
 
-const SnakeBoard::index& SnakeState::getNCols() const
+const Board::index& SnakeState::getNCols() const
 {
 	return board.getNCols();
 }
@@ -120,9 +120,19 @@ SnakeState::GAME_STATE SnakeState::getCurrentState() const
 	return this->gameState;
 }
 
-const SnakeBoard& SnakeState::getSnakeBoard() const
+const Board& SnakeState::getBoard() const
 {
 	return board;
+}
+
+const Snake& SnakeState::getSnake() const
+{
+	return snake;
+}
+
+const Apple& SnakeState::getApple() const
+{
+	return apple;
 }
 
 // ========================== IS MOVE LEGAL ===================================
@@ -205,6 +215,33 @@ bool SnakeState::isMoveSafe(char direction) const
 		ss << __FUNCTION__ << ": parameter direction = " << direction
 			<< " is not a possible move.";
 		throw std::exception(ss.str().c_str());*/
+	}
+}
+
+char SnakeState::getAnySafeMove() const
+{
+	if (isMoveUpSafe()) return 'w';
+	else if (isMoveDownSafe()) return 's';
+	else if (isMoveLeftSafe()) return 'a';
+	else if (isMoveRightSafe()) return 'd';
+	else {
+		std::stringstream ss;
+		ss << __FUNCTION__ << ": No move was found to be safe.";
+		throw std::exception(ss.str().c_str());
+	}
+}
+
+char SnakeState::getAnyLegalAndSafeMove() const
+{
+	if      (isMoveUpLegal() && isMoveUpSafe()) return 'w';
+	else if (isMoveDownLegal() && isMoveDownSafe()) return 's';
+	else if (isMoveLeftLegal() && isMoveLeftSafe()) return 'a';
+	else if (isMoveRightLegal() && isMoveRightSafe()) return 'd';
+	else {
+		// No legal and safe move was found. Our only option is to
+		// return any legal move which will end up making the snake
+		// bit itself.
+		return getAnyLegalMove();
 	}
 }
 

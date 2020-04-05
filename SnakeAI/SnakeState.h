@@ -39,14 +39,16 @@ public:
 
 	GAME_STATE moveSnake(char controlInput);
 
-	const SnakeBoard::index& getNRows() const;
-	const SnakeBoard::index& getNCols() const;
+	const Board::index& getNRows() const;
+	const Board::index& getNCols() const;
 	size_t getNCells() const;
 
 	GAME_STATE calcGameState();
 	GAME_STATE getCurrentState() const;
 
-	const SnakeBoard& getSnakeBoard() const;
+	const Board& getBoard() const;
+	const Snake& getSnake() const;
+	const Apple& getApple() const;
 
 	// === A Legal move will not hit any walls nor move backwards ===
 	bool isMoveUpLegal() const;
@@ -62,6 +64,13 @@ public:
 	bool isMoveLeftSafe() const;
 	bool isMoveRightSafe() const;
 	bool isMoveSafe(char direction) const;
+	char getAnySafeMove() const;
+
+	// === Legal and Safe ===
+	// Finds a move that is both legal and safe. 
+	// If no move is both legal and safe then it returns a legal move
+	// (This move will make the snake bit itself.)
+	char getAnyLegalAndSafeMove() const;
 
 	void moveUpFast();
 	void moveDownFast();
@@ -80,7 +89,7 @@ public:
 
 protected:
 	GAME_STATE gameState;
-	SnakeBoard board;
+	Board board;
 	Snake snake;
 	Apple apple;
 };

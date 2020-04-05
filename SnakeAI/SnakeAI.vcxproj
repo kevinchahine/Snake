@@ -130,6 +130,7 @@
     <ClCompile Include="AIController.cpp" />
     <ClCompile Include="Apple.cpp" />
     <ClCompile Include="AStarSolver.cpp" />
+    <ClCompile Include="BestFirstSolver.cpp" />
     <ClCompile Include="ControllerBase.cpp" />
     <ClCompile Include="DefaultSolver.cpp" />
     <ClCompile Include="DepthFirstSearchSolver.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="AIController.h" />
     <ClInclude Include="Apple.h" />
     <ClInclude Include="AStarSolver.h" />
+    <ClInclude Include="BestFirstSolver.h" />
     <ClInclude Include="ControllerBase.h" />
     <ClInclude Include="DefaultSolver.h" />
     <ClInclude Include="DepthFirstSearchSolver.h" />

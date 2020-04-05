@@ -8,7 +8,7 @@ SnakeInterface::SnakeInterface(size_t boardWidth, size_t boardHeight) :
 void SnakeInterface::run()
 {
 	image = cv::Mat::zeros(gameState.getNRows() * 40, gameState.getNCols() * 40, CV_8UC3);
-	gameState.getSnakeBoard().print(image);
+	gameState.getBoard().print(image);
 	cv::imshow("Snake AI", image);
 	cv::waitKey(1);
 
@@ -26,7 +26,7 @@ void SnakeInterface::run()
 		
 		gameState.moveSnake(input);
 		
-		gameState.getSnakeBoard().print(image);
+		gameState.getBoard().print(image);
 		cv::imshow("Snake AI", image);
 		cv::waitKey(1);
 	}

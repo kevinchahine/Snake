@@ -69,6 +69,9 @@
     <ClCompile Include="SnakeInterface.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
+    <ClCompile Include="BestFirstSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AStarSolver.h">
@@ -115,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="SnakeInterface.h">
       <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="BestFirstSolver.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

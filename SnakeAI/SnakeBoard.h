@@ -17,10 +17,10 @@ enum class CELL : uint8_t {
 	APPLE = 3
 };
 
-class SnakeBoard : public boost::multi_array<CELL, 2>
+class Board : public boost::multi_array<CELL, 2>
 {
 public:
-	SnakeBoard(const SnakeBoard::index & nRows, const SnakeBoard::index & nCols);
+	Board(const Board::index & nRows, const Board::index & nCols);
 
 	// Calculates the hashvalue of the board
 	size_t hashValue() const;
@@ -35,8 +35,8 @@ public:
 
 	void paste(const Snake& snake);
 	
-	const SnakeBoard::index& getNRows() const;
-	const SnakeBoard::index& getNCols() const;
+	const Board::index& getNRows() const;
+	const Board::index& getNCols() const;
 	size_t getNCells() const;
 
 private:
