@@ -70,7 +70,7 @@
       <Filter>GameEngine</Filter>
     </ClCompile>
     <ClCompile Include="BestFirstSolver.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Solvers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -120,7 +120,7 @@
       <Filter>GameEngine</Filter>
     </ClInclude>
     <ClInclude Include="BestFirstSolver.h">
-      <Filter>Header Files</Filter>
+      <Filter>Solvers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

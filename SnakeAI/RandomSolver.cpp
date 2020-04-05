@@ -29,10 +29,11 @@ char RandomSolver::solve()
 		validMoves.push_back('d');
 	}
 
-	// If there are no valid moves, then we are either in a coil or a dead end
-	if (validMoves.size() == 0) {
-		std::cout << __FUNCTION__ << ": No valid moves\n";
-		return 'w';	// Return direction up because we have to return something.
+	// If there are no legal and safe moves, then we must be in a coil
+	if (validMoves.empty() == true) {
+		// Return any legal move
+		std::cout << ":::legal and safe move was found :::\n";
+		return gameState.getAnyLegalMove();	
 	}
 
 	int ranNum = rand() % validMoves.size();

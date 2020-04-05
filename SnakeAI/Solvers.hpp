@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AStarSolver.h"
+#include "BestFirstSolver.h"
 #include "DefaultSolver.h"
 #include "DepthFirstSearchSolver.h"
 #include "RandomSolver.h"

@@ -16,14 +16,15 @@ int main()
 	srand(time(NULL));
 
 	try {
-		const size_t N_ROWS = 6;
-		const size_t N_COLS = 6;
-		
+		const size_t N_ROWS = 8;
+		const size_t N_COLS = 8;
+
 		SnakeInterface gameInterface{ N_ROWS, N_COLS };
 
 		std::unique_ptr<SolverBase> solverPtr =
 			//std::make_unique<DefaultSolver>(gameInterface.gameState);
-			std::make_unique<RandomSolver>(gameInterface.gameState);
+			//std::make_unique<RandomSolver>(gameInterface.gameState);
+			std::make_unique<BestFirstSolver>(gameInterface.gameState);
 			//std::make_unique<AStarSolver>(gameInterface.gameState);
 			//std::make_unique<DepthFirstSearchSolver>(gameInterface.gameState);
 
@@ -33,7 +34,11 @@ int main()
 
 		gameInterface.setController(move(controllerPtr));
 
-		gameInterface.run();
+		while (true) {
+			gameInterface.run();
+			std::cout << "repeat?";
+			std::cin.get();
+		}
 	}
 	catch (std::exception & e) {
 		cout << "Exception caught in " << __FUNCTION__ << ": "
