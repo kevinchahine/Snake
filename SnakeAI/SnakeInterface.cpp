@@ -12,7 +12,7 @@ void SnakeInterface::run()
 	cv::imshow("Snake AI", image);
 	cv::waitKey(1);
 
-	// --- Wait until user makes a (valid) move to start the game ---
+	// --- Wait until user/ai makes a (valid) move to start the game ---
 	char input = NULL;
 	do {
 		input = controllerPtr->getInput();

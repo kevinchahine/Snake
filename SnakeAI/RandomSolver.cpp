@@ -13,19 +13,19 @@ char RandomSolver::solve()
 	validMoves.reserve(3);
 
 	// Determine which moves are safe.
-	if (this->gameState.isMoveUpSafe()) {
+	if (this->gameState.isMoveUpLegal() && this->gameState.isMoveUpSafe()) {
 		validMoves.push_back('w');
 	}
 
-	if (this->gameState.isMoveDownSafe()) {
+	if (this->gameState.isMoveDownLegal() && this->gameState.isMoveDownSafe()) {
 		validMoves.push_back('s');
 	}
 
-	if (this->gameState.isMoveLeftSafe()) {
+	if (this->gameState.isMoveLeftLegal() && this->gameState.isMoveLeftSafe()) {
 		validMoves.push_back('a');
 	}
 
-	if (this->gameState.isMoveRightSafe()) {
+	if (this->gameState.isMoveRightLegal() && this->gameState.isMoveRightSafe()) {
 		validMoves.push_back('d');
 	}
 
@@ -35,6 +35,9 @@ char RandomSolver::solve()
 		return 'w';	// Return direction up because we have to return something.
 	}
 
+	int ranNum = rand() % validMoves.size();
+	char m = validMoves.at(ranNum);
+
 	// Randomly pick one of the valid moves
-	return validMoves.at(rand() % validMoves.size());
+	return validMoves.at(ranNum);
 }

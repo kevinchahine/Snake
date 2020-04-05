@@ -16,19 +16,22 @@ int main()
 	srand(time(NULL));
 
 	try {
-		const size_t N_ROWS = 10;
-		const size_t N_COLS = 10;
+		const size_t N_ROWS = 6;
+		const size_t N_COLS = 6;
 		
 		SnakeInterface gameInterface{ N_ROWS, N_COLS };
 
-		//std::unique_ptr<SolverBase> solverPtr =
+		std::unique_ptr<SolverBase> solverPtr =
 			//std::make_unique<DefaultSolver>(gameInterface.gameState);
-			//std::make_unique<RandomSolver>(gameInterface.gameState);
+			std::make_unique<RandomSolver>(gameInterface.gameState);
 			//std::make_unique<AStarSolver>(gameInterface.gameState);
 			//std::make_unique<DepthFirstSearchSolver>(gameInterface.gameState);
 
-		//gameInterface.setController(std::make_unique<AIController>(gameInterface.gameState, std::move(solverPtr)));
-		gameInterface.setController(std::make_unique<UserController>());
+		std::unique_ptr<ControllerBase> controllerPtr =
+			std::make_unique<AIController>(gameInterface.gameState, std::move(solverPtr));
+			//std::make_unique<UserController>();
+
+		gameInterface.setController(move(controllerPtr));
 
 		gameInterface.run();
 	}
@@ -36,9 +39,9 @@ int main()
 		cout << "Exception caught in " << __FUNCTION__ << ": "
 			<< e.what() << '\n';
 	}
-
+	
+	cout << "Press any key to continue . . .";
 	cv::waitKey(0);
-	//cout << "Press any key to continue . . .";
 	//cin.get();
 	cin.get();
 	return 0;
