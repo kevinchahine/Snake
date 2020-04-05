@@ -73,6 +73,11 @@ const SnakeBoard::index& SnakeState::getNCols() const
 	return board.getNCols();
 }
 
+size_t SnakeState::getNCells() const
+{
+	return board.getNCells();
+}
+
 SnakeState::GAME_STATE SnakeState::calcGameState()
 {
 	// Did we bite our selves?
@@ -347,10 +352,26 @@ void SnakeState::moveAppleRandomly()
 	if (board(apple) == CELL::APPLE) {
 		board(apple) = CELL::EMPTY;
 	}
+	
+	// --- Move apple to a random empty location ---
+	// Create a set of all empty spaces
+	std::vector<Position> emptyCells;
+	emptyCells.reserve(board.getNCells() - snake.size());
 
-	// move apple to a random location
-	// BUG: what if apple ends up on the snakes tail.
-	apple.moveRandom();
+	for (size_t row = 0; row < board.getNRows(); row++) {
+		for (size_t col = 0; col < board.getNCols(); col++) {
+			if (board[row][col] == CELL::EMPTY) {
+				emptyCells.emplace_back(row, col);
+			}
+		}
+	}
+
+	// Pick a random empty cell
+	int randomNumber = rand() % emptyCells.size();
+	Position emptyCell = emptyCells.at(randomNumber);
+
+	// Move apple to the random empty cell
+	apple.moveTo(emptyCell);
 
 	// Place the apple on the board.
 	board(apple) = CELL::APPLE;

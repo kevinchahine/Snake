@@ -21,3 +21,8 @@ void Apple::moveTo(size_t row, size_t col)
 	this->row(row);
 	this->col(col);
 }
+
+void Apple::moveTo(const Position& pos)
+{
+	moveTo(pos.row(), pos.col());
+}

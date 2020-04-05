@@ -16,6 +16,7 @@ public:
 	void moveRandom();
 
 	void moveTo(size_t row, size_t col);
+	void moveTo(const Position& pos);
 
 private:
 	size_t boardHeight;

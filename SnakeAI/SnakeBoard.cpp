@@ -124,3 +124,8 @@ const SnakeBoard::index& SnakeBoard::getNCols() const
 	return this->shape()[1];
 }
 
+size_t SnakeBoard::getNCells() const
+{
+	return this->num_elements();
+}
+

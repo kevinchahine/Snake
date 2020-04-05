@@ -37,6 +37,7 @@ public:
 	
 	const SnakeBoard::index& getNRows() const;
 	const SnakeBoard::index& getNCols() const;
+	size_t getNCells() const;
 
 private:
 	cv::Scalar cellColor = cv::Scalar{ 129, 129, 129 };

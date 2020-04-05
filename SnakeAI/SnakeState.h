@@ -41,6 +41,7 @@ public:
 
 	const SnakeBoard::index& getNRows() const;
 	const SnakeBoard::index& getNCols() const;
+	size_t getNCells() const;
 
 	GAME_STATE calcGameState();
 	GAME_STATE getCurrentState() const;
