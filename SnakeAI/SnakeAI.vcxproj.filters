@@ -72,6 +72,9 @@
     <ClCompile Include="BestFirstSolver.cpp">
       <Filter>Solvers</Filter>
     </ClCompile>
+    <ClCompile Include="HamiltonianSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AStarSolver.h">
@@ -121,6 +124,12 @@
     </ClInclude>
     <ClInclude Include="BestFirstSolver.h">
       <Filter>Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="HamiltonianSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BoardTemplate.h">
+      <Filter>GameEngine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

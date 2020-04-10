@@ -3,10 +3,9 @@
 #include <iostream>
 #include <sstream>
 
-#include <boost/multi_array.hpp>
-
 #include <opencv2/opencv.hpp>
 
+#include "BoardTemplate.h"
 #include "Snake.h"
 #include "Apple.h"
 
@@ -17,7 +16,7 @@ enum class CELL : uint8_t {
 	APPLE = 3
 };
 
-class Board : public boost::multi_array<CELL, 2>
+class Board : public BoardTemplate<CELL>
 {
 public:
 	Board(const Board::index & nRows, const Board::index & nCols);
@@ -35,10 +34,6 @@ public:
 
 	void paste(const Snake& snake);
 	
-	const Board::index& getNRows() const;
-	const Board::index& getNCols() const;
-	size_t getNCells() const;
-
 private:
 	cv::Scalar cellColor = cv::Scalar{ 129, 129, 129 };
 	cv::Scalar headColor = cv::Scalar{ 0, 180, 0 };

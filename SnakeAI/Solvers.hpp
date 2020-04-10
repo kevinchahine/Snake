@@ -5,3 +5,4 @@
 #include "DefaultSolver.h"
 #include "DepthFirstSearchSolver.h"
 #include "RandomSolver.h"
+#include "HamiltonianSolver.h"

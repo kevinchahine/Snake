@@ -134,6 +134,7 @@
     <ClCompile Include="ControllerBase.cpp" />
     <ClCompile Include="DefaultSolver.cpp" />
     <ClCompile Include="DepthFirstSearchSolver.cpp" />
+    <ClCompile Include="HamiltonianSolver.cpp" />
     <ClCompile Include="Position.cpp" />
     <ClCompile Include="RandomSolver.cpp" />
     <ClCompile Include="Snake.cpp" />
@@ -149,9 +150,11 @@
     <ClInclude Include="Apple.h" />
     <ClInclude Include="AStarSolver.h" />
     <ClInclude Include="BestFirstSolver.h" />
+    <ClInclude Include="BoardTemplate.h" />
     <ClInclude Include="ControllerBase.h" />
     <ClInclude Include="DefaultSolver.h" />
     <ClInclude Include="DepthFirstSearchSolver.h" />
+    <ClInclude Include="HamiltonianSolver.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="RandomSolver.h" />
     <ClInclude Include="Snake.h" />

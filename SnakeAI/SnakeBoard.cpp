@@ -3,7 +3,7 @@
 Board::Board(
 	const Board::index& nRows, 
 	const Board::index& nCols) :
-	boost::multi_array<CELL, 2>(boost::extents[nRows][nCols])
+	BoardTemplate<CELL>(nRows, nCols)
 {}
 
 size_t Board::hashValue() const
@@ -114,18 +114,4 @@ void Board::paste(const Snake& snake)
 	(*this)(snake.head()) = CELL::HEAD;
 }
 
-const Board::index& Board::getNRows() const
-{
-	return this->shape()[0];
-}
-
-const Board::index& Board::getNCols() const
-{
-	return this->shape()[1];
-}
-
-size_t Board::getNCells() const
-{
-	return this->num_elements();
-}
 
