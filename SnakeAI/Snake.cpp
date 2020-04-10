@@ -395,3 +395,19 @@ void Snake::growAnyLegal()
 		throw std::exception(ss.str().c_str());
 	}
 }
+
+size_t Snake::hashValue() const
+{
+	size_t hashValue = 0;
+
+	//for (int64_t snakeIndex = this->size() - 1; snakeIndex >= 0; snakeIndex--) {
+	for (size_t snakeIndex = 0; snakeIndex < this->size(); snakeIndex++) {
+		const Position& pos = (*this)[snakeIndex];
+
+		size_t cellIndex = pos.row() * this->boardWidth + pos.col();
+
+		hashValue += (cellIndex + 1) * (snakeIndex + 1);
+	}
+
+	return hashValue;
+}

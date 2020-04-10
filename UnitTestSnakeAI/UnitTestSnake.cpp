@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <SnakeAI/Snake.h>
+#include <SnakeAI/SnakeBoard.h>
 
 using namespace std;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -187,6 +188,53 @@ namespace UnitTestSnakeAI
 			snake.push_front(Position(0, 0));
 			Assert::IsFalse(snake.tailTip() == Position(1, 0));
 			Assert::IsTrue(snake.tailTip() == Position(0, 0));
+		}
+
+		TEST_METHOD(HashValue)
+		{
+			Snake snake(4, 4);
+			Board board(4, 4);
+
+			/* Start snake in this position
+			t h . .
+			. . . .
+			. . . .
+			. . . .
+			*/
+			snake.resetHeadAt(Position(0, 0));
+			snake.moveRightFast();
+			Assert::IsTrue(snake.hashValue() == 5);
+
+			snake.growRightFast();
+			snake.growRightFast();
+			Assert::IsTrue(snake.hashValue() == 30);
+
+			snake.growDownFast();
+			snake.growLeftFast();
+			snake.growLeftFast();
+			snake.growLeftFast();
+			Assert::IsTrue(snake.hashValue() == 194);
+
+			
+			snake.growDownFast();
+			snake.growRightFast();
+			snake.growRightFast();
+			snake.growRightFast();
+			Assert::IsTrue(snake.hashValue() == 640);
+
+			snake.growDownFast();
+			snake.growLeftFast();
+			snake.growLeftFast();
+			snake.growLeftFast();
+			Assert::IsTrue(snake.hashValue() == 1476);
+
+			stringstream ss;
+			board.paste(snake);
+			board.print(ss);
+			ss << "hash value = " << snake.hashValue() << '\n';
+			Logger::WriteMessage(ss.str().c_str());
+
+			Assert::IsTrue(true);
 		}
 	};
 }
