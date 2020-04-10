@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AdvancedSolver.cpp" />
     <ClCompile Include="AIController.cpp" />
     <ClCompile Include="Apple.cpp" />
     <ClCompile Include="AStarSolver.cpp" />
@@ -134,6 +135,7 @@
     <ClCompile Include="ControllerBase.cpp" />
     <ClCompile Include="DefaultSolver.cpp" />
     <ClCompile Include="DepthFirstSearchSolver.cpp" />
+    <ClCompile Include="HamiltonianBFSSolver.cpp" />
     <ClCompile Include="HamiltonianSolver.cpp" />
     <ClCompile Include="Position.cpp" />
     <ClCompile Include="RandomSolver.cpp" />
@@ -142,10 +144,10 @@
     <ClCompile Include="SnakeState.cpp" />
     <ClCompile Include="SnakeInterface.cpp" />
     <ClCompile Include="SolverBase.cpp" />
-    <ClCompile Include="Source.cpp" />
     <ClCompile Include="UserController.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AdvancedSolver.h" />
     <ClInclude Include="AIController.h" />
     <ClInclude Include="Apple.h" />
     <ClInclude Include="AStarSolver.h" />
@@ -154,6 +156,7 @@
     <ClInclude Include="ControllerBase.h" />
     <ClInclude Include="DefaultSolver.h" />
     <ClInclude Include="DepthFirstSearchSolver.h" />
+    <ClInclude Include="HamiltonianBFSSolver.h" />
     <ClInclude Include="HamiltonianSolver.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="RandomSolver.h" />

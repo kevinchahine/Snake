@@ -24,9 +24,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AStarSolver.cpp">
       <Filter>Solvers</Filter>
     </ClCompile>
@@ -73,7 +70,13 @@
       <Filter>Solvers</Filter>
     </ClCompile>
     <ClCompile Include="HamiltonianSolver.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Solvers</Filter>
+    </ClCompile>
+    <ClCompile Include="AdvancedSolver.cpp">
+      <Filter>Solvers</Filter>
+    </ClCompile>
+    <ClCompile Include="HamiltonianBFSSolver.cpp">
+      <Filter>Solvers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -125,11 +128,17 @@
     <ClInclude Include="BestFirstSolver.h">
       <Filter>Solvers</Filter>
     </ClInclude>
-    <ClInclude Include="HamiltonianSolver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="BoardTemplate.h">
       <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="AdvancedSolver.h">
+      <Filter>Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="HamiltonianSolver.h">
+      <Filter>Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="HamiltonianBFSSolver.h">
+      <Filter>Solvers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -27,8 +27,9 @@ int main()
 			//std::make_unique<BestFirstSolver>(gameInterface.gameState);
 			//std::make_unique<AStarSolver>(gameInterface.gameState);
 			//std::make_unique<DepthFirstSearchSolver>(gameInterface.gameState);
-			std::make_unique<HamiltonianSolver>(gameInterface.gameState);
-
+			//std::make_unique<HamiltonianSolver>(gameInterface.gameState);
+			std::make_unique<HamiltonianBFSSolver>(gameInterface.gameState);
+		
 		std::unique_ptr<ControllerBase> controllerPtr =
 			std::make_unique<AIController>(gameInterface.gameState, std::move(solverPtr));
 			//std::make_unique<UserController>();

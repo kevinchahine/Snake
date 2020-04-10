@@ -6,3 +6,6 @@
 #include "DepthFirstSearchSolver.h"
 #include "RandomSolver.h"
 #include "HamiltonianSolver.h"
+
+#include "AdvancedSolver.h"
+#include "HamiltonianBFSSolver.h"
