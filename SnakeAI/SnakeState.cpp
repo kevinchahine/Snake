@@ -1,5 +1,7 @@
 #include "SnakeState.h"
 
+using namespace std;
+
 SnakeState::SnakeState(size_t boardHeight, size_t boardWidth) :
 	gameState{ GAME_STATE::CONTINUE },
 	board{ boardHeight, boardWidth },
@@ -48,6 +50,7 @@ void SnakeState::reset()
 
 SnakeState::GAME_STATE SnakeState::moveSnake(char controlInput)
 {
+	// 1.) Apply the move
 	switch (tolower(controlInput)) {
 	case 'w':	this->moveUpIfLegal();		break;
 	case 's':	this->moveDownIfLegal();	break;
@@ -60,6 +63,10 @@ SnakeState::GAME_STATE SnakeState::moveSnake(char controlInput)
 		throw std::exception(ss.str().c_str());
 	}
 
+	// 2.) Recalculates the current game state
+	calcGameState();
+
+	// 3.) return the current game state
 	return gameState;
 }
 
@@ -82,13 +89,11 @@ SnakeState::GAME_STATE SnakeState::calcGameState()
 {
 	// Did we bite our selves?
 	if (snake.bitItself()) {
-		std::cout << "Ouch. Game over\n";
 		gameState = GAME_STATE::GAME_OVER;
 	}
 	// Did we hit a wall?
 	// Is it even possible to hit a wall? Hitting a wall is not a legal move
 	else if (false) {
-		std::cout << "Hit a wall\n";
 		gameState = GAME_STATE::GAME_OVER;
 	}
 	// Did we eat the apple?
@@ -96,18 +101,13 @@ SnakeState::GAME_STATE SnakeState::calcGameState()
 		// Yes. We need to move apple to a random location 
 		// but not on the snake itself. 
 		// TODO: This will not be efficient for big boards.
-		std::cout << "Yum apples\n";
 		gameState = GAME_STATE::CONTINUE;
-		do {
-			apple.moveRandom();
-		} while (snake == apple);
 	}
 
 	// Did we win? Did we cover every cell?
 	// *** Not else if, because we can eat an apple and win at the same time.
 	if (snake.size() == board.num_elements()) {
 		// Yes we won.
-		std::cout << "Congratulations you won.\n";
 		gameState = GAME_STATE::WON;
 		return gameState;
 	}
@@ -245,14 +245,25 @@ char SnakeState::getAnyLegalAndSafeMove() const
 	}
 }
 
+boost::container::static_vector<char, 3> SnakeState::getAllLegalAndSafeMoves() const
+{
+	boost::container::static_vector<char, 3> moves;
+
+	if (isMoveUpLegal() && isMoveUpSafe())			moves.push_back('w');
+	if (isMoveDownLegal() && isMoveDownSafe())		moves.push_back('s');
+	if (isMoveLeftLegal() && isMoveLeftSafe())		moves.push_back('a');
+	if (isMoveRightLegal() && isMoveRightSafe())	moves.push_back('d');
+
+	return moves;
+}
+
 void SnakeState::moveUpFast()
 {
 	Position tailTip = snake.tailTip();
 
 	if (snake.head().upOne() == apple) {
 		snake.growUpFast();
-		std::cout << "Yum apples---\n";
-		moveAppleRandomly();
+		//moveAppleRandomly();
 	}
 	else {
 		snake.moveUpFast();
@@ -270,9 +281,8 @@ void SnakeState::moveDownFast()
 	Position tailTip = snake.tailTip();
 
 	if (snake.head().downOne() == apple) {
-		std::cout << "Yum apples---\n";
 		snake.growDownFast();
-		moveAppleRandomly();
+		//moveAppleRandomly();
 	}
 	else {
 		snake.moveDownFast();
@@ -290,9 +300,8 @@ void SnakeState::moveLeftFast()
 	Position tailTip = snake.tailTip();
 
 	if (snake.head().leftOne() == apple) {
-		std::cout << "Yum apples---\n";
 		snake.growLeftFast();
-		moveAppleRandomly();
+		//moveAppleRandomly();
 	}
 	else {
 		snake.moveLeftFast();
@@ -310,9 +319,8 @@ void SnakeState::moveRightFast()
 	Position tailTip = snake.tailTip();
 
 	if (snake.head().rightOne() == apple) {
-		std::cout << "Yum apples---\n";
 		snake.growRightFast();
-		moveAppleRandomly();
+		//moveAppleRandomly();
 	}
 	else {
 		snake.moveRightFast();
@@ -403,7 +411,7 @@ void SnakeState::moveAppleRandomly()
 		}
 	}
 
-	// Pick a random empty cell
+	// Pick a random empty cell (will fail to division by 0 if there are no empty cells)
 	int randomNumber = rand() % emptyCells.size();
 	Position emptyCell = emptyCells.at(randomNumber);
 
@@ -412,4 +420,9 @@ void SnakeState::moveAppleRandomly()
 
 	// Place the apple on the board.
 	board(apple) = CELL::APPLE;
+}
+
+bool SnakeState::appleIsEaten() const
+{
+	return snake.head() == apple;
 }

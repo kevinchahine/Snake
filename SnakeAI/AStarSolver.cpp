@@ -1,7 +1,11 @@
 #include "AStarSolver.h"
 
+using namespace std;
+
 AStarSolver::AStarSolver(const SnakeState& gameState) :
-	SolverBase(gameState) {}
+	SolverBase(gameState),
+	solutionPath(gameState)
+{}
 
 void AStarSolver::reset()
 {
@@ -10,60 +14,114 @@ void AStarSolver::reset()
 
 char AStarSolver::solve()
 {
-	//const Snake& snake = gameState.snake;
-	//const Apple& apple = gameState.apple;
-	//const Position& head = snake.head();
+	// 1.) Do we need to search for another solution path?
+	if (solutionPath.pathLength() > 0) {
+		// Nope. We still have moves to make in our solution path
+	}
+	else {
+		// Yes. We used up our solution path. We need so solve another one.
+		solutionPath = search(gameState);
+	}
 
-	//// Find shortest path to apple and avoid hitting tail
-	//
-	//// 1.) Find all valid moves
-	//std::priority_queue<Move, std::vector<Move>, std::greater<Move>> validMoves;
-	//
-	//// Determine which moves are valid.
-	//if (gameState.snake.isMoveUpLegal()) {
-	//	int manhattanDist = calcManhattanDist(head.upOne(), apple);
-	//	
-	//	validMoves.push(Move('w', manhattanDist));
-	//}
+	// 2.) Grab the next move from the solution path
+	char nextMove = solutionPath.peekNextMove();
+	solutionPath.popMove();
 
-	//if (gameState.snake.isMoveDownLegal()) {
-	//	int manhattanDist = calcManhattanDist(head.downOne(), apple);
-	//	
-	//	validMoves.push(Move('s', manhattanDist));
-	//}
-
-	//if (gameState.snake.isMoveLeftLegal()) {
-	//	int manhattanDist = calcManhattanDist(head.leftOne(), apple);
-	//	
-	//	validMoves.push(Move('a', manhattanDist));
-	//}
-
-	//if (gameState.snake.isMoveRightLegal()) {
-	//	int manhattanDist = calcManhattanDist(head.rightOne(), apple);
-	//	
-	//	validMoves.push(Move('d', manhattanDist));
-	//}
-
-	//// Copy current state into another solver which will do a recursive solve call 
-	//SnakeState nextMovesEngine(gameState);
-	//AStarSolver nextMovesSolver(nextMovesEngine);
-	//
-	//// Try each valid direction in order of least manhattan distance
-	//while (validMoves.empty() == false) {
-	//	const auto& move = validMoves.top();
-	//	
-	//	nextMovesEngine.snake.moveIfLegal(move.direction);
-
-	//	validMoves.pop();
-	//}
-
-	return 'd';
+	// 3.) Check for errors
+	if (nextMove == 'x') {
+		cout << "AStar: Oh no. No good move was found.\n"
+			<< "Just do any legal and safe move instead.\n";
+		nextMove = gameState.getAnyLegalAndSafeMove();
+	}
+	
+	// 4.) Return nextMove as our decision
+	return nextMove;
 }
 
-int AStarSolver::calcManhattanDist(const Position& p1, const Position& p2)
+SnakePath AStarSolver::search(const SnakeState& start)
 {
-	return 
-		std::abs(p1.row() - p2.row()) +
-		std::abs(p1.col() - p2.col());
-}
+	// 0.) Initialize node as an empty path that leads at the start state.
+	CostlySnakePath node = start;
 
+	// 1.) Create frontier to store potential solutions (paths) in order of
+	// ascending cost. Push node to the frontier
+	Frontier frontier;
+	frontier.pushIfUnique(move(node));
+
+	// 2.) Create explored list to represent snake states that have been visited 
+	// and analyzed. Only stores the hash of a snake state to save on speed and memory.
+	Explored explored;
+
+	// 3.) Search for shortest path
+	while (true) {
+		// 3-1.) Did we run out of paths to try?
+		if (frontier.isEmpty()) {
+			// Yes, return empty path
+			cout << "Frontier is empty. No path to goal was found.\n";
+			return SnakePath(start);	// no solution
+		}
+
+		// 3-2.) Get the next path to analyze
+		node = frontier.getNextBestPath();
+		frontier.pop();
+		//cout << "Pop frontier: " << node << '\n';
+
+		// 3-3.) Is this the goal state?
+		if (node.isGoalState()) {
+			// Yes, return node as the solution.
+			cout << "!!!Solution has been found. Yay :) !!!\n";
+			cout << "Solution = " << node << '\n';
+			//system("pause");
+			return node;
+		}
+
+		// 3-4.) Expand the roads from node to get all possible paths.
+		for (char safeAndLegalMove : node.destinationSnakeState().getAllLegalAndSafeMoves()) {
+			// 3-4-0.) Make a copy of the node path. We will need to modify it later
+			CostlySnakePath childNode = node;
+
+			// 3-4-1.) Append a road to the end of the new path
+			childNode.pushMove(safeAndLegalMove);
+			//cout << "new child node: " << childNode << '\n';
+
+			// 3-4-2.) What game state does the new path end up at?
+			const SnakeState& childDestination = childNode.destinationSnakeState();
+			
+			// REMOVE vvvvvvvvvv
+			/*cv::Mat image = cv::Mat::zeros(childDestination.getNRows() * 40, childDestination.getNCols() * 40, CV_8UC3);
+			childDestination.getBoard().print(image);
+			cv::imshow("Snake AI", image);
+			cv::waitKey(0);*/
+			// REMOVE ^^^^^^^^^
+
+			// --- Now we have a path and we know where it leads us ---
+			// --- Before we add this new path to the frontier, 1st check to see if we should. ---
+
+			// 3-4-3.) Have we explored the destination city already and
+			// is it already in the frontier? If so we should not add it.
+			//cout << "explored does " << (explored.contains(childDestination) ? "" : "NOT")
+			//	<< " contain childDestination\n";
+			//cout << "frontier does " << (frontier.contains(childNode) ? "" : "NOT")
+			//	<< " contain childNode\n";
+
+			if (!explored.contains(childDestination) &&
+				!frontier.contains(childNode)) {
+				// We have not explored the destination snake state yet and
+				// the path is not already in the frontier, which it now should be.
+				// Add this new path to the frontier.
+				//cout << "Pushing " << childNode << " to frontier " << '\n';
+				frontier.pushIfUnique(childNode);
+				explored.insert(childDestination);
+			}
+			//else if (childPathPtr) {
+				// Only important if two adjacent cities have more than one
+				// road between them.
+			//}
+			/*else {
+				cout << "new child node\n";
+			}*/
+			//cin.get();
+			//cout << '\n';
+		} // end for (const Road &
+	} // end while (true)
+}

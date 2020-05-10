@@ -83,6 +83,17 @@ void Board::print(cv::Mat& image) const
 				topLeftOfCell + cv::Point(CELL_WIDTH - 4, CELL_HEIGHT - 4),
 				color,
 				-1);
+
+			// If its the head, draw eyes
+			if ((*this)[row][col] == CELL::HEAD) {
+				cv::circle(
+					image,
+					topLeftOfCell + cv::Point(CELL_HEIGHT * 0.5, CELL_WIDTH * 0.5),
+					CELL_HEIGHT * 0.15,
+					appleColor,
+					-1
+				);
+			}
 		}
 	}
 }

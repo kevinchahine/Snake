@@ -97,12 +97,10 @@ void Snake::resetHeadRandom()
 
 	// Give it a tail so that it will start at 2 cells long
 	if (row > 0) {
-		std::cout << "Moved up\n";
 		growUpFast();
 		moveDownFast();
 	}
 	else {
-		std::cout << "Move down\n";
 		growDownFast();
 		moveUpFast();
 	}
@@ -396,11 +394,10 @@ void Snake::growAnyLegal()
 	}
 }
 
-size_t Snake::hashValue() const
+uint64_t Snake::hashValue() const
 {
-	size_t hashValue = 0;
+	uint64_t hashValue = 0;
 
-	//for (int64_t snakeIndex = this->size() - 1; snakeIndex >= 0; snakeIndex--) {
 	for (size_t snakeIndex = 0; snakeIndex < this->size(); snakeIndex++) {
 		const Position& pos = (*this)[snakeIndex];
 

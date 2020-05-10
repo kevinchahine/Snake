@@ -25,4 +25,6 @@ char DefaultSolver::solve()
 	if (gameState.isMoveRightLegal()) {
 		return 'd';
 	}
+	// Then were do we move?
+	return 'x';
 }

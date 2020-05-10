@@ -4,6 +4,10 @@
 
 #include "SolverBase.h"
 
+#include "CostlySnakePath.h"
+#include "Frontier.h"
+#include "Explored.h"
+
 class AStarSolver : public SolverBase
 {
 public:
@@ -12,32 +16,11 @@ public:
 	virtual void reset() override;
 	virtual char solve() override;
 
-	static int calcManhattanDist(const Position& p1, const Position& p2);
-};
+private:
+	// Searches for a optimal solution (or path) from start to a goal state.
+	// Path is stored in this->solutionPath
+	SnakePath search(const SnakeState& start);
 
-class Move
-{
-public:
-	Move(char direction, int heiristic) :
-		direction(direction),
-		heiristic(heiristic) {}
-
-	bool operator()(const Move& left) const {
-		return heiristic < left.heiristic;
-	}
-
-	bool operator<(const Move& left) const {
-		return heiristic < left.heiristic;
-	}
-
-	bool operator==(const Move& left) const {
-		return heiristic == left.heiristic;
-	}
-
-	bool operator>(const Move& left) const {
-		return heiristic > left.heiristic;
-	}
-
-	char direction;
-	int heiristic;
+private:
+	SnakePath solutionPath;
 };

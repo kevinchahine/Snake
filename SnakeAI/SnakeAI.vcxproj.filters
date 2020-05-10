@@ -22,6 +22,9 @@
     <Filter Include="GameEngine">
       <UniqueIdentifier>{4f7b6e24-5632-4ba1-a936-da098f9d329d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SolversUtility">
+      <UniqueIdentifier>{d31c030a-95fe-4593-85f1-9b387beb7ebe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AStarSolver.cpp">
@@ -77,6 +80,18 @@
     </ClCompile>
     <ClCompile Include="HamiltonianBFSSolver.cpp">
       <Filter>Solvers</Filter>
+    </ClCompile>
+    <ClCompile Include="SnakePath.cpp">
+      <Filter>SolversUtility</Filter>
+    </ClCompile>
+    <ClCompile Include="CostlySnakePath.cpp">
+      <Filter>SolversUtility</Filter>
+    </ClCompile>
+    <ClCompile Include="Frontier.cpp">
+      <Filter>SolversUtility</Filter>
+    </ClCompile>
+    <ClCompile Include="Explored.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +154,18 @@
     </ClInclude>
     <ClInclude Include="HamiltonianBFSSolver.h">
       <Filter>Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="SnakePath.h">
+      <Filter>SolversUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="CostlySnakePath.h">
+      <Filter>SolversUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="Frontier.h">
+      <Filter>SolversUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="Explored.h">
+      <Filter>SolversUtility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -3,8 +3,11 @@
 #include <iostream>
 #include <sstream>
 #include <memory>
+#include <vector>
 
 #include <opencv2/opencv.hpp>
+
+#include <boost/container/static_vector.hpp>
 
 #include "Apple.h"
 #include "Snake.h"
@@ -71,6 +74,7 @@ public:
 	// If no move is both legal and safe then it returns a legal move
 	// (This move will make the snake bit itself.)
 	char getAnyLegalAndSafeMove() const;
+	boost::container::static_vector<char, 3> getAllLegalAndSafeMoves() const;
 
 	void moveUpFast();
 	void moveDownFast();
@@ -86,6 +90,7 @@ public:
 	void moveIfLegal(char direction);
 	
 	void moveAppleRandomly();
+	bool appleIsEaten() const;
 
 protected:
 	GAME_STATE gameState;

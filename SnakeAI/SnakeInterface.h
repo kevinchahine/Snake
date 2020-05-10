@@ -18,7 +18,7 @@ public:
 	void run();
 
 	void setController(std::unique_ptr<ControllerBase>&& controllerPtr);
-
+	
 	SnakeState gameState;
 
 private:

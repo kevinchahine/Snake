@@ -115,7 +115,7 @@ public:
 	void growIfLegal(char direction);
 	void growAnyLegal();
 
-	size_t hashValue() const;
+	uint64_t hashValue() const;
 
 private:
 	size_t boardHeight;

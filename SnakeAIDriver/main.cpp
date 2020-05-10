@@ -16,29 +16,29 @@ int main()
 	srand(time(NULL));
 
 	try {
-		const size_t N_ROWS = 12;
-		const size_t N_COLS = 12;
-
+		const size_t N_ROWS = 10;
+		const size_t N_COLS = 10;
+	
 		SnakeInterface gameInterface{ N_ROWS, N_COLS };
-
+	
 		std::unique_ptr<SolverBase> solverPtr =
 			//std::make_unique<DefaultSolver>(gameInterface.gameState);
 			//std::make_unique<RandomSolver>(gameInterface.gameState);
 			//std::make_unique<BestFirstSolver>(gameInterface.gameState);
-			//std::make_unique<AStarSolver>(gameInterface.gameState);
+			std::make_unique<AStarSolver>(gameInterface.gameState);
 			//std::make_unique<DepthFirstSearchSolver>(gameInterface.gameState);
 			//std::make_unique<HamiltonianSolver>(gameInterface.gameState);
-			std::make_unique<HamiltonianBFSSolver>(gameInterface.gameState);
+			//std::make_unique<HamiltonianBFSSolver>(gameInterface.gameState);
 		
 		std::unique_ptr<ControllerBase> controllerPtr =
 			std::make_unique<AIController>(gameInterface.gameState, std::move(solverPtr));
 			//std::make_unique<UserController>();
-
+	
 		gameInterface.setController(move(controllerPtr));
-
+	
 		while (true) {
 			gameInterface.run();
-			std::cout << "repeat?";
+			std::cout << "Play again?";
 			std::cin.get();
 		}
 	}
@@ -48,8 +48,7 @@ int main()
 	}
 	
 	cout << "Press any key to continue . . .";
-	cv::waitKey(0);
-	//cin.get();
+	cv::waitKey(0);	// keeps display window open
 	cin.get();
 	return 0;
 }
