@@ -19,3 +19,4 @@ void Explored::insert(const SnakeState& visitedSnakeState)
 {
 	this->set<uint64_t>::insert(visitedSnakeState.getSnake().hashValue());
 }
+

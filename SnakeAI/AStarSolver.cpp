@@ -29,8 +29,8 @@ char AStarSolver::solve()
 
 	// 3.) Check for errors
 	if (nextMove == 'x') {
-		cout << "AStar: Oh no. No good move was found.\n"
-			<< "Just do any legal and safe move instead.\n";
+		//cout << "AStar: Oh no. No good move was found.\n"
+		//	<< "Just do any legal and safe move instead.\n";
 		nextMove = gameState.getAnyLegalAndSafeMove();
 	}
 	
@@ -57,7 +57,7 @@ SnakePath AStarSolver::search(const SnakeState& start)
 		// 3-1.) Did we run out of paths to try?
 		if (frontier.isEmpty()) {
 			// Yes, return empty path
-			cout << "Frontier is empty. No path to goal was found.\n";
+			//cout << "Frontier is empty. No path to goal was found.\n";
 			return SnakePath(start);	// no solution
 		}
 
@@ -69,8 +69,8 @@ SnakePath AStarSolver::search(const SnakeState& start)
 		// 3-3.) Is this the goal state?
 		if (node.isGoalState()) {
 			// Yes, return node as the solution.
-			cout << "!!!Solution has been found. Yay :) !!!\n";
-			cout << "Solution = " << node << '\n';
+			//cout << "!!!Solution has been found. Yay :) !!!\n";
+			//cout << "Solution = " << node << '\n';
 			//system("pause");
 			return node;
 		}

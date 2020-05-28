@@ -22,7 +22,7 @@ char DepthFirstSearchSolver::solve()
 	// Pop the next move and return it
 	char nextMove = depthFirstSearch(gameState);
 
-	std::cout << "Next move = '" << nextMove << "'\n";
+	//std::cout << "Next move = '" << nextMove << "'\n";
 
 	// Is nextMove valid and safe?
 	if (nextMove != NULL) {

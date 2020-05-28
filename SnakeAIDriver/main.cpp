@@ -3,12 +3,16 @@
 #include <time.h>
 using namespace std;
 
-#include <SnakeAI/SnakeInterface.h>
-#include <SnakeAI/ControllerBase.h>
-#include <SnakeAI/UserController.h>
-#include <SnakeAI/AIController.h>
+#include <boost/accumulators/accumulators.hpp>
+#include <boost/accumulators/statistics.hpp>
+using namespace boost::accumulators;
 
+#include <SnakeAI/SnakeInterface.h>
+#include <SnakeAI/Controllers.hpp>
 #include <SnakeAI/Solvers.hpp>
+#include <SnakeAI/PerformanceTest.h>
+
+#include "Run.h"
 
 int main()
 {
@@ -18,29 +22,21 @@ int main()
 	try {
 		const size_t N_ROWS = 10;
 		const size_t N_COLS = 10;
-	
-		SnakeInterface gameInterface{ N_ROWS, N_COLS };
-	
-		std::unique_ptr<SolverBase> solverPtr =
-			//std::make_unique<DefaultSolver>(gameInterface.gameState);
-			//std::make_unique<RandomSolver>(gameInterface.gameState);
-			//std::make_unique<BestFirstSolver>(gameInterface.gameState);
-			std::make_unique<AStarSolver>(gameInterface.gameState);
-			//std::make_unique<DepthFirstSearchSolver>(gameInterface.gameState);
-			//std::make_unique<HamiltonianSolver>(gameInterface.gameState);
-			//std::make_unique<HamiltonianBFSSolver>(gameInterface.gameState);
+		const size_t N_SAMPLES = 30;
+
+		PerformanceTest<AStarSolver> benchAStar(N_ROWS, N_COLS);
+		benchAStar.run(N_SAMPLES);
 		
-		std::unique_ptr<ControllerBase> controllerPtr =
-			std::make_unique<AIController>(gameInterface.gameState, std::move(solverPtr));
-			//std::make_unique<UserController>();
-	
-		gameInterface.setController(move(controllerPtr));
-	
-		while (true) {
-			gameInterface.run();
-			std::cout << "Play again?";
-			std::cin.get();
-		}
+		//PerformanceTest<BestFirstSolver> benchBFS(N_ROWS, N_COLS);
+		//benchBFS.run(N_SAMPLES);
+
+		//PerformanceTest<RandomSolver> benchRandom(N_ROWS, N_COLS);
+		//benchRandom.run(N_SAMPLES);
+
+		//PerformanceTest<DefaultSolver> benchDefault(N_ROWS, N_COLS);
+		//benchDefault.run(N_SAMPLES);
+		
+		//run();
 	}
 	catch (std::exception & e) {
 		cout << "Exception caught in " << __FUNCTION__ << ": "
@@ -49,6 +45,6 @@ int main()
 	
 	cout << "Press any key to continue . . .";
 	cv::waitKey(0);	// keeps display window open
-	cin.get();
+	std::cin.get();
 	return 0;
 }

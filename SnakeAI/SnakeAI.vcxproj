@@ -58,19 +58,21 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\..\..\code\libraries\boost_1_72_0.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\..\..\code\libraries\boost_1_72_0.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\..\..\..\code\libraries\boost_release_x64.props" />
     <Import Project="..\..\..\..\..\..\code\libraries\opencv_x64_debug.props" />
+    <Import Project="..\..\..\..\..\..\code\libraries\boost_1_72_0.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\..\..\..\code\libraries\boost_release_x64.props" />
     <Import Project="..\..\..\..\..\..\code\libraries\opencv_x64_release.props" />
+    <Import Project="..\..\..\..\..\..\code\libraries\boost_1_72_0.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup />
@@ -158,6 +160,7 @@
     <ClInclude Include="BestFirstSolver.h" />
     <ClInclude Include="BoardTemplate.h" />
     <ClInclude Include="ControllerBase.h" />
+    <ClInclude Include="Controllers.hpp" />
     <ClInclude Include="CostlySnakePath.h" />
     <ClInclude Include="DefaultSolver.h" />
     <ClInclude Include="DepthFirstSearchSolver.h" />
@@ -165,6 +168,7 @@
     <ClInclude Include="Frontier.h" />
     <ClInclude Include="HamiltonianBFSSolver.h" />
     <ClInclude Include="HamiltonianSolver.h" />
+    <ClInclude Include="PerformanceTest.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="RandomSolver.h" />
     <ClInclude Include="Snake.h" />
