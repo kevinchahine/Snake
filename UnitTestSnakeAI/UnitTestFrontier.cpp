@@ -16,7 +16,7 @@ namespace UnitTestSnakeAI
 
 		TEST_METHOD(Constructors)
 		{
-			Frontier frontier;
+			Frontier<std::less<CostlySnakePath>> frontier;
 
 			Assert::IsTrue(frontier.isEmpty());
 		}

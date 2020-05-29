@@ -2,7 +2,7 @@
 
 #include "AStarSolver.h"
 
-class ReverseAStarSolver : public AStarSolver
+class ReverseAStarSolver : public AStarSolverTemplate<std::greater<CostlySnakePath>>
 {
 public:
 	ReverseAStarSolver(const SnakeState& gameState);
