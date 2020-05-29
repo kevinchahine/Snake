@@ -33,7 +33,10 @@ public:
 	// Hash is only based on sequence of moves and not start or destination state.
 	uint64_t hashValue() const;
 
-private:
+	void setFavorShortestPath(bool favorShortPath) { this->favorShortestPath = favorShortestPath; }
+	bool isFavorShortestPath() const { return this->favorShortestPath; }
 
+protected:
+	bool favorShortestPath = true;
 };
 

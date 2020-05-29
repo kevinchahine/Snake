@@ -144,6 +144,7 @@
     <ClCompile Include="HamiltonianSolver.cpp" />
     <ClCompile Include="Position.cpp" />
     <ClCompile Include="RandomSolver.cpp" />
+    <ClCompile Include="ReverseAStarSolver.cpp" />
     <ClCompile Include="Snake.cpp" />
     <ClCompile Include="SnakeBoard.cpp" />
     <ClCompile Include="SnakePath.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="PerformanceTest.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="RandomSolver.h" />
+    <ClInclude Include="ReverseAStarSolver.h" />
     <ClInclude Include="Snake.h" />
     <ClInclude Include="SnakeBoard.h" />
     <ClInclude Include="SnakePath.h" />

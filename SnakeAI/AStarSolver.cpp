@@ -87,13 +87,6 @@ SnakePath AStarSolver::search(const SnakeState& start)
 			// 3-4-2.) What game state does the new path end up at?
 			const SnakeState& childDestination = childNode.destinationSnakeState();
 			
-			// REMOVE vvvvvvvvvv
-			/*cv::Mat image = cv::Mat::zeros(childDestination.getNRows() * 40, childDestination.getNCols() * 40, CV_8UC3);
-			childDestination.getBoard().print(image);
-			cv::imshow("Snake AI", image);
-			cv::waitKey(0);*/
-			// REMOVE ^^^^^^^^^
-
 			// --- Now we have a path and we know where it leads us ---
 			// --- Before we add this new path to the frontier, 1st check to see if we should. ---
 

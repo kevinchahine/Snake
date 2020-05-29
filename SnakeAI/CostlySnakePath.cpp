@@ -12,7 +12,14 @@ bool CostlySnakePath::operator<(const CostlySnakePath& costlySnakePath) const
 {
 	// Made greater than on purpose so that the greater CostlySnakePaths
 	// will be "shorter" and "better" for the AStar algorithm
-	return calcTotalCost() > costlySnakePath.calcTotalCost();
+	if (favorShortestPath) {
+		// Favor shortest path
+		return calcTotalCost() > costlySnakePath.calcTotalCost();		// AStar
+	}
+	else {
+		// Favor longest path 
+		return calcTotalCost() < costlySnakePath.calcTotalCost();		// Reverse AStar
+	}
 }
 
 bool CostlySnakePath::operator==(const CostlySnakePath& costlySnakePath) const

@@ -88,6 +88,7 @@
     <ClCompile Include="Explored.cpp">
       <Filter>SolversUtility</Filter>
     </ClCompile>
+    <ClCompile Include="ReverseAStarSolver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AStarSolver.h">
@@ -168,5 +169,6 @@
     <ClInclude Include="Controllers.hpp">
       <Filter>Controllers</Filter>
     </ClInclude>
+    <ClInclude Include="ReverseAStarSolver.h" />
   </ItemGroup>
 </Project>
