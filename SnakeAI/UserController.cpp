@@ -4,6 +4,8 @@
 #include <Windows.h>
 #include <conio.h>	// for _kbhit() and _getch()
 
+using namespace std;
+
 UserController::UserController()
 {
 	initAsyncOp();
@@ -18,7 +20,7 @@ UserController::~UserController() noexcept
 char UserController::getInput()
 {
 	clock_t delayMilliSec = 400;
-
+	
 	// block until delay has passed
 	//Sleep(delayMilliSec);
 	clock_t stopTime = clock() + delayMilliSec;

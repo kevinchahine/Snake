@@ -43,43 +43,43 @@ void Frontier<C>::pushIfUnique(T&& costlySnakePath)
 	uint64_t hash = costlySnakePath.hashValue();
 
 	// 1.) Is this path already in frontier? We don't want to add it twice
-	auto matchingPathIt = this->set<uint64_t>::find(hash);
-	if (matchingPathIt == this->set<uint64_t>::end()) {
+	auto matchingPathIt = this->std::set<uint64_t>::find(hash);
+	if (matchingPathIt == this->std::set<uint64_t>::end()) {
 		// 1-1.) No. There is no matching path. Add new path to frontier
-		this->priority_queue<CostlySnakePath>::push(std::forward<T>(costlySnakePath));
+		this->std::priority_queue<CostlySnakePath, std::vector<CostlySnakePath>, C>::push(std::forward<T>(costlySnakePath));
 		//this->std::priority_queue<CostlySnakePath, std::vector<CostlySnakePath>, C>::push(std::forward<T>(costlySnakePath));
-		this->set<uint64_t>::insert(hash);
+		this->std::set<uint64_t>::insert(hash);
 	}
 }
 
 template<typename C>
 void Frontier<C>::pop()
 {
-	const CostlySnakePath& topPath = this->priority_queue<CostlySnakePath, std::vector<CostlySnakePath>, C>::top();
+	const CostlySnakePath& topPath = this->std::priority_queue<CostlySnakePath, std::vector<CostlySnakePath>, C>::top();
 
 	// remove the most promising path from queue
-	this->priority_queue<CostlySnakePath, std::vector<CostlySnakePath>, C>::pop();
+	this->std::priority_queue<CostlySnakePath, std::vector<CostlySnakePath>, C>::pop();
 
 	// remove its identifying hash value from the set.
-	auto it = this->set<uint64_t>::erase(topPath.hashValue());
+	auto it = this->std::set<uint64_t>::erase(topPath.hashValue());
 }
 
 template<typename C>
 const CostlySnakePath& Frontier<C>::getNextBestPath() const
 {
-	return this->priority_queue<CostlySnakePath>::top();
+	return this->std::priority_queue<CostlySnakePath, std::vector<CostlySnakePath>, C>::top();
 }
 
 template<typename C>
 bool Frontier<C>::contains(const CostlySnakePath& costlySnakePath) const
 {
-	auto matchingPathIter = this->set<uint64_t>::find(costlySnakePath.hashValue());
+	auto matchingPathIter = this->std::set<uint64_t>::find(costlySnakePath.hashValue());
 
-	return matchingPathIter != this->set<uint64_t>::end();
+	return matchingPathIter != this->std::set<uint64_t>::end();
 }
 
 template<typename C>
 bool Frontier<C>::isEmpty() const
 {
-	return this->priority_queue<CostlySnakePath>::empty();
+	return this->std::priority_queue<CostlySnakePath, std::vector<CostlySnakePath>, C>::empty();
 }

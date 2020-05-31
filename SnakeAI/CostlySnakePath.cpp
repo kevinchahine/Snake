@@ -10,16 +10,10 @@ CostlySnakePath::CostlySnakePath(SnakeState&& startingState) :
 
 bool CostlySnakePath::operator<(const CostlySnakePath& costlySnakePath) const
 {
-	// Made greater than on purpose so that the greater CostlySnakePaths
-	// will be "shorter" and "better" for the AStar algorithm
-	if (favorShortestPath) {
-		// Favor shortest path
-		return calcTotalCost() > costlySnakePath.calcTotalCost();		// AStar
-	}
-	else {
-		// Favor longest path 
-		return calcTotalCost() < costlySnakePath.calcTotalCost();		// Reverse AStar
-	}
+	// Made greater than on purpose so that "shorter" and "better" SnakePaths
+	// will go first (nearer to top()) in priority_queues for the AStar algorithm
+	// Favor shortest path
+	return calcTotalCost() > costlySnakePath.calcTotalCost();
 }
 
 bool CostlySnakePath::operator==(const CostlySnakePath& costlySnakePath) const

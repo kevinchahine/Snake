@@ -1,5 +1,7 @@
 #include "SnakeInterface.h"
 
+using namespace std;
+
 SnakeInterface::SnakeInterface(size_t boardWidth, size_t boardHeight) :
 	gameState{ boardWidth, boardHeight }
 {
@@ -17,6 +19,8 @@ void SnakeInterface::run()
 	cv::waitKey(1);
 
 	// 3.) --- Wait until user/ai makes a (valid) move to start the game ---
+	//		-- User/AI should always be able to make a valid move at the --
+	//		-- start of the game
 	char input = NULL;
 	do {
 		input = controllerPtr->getInput();

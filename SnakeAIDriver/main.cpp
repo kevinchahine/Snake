@@ -20,26 +20,27 @@ int main()
 	srand(time(NULL));
 
 	try {
-		const size_t N_ROWS = 10;
-		const size_t N_COLS = 10;
+		const size_t N_ROWS = 6;
+		const size_t N_COLS = 6;
 		const size_t N_SAMPLES = 30;
+		const int DELAY = 1;
 
-		//PerformanceTest<ReverseAStarSolver> benchReverseAStar(N_ROWS, N_COLS);
-		//benchReverseAStar.run(N_SAMPLES);
-		//
-		//PerformanceTest<AStarSolver> benchAStar(N_ROWS, N_COLS);
-		//benchAStar.run(N_SAMPLES);
-		//
-		//PerformanceTest<BestFirstSolver> benchBFS(N_ROWS, N_COLS);
-		//benchBFS.run(N_SAMPLES);
-		//
-		//PerformanceTest<RandomSolver> benchRandom(N_ROWS, N_COLS);
-		//benchRandom.run(N_SAMPLES);
-		//
-		//PerformanceTest<DefaultSolver> benchDefault(N_ROWS, N_COLS);
+		PerformanceTest<ReverseAStarSolver> benchReverseAStar(N_ROWS, N_COLS, DELAY);
+		benchReverseAStar.run(N_SAMPLES);
+		
+		PerformanceTest<AStarSolver> benchAStar(N_ROWS, N_COLS, DELAY);
+		benchAStar.run(N_SAMPLES);
+		
+		PerformanceTest<BestFirstSolver> benchBFS(N_ROWS, N_COLS, DELAY);
+		benchBFS.run(N_SAMPLES);
+		
+		PerformanceTest<RandomSolver> benchRandom(N_ROWS, N_COLS, DELAY);
+		benchRandom.run(N_SAMPLES);
+		
+		//PerformanceTest<DefaultSolver> benchDefault(N_ROWS, N_COLS, DELAY);
 		//benchDefault.run(N_SAMPLES);
-		//
-		run();
+		
+		//run();
 	}
 	catch (std::exception & e) {
 		cout << "Exception caught in " << __FUNCTION__ << ": "

@@ -18,7 +18,7 @@ void run()
 		//std::make_unique<HamiltonianBFSSolver>(gameInterface.gameState);
 
 	std::unique_ptr<ControllerBase> controllerPtr =
-		std::make_unique<AIController>(gameInterface.gameState, std::move(solverPtr));
+		std::make_unique<AIController>(gameInterface.gameState, std::move(solverPtr), 50);
 		//std::make_unique<UserController>();
 
 	gameInterface.setController(move(controllerPtr));

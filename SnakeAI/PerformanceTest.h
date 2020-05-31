@@ -20,8 +20,7 @@ public:
 	virtual ~PerformanceTest() noexcept = default;
 	PerformanceTest& operator=(const PerformanceTest&) = default;
 	PerformanceTest& operator=(PerformanceTest&&) noexcept = default;
-
-	PerformanceTest(size_t nRows, size_t nCols);
+	PerformanceTest(size_t nRows, size_t nCols, int delayMilliSec = 50);
 
 	void run(size_t nGames);
 
@@ -32,10 +31,10 @@ private:
 };
 
 template<typename SOLVER_T>
-PerformanceTest<SOLVER_T>::PerformanceTest(size_t nRows, size_t nCols) :
+PerformanceTest<SOLVER_T>::PerformanceTest(size_t nRows, size_t nCols, int delayMilliSec) :
 	snakeInterface(nRows, nCols),
 	solverPtr(std::make_unique<SOLVER_T>(snakeInterface.gameState)),
-	controllerPtr(std::make_unique<AIController>(snakeInterface.gameState, std::move(solverPtr)))
+	controllerPtr(std::make_unique<AIController>(snakeInterface.gameState, std::move(solverPtr), delayMilliSec))
 {
 	snakeInterface.setController(move(controllerPtr));
 }

@@ -1,13 +1,16 @@
 #include "AIController.h"
 
-AIController::AIController(SnakeState& gameState, std::unique_ptr<SolverBase>&& solverPtr) :
+using namespace std;
+
+AIController::AIController(SnakeState& gameState, std::unique_ptr<SolverBase>&& solverPtr, int delayMilliSec) :
 	gameState(gameState),
-	solverPtr(std::move(solverPtr)) {}
+	solverPtr(std::move(solverPtr)),
+	delayMilliSec(delayMilliSec) {}
 
 char AIController::getInput()
 {
-	cv::waitKey(50);
-	
+	cv::waitKey(delayMilliSec);
+
 	char selectedMove = solverPtr->solve();
 		
 	return selectedMove;

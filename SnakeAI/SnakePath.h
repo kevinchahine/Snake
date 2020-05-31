@@ -8,7 +8,7 @@
 #include "SnakeState.h"
 
 // Defines a sequence of moves that lead to a defined snake state
-class SnakePath : protected std::deque<char>
+class SnakePath : public std::deque<char>
 {
 public:
 	SnakePath() = default;
