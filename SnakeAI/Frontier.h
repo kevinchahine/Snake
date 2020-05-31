@@ -18,7 +18,7 @@
 // C should be either std::less<CostlySnakePath> or std::greater<CostlySnakePath>
 template<typename C>
 class Frontier : 
-	public std::priority_queue<CostlySnakePath, std::vector<CostlySnakePath>, C>,	// sorted in order of ascending cost
+	public std::priority_queue<CostlySnakePath, std::vector<CostlySnakePath>, C>,	// sorted in order of ascending/decending cost
 	public std::set<uint64_t>														// hash value of CostlySnakePaths
 {
 public:
@@ -47,6 +47,7 @@ void Frontier<C>::pushIfUnique(T&& costlySnakePath)
 	if (matchingPathIt == this->set<uint64_t>::end()) {
 		// 1-1.) No. There is no matching path. Add new path to frontier
 		this->priority_queue<CostlySnakePath>::push(std::forward<T>(costlySnakePath));
+		//this->std::priority_queue<CostlySnakePath, std::vector<CostlySnakePath>, C>::push(std::forward<T>(costlySnakePath));
 		this->set<uint64_t>::insert(hash);
 	}
 }
@@ -54,10 +55,10 @@ void Frontier<C>::pushIfUnique(T&& costlySnakePath)
 template<typename C>
 void Frontier<C>::pop()
 {
-	const CostlySnakePath& topPath = this->priority_queue<CostlySnakePath>::top();
+	const CostlySnakePath& topPath = this->priority_queue<CostlySnakePath, std::vector<CostlySnakePath>, C>::top();
 
 	// remove the most promising path from queue
-	this->priority_queue<CostlySnakePath>::pop();
+	this->priority_queue<CostlySnakePath, std::vector<CostlySnakePath>, C>::pop();
 
 	// remove its identifying hash value from the set.
 	auto it = this->set<uint64_t>::erase(topPath.hashValue());

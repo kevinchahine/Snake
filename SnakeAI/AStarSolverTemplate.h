@@ -78,7 +78,7 @@ SnakePath AStarSolverTemplate<C>::search(const SnakeState& start)
 
 	// 1.) Create frontier to store potential solutions (paths) in order of
 	// ascending cost. Push node to the frontier
-	Frontier<std::less<CostlySnakePath>> frontier;
+	Frontier<C> frontier;
 	frontier.pushIfUnique(move(node));
 
 	// 2.) Create explored list to represent snake states that have been visited 
