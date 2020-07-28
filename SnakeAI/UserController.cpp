@@ -19,13 +19,21 @@ UserController::~UserController() noexcept
 
 char UserController::getInput()
 {
-	clock_t delayMilliSec = 400;
+	clock_t delayMilliSec = 200;
 	
 	// block until delay has passed
 	//Sleep(delayMilliSec);
 	clock_t stopTime = clock() + delayMilliSec;
 	while (clock() < stopTime);
 	
+	if (_kbhit()) {
+		input = _getch();
+
+		input = tolower(input);
+
+		return input;
+	}
+
 	return input;
 }
 
