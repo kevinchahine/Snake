@@ -394,6 +394,25 @@ void Snake::growAnyLegal()
 	}
 }
 
+void Snake::undoMove(const Position& lastTailPos)
+{
+	const Position& currTail = tailTip();
+
+	// Is lastTailPos the same as the current tail?
+	if (lastTailPos == currTail) {
+		// Yes. This means that the snake moved by "growing"
+		// All we have to do is move the head back. 
+		// Tail can stay where it is.
+		this->pop_back();				// Chop off head
+	}
+	else {
+		// No. This means that the snake moved by "moving" 
+		// We have to move the head back and the tail
+		this->pop_back();				// Chop off head
+		this->push_front(lastTailPos);	// Move tail back
+	}
+}
+
 uint64_t Snake::hashValue() const
 {
 	uint64_t hashValue = 0;

@@ -17,9 +17,13 @@ void run()
 		//std::make_unique<HamiltonianSolver>(gameInterface.gameState);
 		//std::make_unique<HamiltonianBFSSolver>(gameInterface.gameState);
 
+	cout << "--- Using " << typeid(*solverPtr).name() << " ---\n";
+
 	std::unique_ptr<ControllerBase> controllerPtr =
-	std::make_unique<AIController>(gameInterface.gameState, std::move(solverPtr), 50);
-	//std::make_unique<UserController>();
+		//std::make_unique<AIController>(gameInterface.gameState, std::move(solverPtr), 50);
+		std::make_unique<UserController>();
+
+	cout << "--- " << typeid(*controllerPtr).name() << " ---\n";
 
 	gameInterface.setController(move(controllerPtr));
 

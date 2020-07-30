@@ -9,6 +9,9 @@ SnakeInterface::SnakeInterface(size_t boardWidth, size_t boardHeight) :
 
 void SnakeInterface::run()
 {
+	stack<Position> snakePositions;		// REMOVE
+	stack<Position> applePositions;		// REMOVE
+
 	// 1.) --- Start from a clean game ---
 	gameState.reset();
 
@@ -35,7 +38,20 @@ void SnakeInterface::run()
 		char input = controllerPtr->getInput();
 
 		// 4-3.) --- Apply move ---
-		auto currGameState = gameState.moveSnake(input);
+		if (input == 'z') {
+			if (snakePositions.size() > 2) {
+				gameState.undoMove(snakePositions.top(), applePositions.top());
+				snakePositions.pop();
+				applePositions.pop();
+			}
+		}
+		else {
+			if (gameState.isMoveLegal(input) && gameState.isMoveSafe(input)) {
+				snakePositions.push(gameState.getSnake().tailTip());	// remove
+				applePositions.push(gameState.getApple());				// remove
+			}
+			auto currGameState = gameState.moveSnake(input);
+		}
 
 		// 4-4.) --- Check game state ---
 		switch (gameState.getCurrentState())

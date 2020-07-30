@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <memory>
+#include <stack>		// remove
 #include <time.h>
 
 #include <opencv2/opencv.hpp>

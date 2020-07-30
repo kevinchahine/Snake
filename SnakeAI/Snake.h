@@ -26,10 +26,10 @@
 
 	Head is at the rbegin()
 
-	head()
-	end()
-	back()
-	push_back() moves head forward
+	head()			- returns position of head
+	end()			- returns iterator that points 1 past the head
+	back()			- returns position of head 
+	push_back(p)	- moves head to the position of p
 
 	tailTip()
 	begin()
@@ -79,14 +79,6 @@ public:
 	bool isMoveLegal(char direction) const;
 	char getAnyLegalMove() const;
 
-	// Safe moves are moves where you don't hit your tail.
-	// Defined in SnakeState
-	///bool isMoveUpSafe() const;
-	///bool isMoveDownSafe() const;
-	///bool isMoveLeftSafe() const;
-	///bool isMoveRightSafe() const;
-	///bool isMoveSafe(char move) const;
-	
 	void moveUpFast();
 	void moveDownFast();
 	void moveLeftFast();
@@ -114,6 +106,11 @@ public:
 	void growRightIfLegal();
 	void growIfLegal(char direction);
 	void growAnyLegal();
+
+	// Undoes a move by moving the snake backwards so that the snakes tail is at lastTailPos.
+	// Works for undoing move and grow operations. Make sure lastTailPos is adjacent to the current tail
+	// position or the snake will become detached.
+	void undoMove(const Position& lastTailPos);
 
 	uint64_t hashValue() const;
 

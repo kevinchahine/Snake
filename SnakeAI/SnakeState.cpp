@@ -45,7 +45,22 @@ void SnakeState::reset()
 	// --- Place apple in a random position ---
 	// --- Will make sure it doesn't get placed on snake ---
 	moveAppleRandomly();
-	board.paste(apple);
+	//board.paste(apple);
+}
+
+void SnakeState::reset(const Position& snakeStartingPos, const Position& appleStartingPos)
+{
+	gameState = GAME_STATE::CONTINUE;
+	board.clear();
+
+	// --- Place snake in a random position ---
+	snake.resetHeadAt(snakeStartingPos);
+	board.paste(snake);
+
+	// --- Place apple in a random position ---
+	// --- Will make sure it doesn't get placed on snake ---
+	moveAppleTo(appleStartingPos);
+	//board.paste(apple);
 }
 
 SnakeState::GAME_STATE SnakeState::moveSnake(char controlInput)
@@ -105,7 +120,7 @@ SnakeState::GAME_STATE SnakeState::calcGameState()
 	}
 
 	// Did we win? Did we cover every cell?
-	// *** Not else if, because we can eat an apple and win at the same time.
+	// *** Not else if, because we have to eat the last apple to win ***
 	if (snake.size() == board.num_elements()) {
 		// Yes we won.
 		gameState = GAME_STATE::WON;
@@ -349,6 +364,70 @@ void SnakeState::moveFast(char direction)
 	}
 }
 
+void SnakeState::growUpFast()
+{
+	Position tailTip = snake.tailTip();
+
+	snake.growUpFast();
+
+	board(snake.head()) = CELL::HEAD;
+	board(snake.neck()) = CELL::TAIL;
+
+	calcGameState();
+}
+
+void SnakeState::growDownFast()
+{
+	Position tailTip = snake.tailTip();
+
+	snake.growDownFast();
+
+	board(snake.head()) = CELL::HEAD;
+	board(snake.neck()) = CELL::TAIL;
+
+	calcGameState();
+}
+
+void SnakeState::growLeftFast()
+{
+	Position tailTip = snake.tailTip();
+
+	snake.growLeftFast();
+
+	board(snake.head()) = CELL::HEAD;
+	board(snake.neck()) = CELL::TAIL;
+
+	calcGameState();
+}
+
+void SnakeState::growRightFast()
+{
+	Position tailTip = snake.tailTip();
+
+	snake.growRightFast();
+
+	board(snake.head()) = CELL::HEAD;
+	board(snake.neck()) = CELL::TAIL;
+
+	calcGameState();
+}
+
+void SnakeState::growFast(char direction)
+{
+	switch (direction)
+	{
+	case 'w': growUpFast();		break;
+	case 's': growDownFast();	break;
+	case 'a': growLeftFast();	break;
+	case 'd': growRightFast();	break;
+	default:
+		std::stringstream ss;
+		ss << __FUNCTION__ << ": parameter move = " << direction
+			<< "Is not a possible move.";
+		throw std::exception(ss.str().c_str());
+	}
+}
+
 void SnakeState::moveUpIfLegal()
 {
 	if (isMoveUpLegal())
@@ -389,6 +468,25 @@ void SnakeState::moveIfLegal(char direction)
 	}
 }
 
+void SnakeState::undoMove(const Position& lastTailPos, const Position& lastApplePos)
+{
+	// Must be done before moving snake 
+	board(snake.head()) = CELL::EMPTY;
+
+	// Move apple back to where it was before
+	moveAppleTo(lastApplePos);
+
+	// Move snake back to where it was before
+	snake.undoMove(lastTailPos);
+
+	// Replace cells to what they were before
+	board(snake.head()) = CELL::HEAD;
+	board(snake.tailTip()) = CELL::TAIL;
+
+	// After undoing a move, the game will always be in the CONTINUE state
+	gameState = GAME_STATE::CONTINUE;	
+}
+
 void SnakeState::moveAppleRandomly()
 {
 	// --- Remove apple from cell, but only if it is occupied by an apple ---
@@ -417,6 +515,22 @@ void SnakeState::moveAppleRandomly()
 
 	// Move apple to the random empty cell
 	apple.moveTo(emptyCell);
+
+	// Place the apple on the board.
+	board(apple) = CELL::APPLE;
+}
+
+void SnakeState::moveAppleTo(const Position& newApplePos)
+{
+	// --- Remove apple from cell, but only if it is occupied by an apple ---
+	// This way in case cell is occupied by the snake's head, we won't
+	// accidentally remove its head.
+	if (board(apple) == CELL::APPLE) {
+		board(apple) = CELL::EMPTY;
+	}
+
+	// --- Move apple to the new location (even if it is on the snake itself) ---
+	apple.moveTo(newApplePos);
 
 	// Place the apple on the board.
 	board(apple) = CELL::APPLE;

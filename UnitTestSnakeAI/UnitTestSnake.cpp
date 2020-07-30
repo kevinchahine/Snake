@@ -233,8 +233,34 @@ namespace UnitTestSnakeAI
 			board.print(ss);
 			ss << "hash value = " << snake.hashValue() << '\n';
 			Logger::WriteMessage(ss.str().c_str());
-
+			
 			Assert::IsTrue(true);
+		}
+
+		TEST_METHOD(UndoMove)
+		{
+			Snake snake(4, 4);
+			snake.resetHeadAt(Position(1, 1));	// Head is at (1, 1)
+			snake.moveRightFast();				// Head is at (1, 2)
+			snake.moveRightFast();				// Head is at (1, 3)
+			snake.undoMove(Position(1, 1));		// Head is at (1, 2)
+
+			Assert::IsTrue(snake.head() == Position(1, 2));
+			Assert::IsTrue(snake.tailTip() == Position(1, 1));
+			Assert::IsTrue(snake.size() == size_t(2));
+		}
+
+		TEST_METHOD(UndoGrow)
+		{
+			Snake snake(4, 4);					// Tail		Head	Size
+			snake.resetHeadAt(Position(1, 1));	// (?, ?)	(1, 1)	2
+			snake.moveRightFast();				// (1, 1)	(1, 2)	2
+			snake.growRightFast();				// (1, 1)	(1, 3)	3
+			snake.undoMove(Position(1, 1));		// (1, 1)	(1, 2)	2
+
+			Assert::IsTrue(snake.head() == Position(1, 2));
+			Assert::IsTrue(snake.tailTip() == Position(1, 1));
+			Assert::IsTrue(snake.size() == size_t(2));
 		}
 	};
 }

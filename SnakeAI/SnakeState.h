@@ -39,6 +39,7 @@ public:
 	void init();
 
 	void reset();
+	void reset(const Position& snakeStartingPos, const Position & appleStartingPos);
 
 	GAME_STATE moveSnake(char controlInput);
 
@@ -82,14 +83,30 @@ public:
 	void moveRightFast();
 	void moveFast(char direction);
 
+	// === Forces growing. Does not account for eating apple. Not intended for regular gameplay ===
+	// === Use move***Fast() or move***IfLegal() for regular gameplay ===
+	void growUpFast();
+	void growDownFast();
+	void growLeftFast();
+	void growRightFast();
+	void growFast(char direction);
+
 	// === A Legal move will not hit any walls nor move backwards ===
 	void moveUpIfLegal();
 	void moveDownIfLegal();
 	void moveLeftIfLegal();
 	void moveRightIfLegal();
 	void moveIfLegal(char direction);
-	
+
+	// Undoes a move by moving the snake backwards so that the snakes tail is at lastTailPos.
+	// Works for undoing move and grow operations. Make sure lastTailPos is adjacent to the current tail
+	// position or the snake will become detached.
+	// Also replaces the apple. The apple may infact not have been eaten. In that case, it will unnecessarily
+	// place it where it already is.
+	void undoMove(const Position& lastTailPos, const Position & lastApplePos);
+
 	void moveAppleRandomly();
+	void moveAppleTo(const Position& newApplePos);
 	bool appleIsEaten() const;
 
 protected:
