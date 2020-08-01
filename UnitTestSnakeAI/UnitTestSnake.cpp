@@ -243,7 +243,7 @@ namespace UnitTestSnakeAI
 			snake.resetHeadAt(Position(1, 1));	// Head is at (1, 1)
 			snake.moveRightFast();				// Head is at (1, 2)
 			snake.moveRightFast();				// Head is at (1, 3)
-			snake.undoMove(Position(1, 1));		// Head is at (1, 2)
+			snake.undoMoveSafe(Position(1, 1));		// Head is at (1, 2)
 
 			Assert::IsTrue(snake.head() == Position(1, 2));
 			Assert::IsTrue(snake.tailTip() == Position(1, 1));
@@ -256,7 +256,7 @@ namespace UnitTestSnakeAI
 			snake.resetHeadAt(Position(1, 1));	// (?, ?)	(1, 1)	2
 			snake.moveRightFast();				// (1, 1)	(1, 2)	2
 			snake.growRightFast();				// (1, 1)	(1, 3)	3
-			snake.undoMove(Position(1, 1));		// (1, 1)	(1, 2)	2
+			snake.undoMoveSafe(Position(1, 1));		// (1, 1)	(1, 2)	2
 
 			Assert::IsTrue(snake.head() == Position(1, 2));
 			Assert::IsTrue(snake.tailTip() == Position(1, 1));

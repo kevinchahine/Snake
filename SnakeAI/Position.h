@@ -25,6 +25,7 @@ public:
 	Position downOne() const;
 	Position leftOne() const;
 	Position rightOne() const;
+	Position oneToThe(char move) const;
 
 	index row() const;
 	void row(const index& row);

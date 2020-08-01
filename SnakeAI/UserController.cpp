@@ -17,6 +17,10 @@ UserController::~UserController() noexcept
 	terminate();
 }
 
+void UserController::reset()
+{
+}
+
 char UserController::getInput()
 {
 	clock_t delayMilliSec = 200;

@@ -274,6 +274,9 @@ boost::container::static_vector<char, 3> SnakeState::getAllLegalAndSafeMoves() c
 
 void SnakeState::moveUpFast()
 {
+	snakePositions.push_back(snake.head());
+	applePositions.push_back(apple);
+
 	Position tailTip = snake.tailTip();
 
 	if (snake.head().upOne() == apple) {
@@ -293,6 +296,9 @@ void SnakeState::moveUpFast()
 
 void SnakeState::moveDownFast()
 {
+	snakePositions.push_back(snake.head());
+	applePositions.push_back(apple);
+	
 	Position tailTip = snake.tailTip();
 
 	if (snake.head().downOne() == apple) {
@@ -312,6 +318,9 @@ void SnakeState::moveDownFast()
 
 void SnakeState::moveLeftFast()
 {
+	snakePositions.push_back(snake.head());
+	applePositions.push_back(apple);
+
 	Position tailTip = snake.tailTip();
 
 	if (snake.head().leftOne() == apple) {
@@ -331,6 +340,9 @@ void SnakeState::moveLeftFast()
 
 void SnakeState::moveRightFast()
 {
+	snakePositions.push_back(snake.head());
+	applePositions.push_back(apple);
+
 	Position tailTip = snake.tailTip();
 
 	if (snake.head().rightOne() == apple) {
@@ -366,8 +378,6 @@ void SnakeState::moveFast(char direction)
 
 void SnakeState::growUpFast()
 {
-	Position tailTip = snake.tailTip();
-
 	snake.growUpFast();
 
 	board(snake.head()) = CELL::HEAD;
@@ -378,8 +388,6 @@ void SnakeState::growUpFast()
 
 void SnakeState::growDownFast()
 {
-	Position tailTip = snake.tailTip();
-
 	snake.growDownFast();
 
 	board(snake.head()) = CELL::HEAD;
@@ -390,8 +398,6 @@ void SnakeState::growDownFast()
 
 void SnakeState::growLeftFast()
 {
-	Position tailTip = snake.tailTip();
-
 	snake.growLeftFast();
 
 	board(snake.head()) = CELL::HEAD;
@@ -402,8 +408,6 @@ void SnakeState::growLeftFast()
 
 void SnakeState::growRightFast()
 {
-	Position tailTip = snake.tailTip();
-
 	snake.growRightFast();
 
 	board(snake.head()) = CELL::HEAD;
@@ -468,23 +472,29 @@ void SnakeState::moveIfLegal(char direction)
 	}
 }
 
-void SnakeState::undoMove(const Position& lastTailPos, const Position& lastApplePos)
+void SnakeState::undoMoveSafe()
 {
-	// Must be done before moving snake 
-	board(snake.head()) = CELL::EMPTY;
+	// Don't undo a move if snake is too small
+	if (snake.size() > 2 && snakePositions.empty() == false && applePositions.empty() == false) {
+		cout << "(undo";
+		// Must be done before moving snake 
+		board(snake.head()) = CELL::EMPTY;
+		
+		cout << "|";
+		// Move apple back to where it was before
+		moveAppleTo(applePositions.back());
+		cout << "|";
+		// Move snake back to where it was before
+		snake.undoMoveSafe(snakePositions.back());
+		cout << "|";
+		// Replace cells to what they were before
+		board(snake.head()) = CELL::HEAD;
+		board(snake.tailTip()) = CELL::TAIL;
 
-	// Move apple back to where it was before
-	moveAppleTo(lastApplePos);
-
-	// Move snake back to where it was before
-	snake.undoMove(lastTailPos);
-
-	// Replace cells to what they were before
-	board(snake.head()) = CELL::HEAD;
-	board(snake.tailTip()) = CELL::TAIL;
-
-	// After undoing a move, the game will always be in the CONTINUE state
-	gameState = GAME_STATE::CONTINUE;	
+		// After undoing a move, the game will always be in the CONTINUE state
+		gameState = GAME_STATE::CONTINUE;
+		cout << ")\n";
+	}
 }
 
 void SnakeState::moveAppleRandomly()

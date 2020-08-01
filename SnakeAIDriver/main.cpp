@@ -20,8 +20,8 @@ int main()
 	srand(time(NULL));
 
 	try {
-		const size_t N_ROWS = 10;
-		const size_t N_COLS = 10;
+		const size_t N_ROWS =6;
+		const size_t N_COLS =6;
 		const size_t N_SAMPLES = 5;
 		const int DELAY = 1;
 

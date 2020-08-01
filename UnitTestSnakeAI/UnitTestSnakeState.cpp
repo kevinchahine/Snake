@@ -40,7 +40,7 @@ namespace UnitTestSnakeAI
 															// Tail		Head	Size
 			game.moveRightFast();							// (1, 1)	(1, 2)	2
 			game.moveRightFast();							// (1, 2)	(1, 3)	2
-			game.undoMove(Position(1, 1), appleStartPos);	// (1, 1)	(1, 2)	2
+			game.undoMoveSafe(Position(1, 1), appleStartPos);	// (1, 1)	(1, 2)	2
 
 			const Snake& snake = game.getSnake();
 			const Apple& apple = game.getApple();

@@ -110,7 +110,7 @@ public:
 	// Undoes a move by moving the snake backwards so that the snakes tail is at lastTailPos.
 	// Works for undoing move and grow operations. Make sure lastTailPos is adjacent to the current tail
 	// position or the snake will become detached.
-	void undoMove(const Position& lastTailPos);
+	void undoMoveSafe(const Position& lastTailPos);
 
 	uint64_t hashValue() const;
 

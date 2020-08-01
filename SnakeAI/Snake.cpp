@@ -394,7 +394,7 @@ void Snake::growAnyLegal()
 	}
 }
 
-void Snake::undoMove(const Position& lastTailPos)
+void Snake::undoMoveSafe(const Position& lastTailPos)
 {
 	const Position& currTail = tailTip();
 

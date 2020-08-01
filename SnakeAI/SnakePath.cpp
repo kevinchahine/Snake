@@ -38,7 +38,7 @@ void SnakePath::popMove()
 {
 	//char lastMove = this->front();
 
-	//destinationState.undoMove(lastMove);
+	//destinationState.undoMoveSafe(lastMove);
 	//stringstream ss;
 	//ss << "Don't use " << __FUNCTION__ << " until we make undo move methods\n";
 	//throw std::exception(ss.str().c_str());

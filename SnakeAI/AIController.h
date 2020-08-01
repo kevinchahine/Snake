@@ -11,6 +11,8 @@ class AIController : public ControllerBase
 public:
 	AIController(SnakeState& gameState, std::unique_ptr<SolverBase> && solverPtr, int delayMilliSec = 50);
 
+	virtual void reset() override;
+
 	virtual char getInput() override;
 	
 	// Delay after every call to getInput()

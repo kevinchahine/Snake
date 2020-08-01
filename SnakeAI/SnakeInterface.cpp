@@ -9,11 +9,9 @@ SnakeInterface::SnakeInterface(size_t boardWidth, size_t boardHeight) :
 
 void SnakeInterface::run()
 {
-	stack<Position> snakePositions;		// REMOVE
-	stack<Position> applePositions;		// REMOVE
-
 	// 1.) --- Start from a clean game ---
 	gameState.reset();
+	controllerPtr->reset();
 
 	// 2.) --- Print opening board ---
 	image = cv::Mat::zeros(gameState.getNRows() * 40, gameState.getNCols() * 40, CV_8UC3);
@@ -39,18 +37,14 @@ void SnakeInterface::run()
 
 		// 4-3.) --- Apply move ---
 		if (input == 'z') {
-			if (snakePositions.size() > 2) {
-				gameState.undoMove(snakePositions.top(), applePositions.top());
-				snakePositions.pop();
-				applePositions.pop();
+			if (gameState.getSnake().size() > 2) {
+				gameState.undoMoveSafe();
 			}
 		}
 		else {
 			if (gameState.isMoveLegal(input) && gameState.isMoveSafe(input)) {
-				snakePositions.push(gameState.getSnake().tailTip());	// remove
-				applePositions.push(gameState.getApple());				// remove
+				auto currGameState = gameState.moveSnake(input);
 			}
-			auto currGameState = gameState.moveSnake(input);
 		}
 
 		// 4-4.) --- Check game state ---
@@ -68,7 +62,7 @@ void SnakeInterface::run()
 			break;
 		default:
 			std::cout << "Error: " << __FUNCTION__ << " line " << __LINE__
-				<< " new game state encountered: " 
+				<< " new game state encountered: "
 				<< static_cast<int>(gameState.getCurrentState()) << '\n';
 			break;
 		}
@@ -78,7 +72,7 @@ void SnakeInterface::run()
 			gameState.moveAppleRandomly();
 		}
 
-		// 4-4.) --- Print next frame ---
+		// 4-4.) --- Show next frame ---
 		gameState.getBoard().print(image);
 		cv::imshow("Snake AI", image);
 		cv::waitKey(1);

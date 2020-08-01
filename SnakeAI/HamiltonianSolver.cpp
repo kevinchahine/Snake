@@ -14,7 +14,20 @@ HamiltonianSolver::HamiltonianSolver(const SnakeState& gameState) :
 
 void HamiltonianSolver::reset()
 {
+	vector<char> solutionPath = initializeCycleDynamic();
 
+	Position pos = gameState.getSnake().head();
+	
+	cout << "Did our job. Here's the solution:\n";
+	for (auto c : solutionPath) {
+		cout << c << '\t';
+
+		hamiltonianCycle(pos) = c;
+
+		pos = pos.oneToThe(c);
+	}
+
+	system("pause");
 }
 
 char HamiltonianSolver::solve()
@@ -34,6 +47,24 @@ char HamiltonianSolver::solve()
 		// No, so make any legal and safe move instead
 		return gameState.getAnyLegalAndSafeMove();
 	}
+}
+
+bool HamiltonianSolver::isSolution(const SnakeState& game)
+{
+	const Snake & snake = game.getSnake();
+
+	const Position& head = snake.head();
+	const Position& tail = snake.tailTip();
+
+	int colDiff = abs(head.col() - tail.col());
+	int rowDiff = abs(head.row() - tail.row());
+
+	bool isGoal =
+		(snake.size() == game.getNCells()) &&								// Is every cell is filled?
+		((colDiff == 1 && rowDiff == 0) || (rowDiff == 1 && colDiff == 0))	// Is tail adjacent to head?
+		;	
+
+	return isGoal;
 }
 
 void HamiltonianSolver::initializeCycle()
@@ -82,74 +113,149 @@ void HamiltonianSolver::initializeCycle()
 	c[0][0] = 's';
 }
 
-bool HamiltonianSolver::initializeCycleDynamic()
+vector<char> HamiltonianSolver::initializeCycleDynamic()
 {
+	// Used for getting valid moves, and forward checking
 	SnakeState game = gameState;
 
+	// vvvvv remove this vvvvvvv
+	game.growFast(game.getAnyLegalAndSafeMove());
+	game.growFast(game.getAnyLegalAndSafeMove());
+	game.growFast(game.getAnyLegalAndSafeMove());
+	game.growFast(game.getAnyLegalAndSafeMove());
+	game.growFast(game.getAnyLegalAndSafeMove());
+	game.growFast(game.getAnyLegalAndSafeMove());
+	// ^^^^^ remove htis ^^^^^^^
+
+	// Used for branching, backtracking and final solution
 	vector<static_vector<char, 3>> validMoves;
 	validMoves.reserve(game.getNCells());
 
-	// 1.) 
-	validMoves.emplace_back(game.getAllLegalAndSafeMoves());
+	// 1.) --- Initialize validMoves with the current snake state ---
+	initializeValidMoves(validMoves, game.getSnake());
 
-	// 2.) 
-	do {
-		// 2-.) If validMoves is empty then there is no solution
+	// 2.) --- Branch valid moves until a solution is found or branches run out ---
+	while (true) {
+		// remove vvvvv
+		static int i = 0;
+		if (i++ % 1 == 0) {
+			cv::Mat image = cv::Mat::zeros(gameState.getNRows() * 40, gameState.getNCols() * 40, CV_8UC3);
+			game.getBoard().print(image);
+			cv::imshow("Hamiltonian Solver", image);
+			cv::waitKey(0);
+		}
+		// remove ^^^^^^^^^
+
+		//cout << validMoves.size() << '\n';
+
+		// 2-1.) --- If validMoves is empty then there is no solution ---
 		if (validMoves.empty()) {
-			return false;	// No solution is possible.
+			cout << "Hamiltonian Solver NO SOLUTION\n";
+			return vector<char>();	// No solution was found
 		}
 
-		// 2-.) Find branches
-		validMoves.emplace_back(game.getAllLegalAndSafeMoves());
+		// 2-2.) --- Forward Checking ---
+		if (/*fail forward checking*/ false) {
+			// back track
+		}
 
-		static_vector<char, 3>& nextValidMoves = validMoves.back();
+		// 2-3.) --- Check for solution ---
+		if (isSolution(game)) {
+			cout << "--- Hamiltonian Solver : Solution found ---\n";
 
-		// 2-.) Apply next valid move
-		if (nextValidMoves.empty()) {
-			// We need to back track
+			// finalize solution
+			vector<char> solutionPath;
+
+			solutionPath.resize(validMoves.size());
+			transform(
+				validMoves.begin(),
+				validMoves.end(),
+				solutionPath.begin(),
+				[](const static_vector<char, 3>& moveVec) { return moveVec.front(); });
+
+			return solutionPath;
+		}
+
+		// 3-4.) --- Iterate leaves ---
+		static_vector<char, 3>& leaves = validMoves.back();
+		// Are there any leaves to iterate 
+		if (leaves.empty()) { // Maybe this if should be first (2-0.) and contain a pop_back loop
+			// No more leaves. Back track
 			validMoves.pop_back();
+			
+			if (validMoves.empty() == false) {
+				if (validMoves.back().empty() == false) { 
+					validMoves.back().pop_back(); 
+				}
+			}
+
+			game.undoMoveSafe();
 		}
 		else {
-			game.growFast(nextValidMoves.back());
-			nextValidMoves.pop_back();
+			// Yes we have a few leaves. Search the last leaf.
+			char nextMove = leaves.back();
+
+			cout << "Moving " << nextMove << "\n";
+			if (game.isMoveSafe(nextMove)) {
+				game.growFast(nextMove);
+			}
+			else {
+				cout << "Error can't move in that direction " << nextMove << '\n';
+			}
+
+			// Apply next move
+			validMoves.emplace_back(game.getAllLegalAndSafeMoves());
+		}
+	} // end while (branch)
+}
+
+void HamiltonianSolver::initializeValidMoves(vector<static_vector<char, 3>>& validMoves, const Snake& snake) const
+{
+	validMoves.clear();
+
+	if (snake.size() < 2) {
+		// Bad. Snake is either 0 or 1 cells long, we can't do anything
+		return;
+	}
+
+	// At this point snake length is guarenteed to be atleast 2
+
+	Position prevPos = snake.tailTip();
+
+	// Iterate along the snake from tail to head
+	// Begin is the tail tip
+	// End the the head
+	for (auto snakeIt = snake.begin() + 1; snakeIt != snake.end(); snakeIt++) {
+		validMoves.emplace_back();
+
+		// Alias the current position on the snakes body
+		const Position& currPos = *snakeIt;
+
+		char move = 'x';
+
+		// Figure out how to get from prevPos to currPos
+		if (prevPos.upOne() == currPos) { move = 'w'; }
+		else if (prevPos.downOne() == currPos) { move = 's'; }
+		else if (prevPos.leftOne() == currPos) { move = 'a'; }
+		else if (prevPos.rightOne() == currPos) { move = 'd'; }
+		else {
+			cout << "Error: " << __FILE__ << " line " << __LINE__
+				<< " prevPos == " << prevPos << " currPos = " << currPos << '\n';
 		}
 
-		// 2-.) Was move "Hamiltonian Happy"
-		// Do some forward checking: check for holes and caves
+		// Append the move that would take us from prevPos to currPos
+		validMoves.back().push_back(move);
 
-		// 2-.) 
+		prevPos = currPos;
+	}
 
-	} while (true);
-
-	//vector<static_vector<Position, 3>> branches;
-	//branches.reserve(gameState.getNRows() * gameState.getNCols());
-	//// 1.) --- Snake state determines the first part of the cycle ---
-	////     --- (It may not be possible to generate a hamiltonian ---
-	////	   --- (from it but its okay) ---
-	//
-	//// 2.) --- Make a copy of the current game state so we don't modify it ---
-	//SnakeState tempState = gameState;
-	//
-	//do {
-	//	// 2-1.) --- Identify current snake head position ---
-	//
-	//	// 2-2.) --- Find all possible moves ---
-	//	static_vector<char, 3> possibleMoves;
-	//
-	//	if (tempState.isMoveUpLegal() && tempState.isMoveUpSafe()) {
-	//		possibleMoves.push_back('w');
-	//	}
-	//	else if (tempState.isMoveDownLegal() && tempState.isMoveDownSafe()) {
-	//		possibleMoves.push_back('s');
-	//	}
-	//	else if (tempState.isMoveLeftLegal() && tempState.isMoveLeftSafe()) {
-	//		possibleMoves.push_back('a');
-	//	}
-	//	else if (tempState.isMoveRightLegal() && tempState.isMoveRightSafe()) {
-	//		possibleMoves.push_back('d');
-	//	}
-	//
-	//	// 2-3.) --- Try Make move
-	//
-	//} while (true);
+	// remove this
+	for (const static_vector<char, 3> & moves : validMoves) {
+		cout << "<";
+		for (char m : moves) {
+			cout << m << ' ';
+		}
+		cout << ">\t";
+	}
+	cout << "\n";
 }

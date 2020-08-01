@@ -37,6 +37,18 @@ Position Position::rightOne() const
 	return Position(row(), col() + 1);
 }
 
+Position Position::oneToThe(char move) const
+{
+	switch (move)
+	{
+	case 'w':	return upOne();
+	case 's':	return downOne();
+	case 'a':	return leftOne();
+	case 'd':	return rightOne();
+	default:	return *this;
+	}
+}
+
 index Position::row() const
 {
 	return (*this)[0];

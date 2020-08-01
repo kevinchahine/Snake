@@ -11,6 +11,8 @@ public:
 	UserController();
 	virtual ~UserController() noexcept;
 
+	virtual void reset() override;
+
 	virtual char getInput() override;
 	
 	// Stops ongoing thread

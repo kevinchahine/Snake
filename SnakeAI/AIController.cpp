@@ -7,6 +7,11 @@ AIController::AIController(SnakeState& gameState, std::unique_ptr<SolverBase>&& 
 	solverPtr(std::move(solverPtr)),
 	delayMilliSec(delayMilliSec) {}
 
+void AIController::reset()
+{
+	solverPtr->reset();
+}
+
 char AIController::getInput()
 {
 	cv::waitKey(delayMilliSec);

@@ -15,6 +15,7 @@
 
 #include "ControllerBase.h"
 
+// TODO: Make a class called Undoable that takes care of undoing moves and inherite SnakeState from it.
 class SnakeState
 {
 public:
@@ -100,10 +101,8 @@ public:
 
 	// Undoes a move by moving the snake backwards so that the snakes tail is at lastTailPos.
 	// Works for undoing move and grow operations. Make sure lastTailPos is adjacent to the current tail
-	// position or the snake will become detached.
-	// Also replaces the apple. The apple may infact not have been eaten. In that case, it will unnecessarily
-	// place it where it already is.
-	void undoMove(const Position& lastTailPos, const Position & lastApplePos);
+	// Do not call if snake.size() <= 2 or errors will occur
+	void undoMoveSafe();
 
 	void moveAppleRandomly();
 	void moveAppleTo(const Position& newApplePos);
@@ -114,5 +113,9 @@ protected:
 	Board board;
 	Snake snake;
 	Apple apple;
+
+	// Used for undoing moves
+	std::vector<Apple> applePositions;
+	std::vector<Position> snakePositions;
 };
 

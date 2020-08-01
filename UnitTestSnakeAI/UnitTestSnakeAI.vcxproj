@@ -176,6 +176,7 @@
     </ClCompile>
     <ClCompile Include="UnitTestApple.cpp" />
     <ClCompile Include="UnitTestFrontier.cpp" />
+    <ClCompile Include="UnitTestHamiltonianSolver.cpp" />
     <ClCompile Include="UnitTestPosition.cpp" />
     <ClCompile Include="UnitTestSnake.cpp" />
     <ClCompile Include="UnitTestSnakeAI.cpp" />
