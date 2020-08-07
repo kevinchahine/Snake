@@ -53,9 +53,11 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& os, const Snake& snake);
 
+	void print(std::ostream& os = std::cout) const;
+
 	// Returns true iff snake bit itself.
 	// Meaning the head hits one of its tail cells.
-	bool bitItself() const;
+	bool isBittingItself() const;
 
 	// Determines if position is somewhere on the snakes body.
 	bool isOnSnake(const Position& position) const;
@@ -76,6 +78,7 @@ public:
 	bool isMoveDownLegal() const;
 	bool isMoveLeftLegal() const;
 	bool isMoveRightLegal() const;
+	bool isUndoLegal() const;
 	bool isMoveLegal(char direction) const;
 	char getAnyLegalMove() const;
 
@@ -83,6 +86,7 @@ public:
 	void moveDownFast();
 	void moveLeftFast();
 	void moveRightFast();
+	void undoFast();
 	void moveFast(char direction);
 	
 	// Move if it will not hit wall or the snakes neck
@@ -90,6 +94,7 @@ public:
 	void moveDownIfLegal();
 	void moveLeftIfLegal();
 	void moveRightIfLegal();
+	void undoIfLegal();
 	void moveIfLegal(char direction);
 	void moveAnyLegal();
 	
@@ -106,16 +111,12 @@ public:
 	void growRightIfLegal();
 	void growIfLegal(char direction);
 	void growAnyLegal();
-
-	// Undoes a move by moving the snake backwards so that the snakes tail is at lastTailPos.
-	// Works for undoing move and grow operations. Make sure lastTailPos is adjacent to the current tail
-	// position or the snake will become detached.
-	void undoMoveSafe(const Position& lastTailPos);
-
 	uint64_t hashValue() const;
 
 private:
 	size_t boardHeight;
 	size_t boardWidth;
+
+	std::vector<Position> snakePositions;
 };
 

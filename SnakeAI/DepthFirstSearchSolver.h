@@ -7,10 +7,10 @@
 
 #include "SolverBase.h"
 
-class Node : public std::pair<char, SnakeState>
+class Node : public std::pair<char, SnakeGame>
 {
 public:
-	Node(char move, const SnakeState& gameState);
+	Node(char move, const SnakeGame& m_gameState);
 	Node(const Node&) = default;
 	Node(Node&&) noexcept = default;
 	~Node() noexcept = default;
@@ -21,8 +21,8 @@ public:
 
 	char getMove() const;
 
-	const SnakeState& getGameState() const;
-	SnakeState& getGameState();
+	const SnakeGame& getGameState() const;
+	SnakeGame& getGameState();
 
 	bool operator==(const Node& left) const;
 }; 
@@ -30,16 +30,16 @@ public:
 class DepthFirstSearchSolver : public SolverBase
 {
 public:
-	DepthFirstSearchSolver(const SnakeState& gameState);
+	DepthFirstSearchSolver(const SnakeGame& m_gameState);
 
 	virtual void reset() override;
 
 	virtual char solve() override;
 	
 protected:
-	char depthFirstSearch(const SnakeState & currGameState);
+	char depthFirstSearch(const SnakeGame & currGameState);
 
-	void pushSafeMovesToFrontier(const SnakeState & gameState);
+	void pushSafeMovesToFrontier(const SnakeGame & m_gameState);
 
 protected:
 	std::vector<Node> frontier;

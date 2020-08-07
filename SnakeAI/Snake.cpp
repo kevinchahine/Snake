@@ -15,6 +15,13 @@ bool Snake::operator==(const Position& position) const
 	return this->isOnSnake(position);
 }
 
+void Snake::print(std::ostream& os) const
+{
+	os << "Snake " << head() << ' ' << neck() << ' ' << tailTip()
+		<< "length = " << size() << ' '
+		<< snakePositions.size() << " undos available\n";
+}
+
 std::ostream& operator<<(std::ostream& os, const Snake& snake)
 {
 	for (int i = 0; i < snake.size(); i++) {
@@ -24,7 +31,7 @@ std::ostream& operator<<(std::ostream& os, const Snake& snake)
 	return os;
 }
 
-bool Snake::bitItself() const
+bool Snake::isBittingItself() const
 {
 	// Iterator to the tip of the snakes tail
 	const auto tailIter = this->begin();
@@ -92,18 +99,7 @@ void Snake::resetHeadRandom()
 	int row = (rand() % boardHeight);
 	int col = (rand() % boardWidth);
 
-	this->clear();
-	this->push_back(Position(row, col));
-
-	// Give it a tail so that it will start at 2 cells long
-	if (row > 0) {
-		growUpFast();
-		moveDownFast();
-	}
-	else {
-		growDownFast();
-		moveUpFast();
-	}
+	resetHeadAt(Position(row, col));
 }
 
 void Snake::resetHeadAt(Position headStartingPosition)
@@ -111,22 +107,18 @@ void Snake::resetHeadAt(Position headStartingPosition)
 	// 'headStartingPosition' is to long to spell every time
 	Position& p = headStartingPosition;
 
-	// Remove the snake completely
-	this->clear();
+	this->clear();									// Delete snake
+	this->push_back(Position(p.row(), p.col()));	// Place head at the random position
+	snakePositions.clear();							// Clear the undo positions
 
-	// Place head at starting position
-	this->push_back(p);
-	
-	// Place its neck/tail somewhere near its head
-	if (p.row() > 0)					this->push_front(p.upOne());
-	else if (p.row() < boardHeight - 1)	this->push_front(p.downOne());
-	else if (p.col() > 0)				this->push_front(p.leftOne());
-	else if (p.col() < boardWidth - 1)	this->push_front(p.rightOne());
+	// Give it a tail so that it will start at 2 cells long
+	if (p.row() > 0) {
+		growUpFast();
+		moveDownFast();
+	}
 	else {
-		std::stringstream ss;
-		ss << "error in : " << __FUNCTION__ << " line " << __LINE__
-			<< ": headStartingPosition = " << headStartingPosition << '\n';
-		throw std::exception(ss.str().c_str());
+		growDownFast();
+		moveUpFast();
 	}
 }
 
@@ -170,6 +162,11 @@ bool Snake::isMoveRightLegal() const
 		headPosition.col() != neckPosition.col() - 1;
 }
 
+bool Snake::isUndoLegal() const
+{
+	return snakePositions.size() > 2;
+}
+
 bool Snake::isMoveLegal(char direction) const
 {
 	switch (direction)
@@ -178,6 +175,7 @@ bool Snake::isMoveLegal(char direction) const
 	case 's':	return isMoveDownLegal();
 	case 'a':	return isMoveLeftLegal();
 	case 'd':	return isMoveRightLegal();
+	case 'z':	return isUndoLegal();
 	default:	return false;
 	//default:	throw std::exception("Received invalid direction");
 	}
@@ -230,6 +228,28 @@ void Snake::moveRightFast()
 	this->pop_front();
 }
 
+void Snake::undoFast()
+{
+	const Position& lastTailPos = snakePositions.back();
+	const Position& currTail = tailTip();
+
+	// Is lastTailPos the same as the current tail?
+	if (lastTailPos == currTail) {
+		// Yes. This means that the snake moved by "growing"
+		// All we have to do is move the head back. 
+		// Tail can stay where it is.
+		this->pop_back();				// Chop off head
+	}
+	else {
+		// No. This means that the snake moved by "moving" 
+		// We have to move the head back and the tail
+		this->pop_back();				// Chop off head
+		this->push_front(lastTailPos);	// Move tail back
+	}
+
+	snakePositions.pop_back();
+}
+
 void Snake::moveFast(char direction)
 {
 	switch (direction)
@@ -238,6 +258,7 @@ void Snake::moveFast(char direction)
 	case 'd':	return moveRightFast();
 	case 's':	return moveDownFast();
 	case 'a':	return moveLeftFast();
+	case 'z':	return undoFast();
 	default:	throw std::exception("Received invalid direction");
 	}
 }
@@ -266,6 +287,12 @@ void Snake::moveRightIfLegal()
 		moveRightFast();
 }
 
+void Snake::undoIfLegal()
+{
+	if (isUndoLegal())
+		undoFast();
+}
+
 void Snake::moveIfLegal(char direction)
 {
 	switch (direction)
@@ -274,6 +301,7 @@ void Snake::moveIfLegal(char direction)
 	case 'd':	return moveRightIfLegal();
 	case 's':	return moveDownIfLegal();
 	case 'a':	return moveLeftIfLegal();
+	case 'z':	return undoIfLegal();
 	//default:	throw std::exception("Received invalid direction");
 	}
 }
@@ -294,6 +322,9 @@ void Snake::moveAnyLegal()
 
 void Snake::growUpFast()
 {
+	// Save tail Pos for undo
+	snakePositions.push_back(tailTip());
+
 	Position headPosition = head();
 
 	headPosition = headPosition.upOne();
@@ -304,6 +335,9 @@ void Snake::growUpFast()
 
 void Snake::growDownFast()
 {
+	// Save tail Pos for undo
+	snakePositions.push_back(tailTip());
+
 	Position headPosition = head();
 
 	headPosition = headPosition.downOne();
@@ -314,6 +348,9 @@ void Snake::growDownFast()
 
 void Snake::growLeftFast()
 {
+	// Save tail Pos for undo
+	snakePositions.push_back(tailTip());
+
 	Position headPosition = head();
 
 	headPosition = headPosition.leftOne();
@@ -324,6 +361,9 @@ void Snake::growLeftFast()
 
 void Snake::growRightFast()
 {
+	// Save tail Pos for undo
+	snakePositions.push_back(tailTip());
+
 	Position headPosition = head();
 
 	headPosition = headPosition.rightOne();
@@ -340,6 +380,7 @@ void Snake::growFast(char direction)
 	case 'd':	return growRightFast();
 	case 's':	return growDownFast();
 	case 'a':	return growLeftFast();
+	case 'z':	return undoFast();
 	default:	throw std::exception("Received invalid direction");
 	}
 }
@@ -376,6 +417,7 @@ void Snake::growIfLegal(char direction)
 	case 'd':	return growRightIfLegal();
 	case 's':	return growDownIfLegal();
 	case 'a':	return growLeftIfLegal();
+	case 'z':	return undoIfLegal();
 	default:	throw std::exception("Received invalid direction");
 	}
 }
@@ -391,25 +433,6 @@ void Snake::growAnyLegal()
 		ss << __FUNCTION__ << " line " << __LINE__
 			<< ": No move is legal";
 		throw std::exception(ss.str().c_str());
-	}
-}
-
-void Snake::undoMoveSafe(const Position& lastTailPos)
-{
-	const Position& currTail = tailTip();
-
-	// Is lastTailPos the same as the current tail?
-	if (lastTailPos == currTail) {
-		// Yes. This means that the snake moved by "growing"
-		// All we have to do is move the head back. 
-		// Tail can stay where it is.
-		this->pop_back();				// Chop off head
-	}
-	else {
-		// No. This means that the snake moved by "moving" 
-		// We have to move the head back and the tail
-		this->pop_back();				// Chop off head
-		this->push_front(lastTailPos);	// Move tail back
 	}
 }
 

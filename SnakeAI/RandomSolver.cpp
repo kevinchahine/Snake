@@ -1,7 +1,7 @@
 #include "RandomSolver.h"
 
-RandomSolver::RandomSolver(const SnakeState& gameState) :
-	SolverBase(gameState) {}
+RandomSolver::RandomSolver(const SnakeGame& m_gameState) :
+	SolverBase(m_gameState) {}
 
 void RandomSolver::reset()
 {
@@ -13,19 +13,19 @@ char RandomSolver::solve()
 	validMoves.reserve(3);
 
 	// Determine which moves are safe.
-	if (this->gameState.isMoveUpLegal() && this->gameState.isMoveUpSafe()) {
+	if (this->m_gameState.isMoveUpLegal() && this->m_gameState.isMoveUpSafe()) {
 		validMoves.push_back('w');
 	}
 
-	if (this->gameState.isMoveDownLegal() && this->gameState.isMoveDownSafe()) {
+	if (this->m_gameState.isMoveDownLegal() && this->m_gameState.isMoveDownSafe()) {
 		validMoves.push_back('s');
 	}
 
-	if (this->gameState.isMoveLeftLegal() && this->gameState.isMoveLeftSafe()) {
+	if (this->m_gameState.isMoveLeftLegal() && this->m_gameState.isMoveLeftSafe()) {
 		validMoves.push_back('a');
 	}
 
-	if (this->gameState.isMoveRightLegal() && this->gameState.isMoveRightSafe()) {
+	if (this->m_gameState.isMoveRightLegal() && this->m_gameState.isMoveRightSafe()) {
 		validMoves.push_back('d');
 	}
 
@@ -33,7 +33,7 @@ char RandomSolver::solve()
 	if (validMoves.empty() == true) {
 		// Return any legal move
 		std::cout << ":::legal and safe move was found :::\n";
-		return gameState.getAnyLegalMove();	
+		return m_gameState.getAnyLegalMove();	
 	}
 
 	int ranNum = rand() % validMoves.size();

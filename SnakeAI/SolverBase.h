@@ -4,12 +4,12 @@
 #include <algorithm>
 #include <iterator>
 
-#include "SnakeState.h"
+#include "SnakeGame.h"
 
 class SolverBase
 {
 public:
-	SolverBase(const SnakeState& gameState);
+	SolverBase(const SnakeGame& m_gameState);
 
 	virtual void reset() = 0;
 	virtual char solve() = 0;
@@ -17,6 +17,6 @@ public:
 protected:
 	// Reference view of current game state. As the game state changes
 	// This reference will see those changes.
-	const SnakeState & gameState;
+	const SnakeGame & m_gameState;
 };
 

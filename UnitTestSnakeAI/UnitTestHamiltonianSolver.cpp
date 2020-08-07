@@ -23,7 +23,7 @@ namespace UnitTestSnakeAI
 
 		TEST_METHOD(IsSolutionFalse)
 		{
-			SnakeState game(4, 4);
+			SnakeGame game(4, 4);
 
 			game.reset(Position(1, 0), Position(3, 3));
 
@@ -60,7 +60,7 @@ namespace UnitTestSnakeAI
 
 		TEST_METHOD(IsSolutionTrue)
 		{
-			SnakeState game(4, 4);
+			SnakeGame game(4, 4);
 
 			game.reset(Position(1, 0), Position(3, 3));
 

@@ -1,6 +1,6 @@
 #include "SolverBase.h"
 
-SolverBase::SolverBase(const SnakeState& gameState) :
-	gameState(gameState)
+SolverBase::SolverBase(const SnakeGame& m_gameState) :
+	m_gameState(m_gameState)
 {}
 

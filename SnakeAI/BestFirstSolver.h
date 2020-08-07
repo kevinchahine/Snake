@@ -5,7 +5,7 @@
 class BestFirstSolver :	public SolverBase
 {
 public:
-	BestFirstSolver(const SnakeState& gameState);
+	BestFirstSolver(const SnakeGame& m_gameState);
 
 	virtual void reset() override;
 

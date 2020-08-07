@@ -1,7 +1,7 @@
 #include "DepthFirstSearchSolver.h"
 
-DepthFirstSearchSolver::DepthFirstSearchSolver(const SnakeState& gameState) :
-	SolverBase(gameState)
+DepthFirstSearchSolver::DepthFirstSearchSolver(const SnakeGame& m_gameState) :
+	SolverBase(m_gameState)
 {}
 
 void DepthFirstSearchSolver::reset()
@@ -11,7 +11,7 @@ void DepthFirstSearchSolver::reset()
 	while (solution.empty() == false) solution.pop();
 
 	// Push current state to the frontier
-	frontier.push_back(Node{ NULL, gameState });
+	frontier.push_back(Node{ NULL, m_gameState });
 }
 
 char DepthFirstSearchSolver::solve()
@@ -20,7 +20,7 @@ char DepthFirstSearchSolver::solve()
 	reset();
 	
 	// Pop the next move and return it
-	char nextMove = depthFirstSearch(gameState);
+	char nextMove = depthFirstSearch(m_gameState);
 
 	//std::cout << "Next move = '" << nextMove << "'\n";
 
@@ -32,11 +32,11 @@ char DepthFirstSearchSolver::solve()
 	else {
 		// No, this move will kill us. But we have no other choises to just 
 		// return any valid move.
-		return gameState.getAnyLegalMove();
+		return m_gameState.getAnyLegalMove();
 	}
 }
 
-char DepthFirstSearchSolver::depthFirstSearch(const SnakeState& currGameState)
+char DepthFirstSearchSolver::depthFirstSearch(const SnakeGame& currGameState)
 {
 	// If the frontier is empty it means we have run out of moves to try.
 	// There are no valid move that we can make except those that will
@@ -78,12 +78,12 @@ char DepthFirstSearchSolver::depthFirstSearch(const SnakeState& currGameState)
 	}
 }
 
-void DepthFirstSearchSolver::pushSafeMovesToFrontier(const SnakeState& gameState)
+void DepthFirstSearchSolver::pushSafeMovesToFrontier(const SnakeGame& m_gameState)
 {
 	// Determine which moves are safe.
 	// Which moves will not immediately kill us?
-	if (gameState.isMoveUpSafe()) {
-		Node nextGameState = Node('w', gameState);
+	if (m_gameState.isMoveUpSafe()) {
+		Node nextGameState = Node('w', m_gameState);
 
 		nextGameState.getGameState().moveUpFast();
 		
@@ -93,8 +93,8 @@ void DepthFirstSearchSolver::pushSafeMovesToFrontier(const SnakeState& gameState
 		}
 	}
 
-	if (gameState.isMoveDownSafe()) {
-		Node nextGameState = Node('s', gameState);
+	if (m_gameState.isMoveDownSafe()) {
+		Node nextGameState = Node('s', m_gameState);
 
 		nextGameState.getGameState().moveDownFast();
 
@@ -104,8 +104,8 @@ void DepthFirstSearchSolver::pushSafeMovesToFrontier(const SnakeState& gameState
 		}
 	}
 
-	if (gameState.isMoveLeftSafe()) {
-		Node nextGameState = Node('a', gameState);
+	if (m_gameState.isMoveLeftSafe()) {
+		Node nextGameState = Node('a', m_gameState);
 
 		nextGameState.getGameState().moveLeftFast();
 
@@ -115,8 +115,8 @@ void DepthFirstSearchSolver::pushSafeMovesToFrontier(const SnakeState& gameState
 		}
 	}
 
-	if (gameState.isMoveRightSafe()) {
-		Node nextGameState = Node('d', gameState);
+	if (m_gameState.isMoveRightSafe()) {
+		Node nextGameState = Node('d', m_gameState);
 
 		nextGameState.getGameState().moveRightFast();
 
@@ -128,19 +128,19 @@ void DepthFirstSearchSolver::pushSafeMovesToFrontier(const SnakeState& gameState
 
 }
 
-Node::Node(char move, const SnakeState& gameState) :
-	std::pair<char, SnakeState>(move, gameState) {}
+Node::Node(char move, const SnakeGame& m_gameState) :
+	std::pair<char, SnakeGame>(move, m_gameState) {}
 
 bool Node::isGoal() const
 {
-	/*const SnakeState& gameState = getGameState();
-	const Snake& snake = gameState.snake;
-	const Apple& apple = gameState.apple;
+	/*const SnakeState& m_gameState = getGameState();
+	const Snake& snake = m_gameState.snake;
+	const Apple& m_apple = m_gameState.m_apple;
 
 	const Position& headPos = static_cast<const Position&>(snake.head());
-	const Position& applePos = static_cast<const Position&>(apple);
+	const Position& applePos = static_cast<const Position&>(m_apple);
 
-	return snake.head() == static_cast<const Position&>(apple);*/
+	return snake.head() == static_cast<const Position&>(m_apple);*/
 	throw std::exception(__FUNCTION__);	// Remove when implemeted
 	return false;
 }
@@ -150,19 +150,19 @@ char Node::getMove() const
 	return this->first;
 }
 
-const SnakeState& Node::getGameState() const
+const SnakeGame& Node::getGameState() const
 {
 	return this->second;
 }
 
-SnakeState& Node::getGameState()
+SnakeGame& Node::getGameState()
 {
 	return this->second;
 }
 
 bool Node::operator==(const Node& left) const
 {
-	// Two Nodes are equal if their snake and apple
+	// Two Nodes are equal if their snake and m_apple
 	// are in the exact same places.
 	// Does not account for the move.
 	return this->getGameState() == left.getGameState();

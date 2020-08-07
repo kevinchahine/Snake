@@ -7,8 +7,8 @@ class CostlySnakePath : public SnakePath
 {
 public:
 	CostlySnakePath() = default;
-	CostlySnakePath(const SnakeState& startingState);
-	CostlySnakePath(SnakeState&& startingState);
+	CostlySnakePath(const SnakeGame& startingState);
+	CostlySnakePath(SnakeGame&& startingState);
 	CostlySnakePath(const CostlySnakePath&) = default;
 	CostlySnakePath(CostlySnakePath&&) noexcept = default;
 	virtual ~CostlySnakePath() noexcept = default;

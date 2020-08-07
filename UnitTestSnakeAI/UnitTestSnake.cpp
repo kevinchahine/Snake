@@ -74,19 +74,19 @@ namespace UnitTestSnakeAI
 			snake.clear();
 
 			snake.push_back(Position(1, 0));
-			Assert::IsFalse(snake.bitItself());
+			Assert::IsFalse(snake.isBittingItself());
 
 			snake.growRightFast();
-			Assert::IsFalse(snake.bitItself());
+			Assert::IsFalse(snake.isBittingItself());
 
 			snake.growDownFast();
-			Assert::IsFalse(snake.bitItself());
+			Assert::IsFalse(snake.isBittingItself());
 
 			snake.growLeftFast();
-			Assert::IsFalse(snake.bitItself());
+			Assert::IsFalse(snake.isBittingItself());
 
 			snake.growUpFast();			// Bit itself
-			Assert::IsTrue(snake.bitItself());
+			Assert::IsTrue(snake.isBittingItself());
 		}
 
 		TEST_METHOD(IsMoveLegal)
@@ -192,8 +192,9 @@ namespace UnitTestSnakeAI
 
 		TEST_METHOD(HashValue)
 		{
+			Apple m_apple(0, 0);	// Not used
 			Snake snake(4, 4);
-			Board board(4, 4);
+			Board board(4, 4, snake, m_apple);
 
 			/* Start snake in this position
 			t h . .
@@ -243,7 +244,7 @@ namespace UnitTestSnakeAI
 			snake.resetHeadAt(Position(1, 1));	// Head is at (1, 1)
 			snake.moveRightFast();				// Head is at (1, 2)
 			snake.moveRightFast();				// Head is at (1, 3)
-			snake.undoMoveSafe(Position(1, 1));		// Head is at (1, 2)
+			snake.undoMoveIfLegal(Position(1, 1));		// Head is at (1, 2)
 
 			Assert::IsTrue(snake.head() == Position(1, 2));
 			Assert::IsTrue(snake.tailTip() == Position(1, 1));
@@ -256,7 +257,7 @@ namespace UnitTestSnakeAI
 			snake.resetHeadAt(Position(1, 1));	// (?, ?)	(1, 1)	2
 			snake.moveRightFast();				// (1, 1)	(1, 2)	2
 			snake.growRightFast();				// (1, 1)	(1, 3)	3
-			snake.undoMoveSafe(Position(1, 1));		// (1, 1)	(1, 2)	2
+			snake.undoMoveIfLegal(Position(1, 1));		// (1, 1)	(1, 2)	2
 
 			Assert::IsTrue(snake.head() == Position(1, 2));
 			Assert::IsTrue(snake.tailTip() == Position(1, 1));

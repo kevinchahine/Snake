@@ -51,7 +51,7 @@ void UserController::initAsyncOp()
 {
 	auto promptUserInput = [&]() {
 		// Prompt user for keyboard hit
-		std::cout << "\nEnter move wasd: ";
+		std::cout << "\nEnter move wasd: (x to exit) ";
 
 		// Keep accepting user inputs until user enters an 'x'
 		// Or the stopFlag is set to true

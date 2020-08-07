@@ -107,16 +107,16 @@ namespace UnitTestSnakeAI
 
 		TEST_METHOD(Paste)
 		{
-			Board board(4, 4);
-			Apple apple(4, 4);
+			Apple m_apple(4, 4);
 			Snake snake(4, 4);
+			Board board(4, 4, snake, m_apple);
 
-			apple.moveTo(1, 2);
+			m_apple.moveTo(1, 2);
 			snake.resetHeadAt(Position(0, 0));
 			snake.growRightFast();
 			snake.moveRightFast();
 
-			board.paste(apple);
+			board.paste(m_apple);
 			board.paste(snake);
 
 			stringstream ss;

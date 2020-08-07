@@ -2,8 +2,8 @@
 
 using namespace std;
 
-AIController::AIController(SnakeState& gameState, std::unique_ptr<SolverBase>&& solverPtr, int delayMilliSec) :
-	gameState(gameState),
+AIController::AIController(SnakeGame& m_gameState, std::unique_ptr<SolverBase>&& solverPtr, int delayMilliSec) :
+	m_gameState(m_gameState),
 	solverPtr(std::move(solverPtr)),
 	delayMilliSec(delayMilliSec) {}
 

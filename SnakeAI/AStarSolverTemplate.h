@@ -12,7 +12,7 @@ template<typename C>
 class AStarSolverTemplate : public SolverBase
 {
 public:
-	AStarSolverTemplate(const SnakeState& gameState);
+	AStarSolverTemplate(const SnakeGame& m_gameState);
 
 	virtual void reset() override;
 	virtual char solve() override;
@@ -20,7 +20,7 @@ public:
 private:
 	// Searches for a optimal solution (or path) from start to a goal state.
 	// Path is stored in this->solutionPath
-	SnakePath search(const SnakeState& start);
+	SnakePath search(const SnakeGame& start);
 
 protected:
 	SnakePath solutionPath;
@@ -29,9 +29,9 @@ protected:
 // -------------------------- DEFINITIONS -------------------------------------
 
 template<typename C>
-AStarSolverTemplate<C>::AStarSolverTemplate(const SnakeState& gameState) :
-	SolverBase(gameState),
-	solutionPath(gameState)
+AStarSolverTemplate<C>::AStarSolverTemplate(const SnakeGame& m_gameState) :
+	SolverBase(m_gameState),
+	solutionPath(m_gameState)
 {}
 
 template<typename C>
@@ -52,7 +52,7 @@ char AStarSolverTemplate<C>::solve()
 	}
 	else {
 		// Yes. We used up our solution path. We need so solve another one.
-		solutionPath = search(gameState);
+		solutionPath = search(m_gameState);
 	}
 
 	// 2.) Grab the next move from the solution path
@@ -63,7 +63,7 @@ char AStarSolverTemplate<C>::solve()
 	if (nextMove == 'x') {
 		//cout << "AStar: Oh no. No good move was found.\n"
 		//	<< "Just do any legal and safe move instead.\n";
-		nextMove = gameState.getAnyLegalAndSafeMove();
+		nextMove = m_gameState.getAnyLegalAndSafeMove();
 	}
 
 	// 4.) Return nextMove as our decision
@@ -71,7 +71,7 @@ char AStarSolverTemplate<C>::solve()
 }
 
 template<typename C>
-SnakePath AStarSolverTemplate<C>::search(const SnakeState& start)
+SnakePath AStarSolverTemplate<C>::search(const SnakeGame& start)
 {
 	// 0.) Initialize node as an empty path that leads at the start state.
 	CostlySnakePath node = start;
@@ -118,7 +118,7 @@ SnakePath AStarSolverTemplate<C>::search(const SnakeState& start)
 			//cout << "new child node: " << childNode << '\n';
 
 			// 3-4-2.) What game state does the new path end up at?
-			const SnakeState& childDestination = childNode.destinationSnakeState();
+			const SnakeGame& childDestination = childNode.destinationSnakeState();
 
 			// --- Now we have a path and we know where it leads us ---
 			// --- Before we add this new path to the frontier, 1st check to see if we should. ---

@@ -3,13 +3,13 @@
 #include <memory>
 
 #include "ControllerBase.h"
-#include "SnakeState.h"
+#include "SnakeGame.h"
 #include "SolverBase.h"
 
 class AIController : public ControllerBase
 {
 public:
-	AIController(SnakeState& gameState, std::unique_ptr<SolverBase> && solverPtr, int delayMilliSec = 50);
+	AIController(SnakeGame& m_gameState, std::unique_ptr<SolverBase> && solverPtr, int delayMilliSec = 50);
 
 	virtual void reset() override;
 
@@ -24,7 +24,7 @@ public:
 	int getDelay() const { return delayMilliSec; }
 
 private:
-	SnakeState& gameState;
+	SnakeGame& m_gameState;
 
 	std::unique_ptr<SolverBase> solverPtr;
 

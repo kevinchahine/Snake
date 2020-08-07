@@ -5,8 +5,8 @@
 class ReverseAStarSolver : public AStarSolverTemplate<std::greater<CostlySnakePath>>
 {
 public:
-	ReverseAStarSolver(const SnakeState& gameState) :
-		AStarSolverTemplate<std::greater<CostlySnakePath>>(gameState) {}
+	ReverseAStarSolver(const SnakeGame& m_gameState) :
+		AStarSolverTemplate<std::greater<CostlySnakePath>>(m_gameState) {}
 
 };
 

@@ -5,7 +5,7 @@
 class Apple : public Position
 {
 public:
-	Apple(size_t boardHeight, size_t boardWidth);
+	Apple();
 	Apple(const Apple&) = default;
 	Apple(Apple&&) noexcept = default;
 	~Apple() noexcept = default;
@@ -13,13 +13,19 @@ public:
 	Apple& operator=(const Apple&) = default;
 	Apple& operator=(Apple&&) noexcept = default;
 
-	void moveRandom();
+	void print(std::ostream& os = std::cout) const;
+
+	void reset();
 
 	void moveTo(size_t row, size_t col);
 	void moveTo(const Position& pos);
+	void logPosition();
+
+	bool isUndoLegal() const;
+	void undoFast();
+	void undoIfLegal();
 
 private:
-	size_t boardHeight;
-	size_t boardWidth;
+	std::vector<Position> applePositions;
 };
 

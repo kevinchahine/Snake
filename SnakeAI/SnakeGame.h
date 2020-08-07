@@ -16,25 +16,26 @@
 #include "ControllerBase.h"
 
 // TODO: Make a class called Undoable that takes care of undoing moves and inherite SnakeState from it.
-class SnakeState
+class SnakeGame
 {
 public:
 	enum class GAME_STATE : uint8_t {
 		CONTINUE,
 		GAME_OVER,
 		WON,
+		ERROR,
 	};
 
 public:
-	SnakeState(size_t boardWidth, size_t boardHeight);
-	SnakeState(const SnakeState&) = default;
-	SnakeState(SnakeState&&) noexcept = default;
-	~SnakeState() noexcept = default;
-	SnakeState& operator=(const SnakeState&) = default;
-	SnakeState& operator=(SnakeState&&) noexcept = default;
+	SnakeGame(size_t boardWidth, size_t boardHeight);
+	SnakeGame(const SnakeGame&) = default;
+	SnakeGame(SnakeGame&&) noexcept = default;
+	~SnakeGame() noexcept = default;
+	SnakeGame& operator=(const SnakeGame&) = default;
+	SnakeGame& operator=(SnakeGame&&) noexcept = default;
 
-	bool operator==(const SnakeState& left) const;
-	bool operator<(const SnakeState& left) const;
+	bool operator==(const SnakeGame& left) const;
+	bool operator<(const SnakeGame& left) const;
 	size_t operator()() const;
 
 	void init();
@@ -42,17 +43,14 @@ public:
 	void reset();
 	void reset(const Position& snakeStartingPos, const Position & appleStartingPos);
 
-	GAME_STATE moveSnake(char controlInput);
-
 	const Board::index& getNRows() const;
 	const Board::index& getNCols() const;
 	size_t getNCells() const;
 
 	GAME_STATE calcGameState();
-	GAME_STATE getCurrentState() const;
 
-	const Board& getBoard() const;
-	const Snake& getSnake() const;
+	const Board& board() const;
+	const Snake& snake() const;
 	const Apple& getApple() const;
 
 	// === A Legal move will not hit any walls nor move backwards ===
@@ -60,6 +58,7 @@ public:
 	bool isMoveDownLegal() const;
 	bool isMoveLeftLegal() const;
 	bool isMoveRightLegal() const;
+	bool isUndoLegal() const;
 	bool isMoveLegal(char direction) const;
 	char getAnyLegalMove() const;
 
@@ -82,9 +81,10 @@ public:
 	void moveDownFast();
 	void moveLeftFast();
 	void moveRightFast();
+	void undoFast();
 	void moveFast(char direction);
 
-	// === Forces growing. Does not account for eating apple. Not intended for regular gameplay ===
+	// === Forces growing. Does not account for eating m_apple. Not intended for regular gameplay ===
 	// === Use move***Fast() or move***IfLegal() for regular gameplay ===
 	void growUpFast();
 	void growDownFast();
@@ -97,25 +97,22 @@ public:
 	void moveDownIfLegal();
 	void moveLeftIfLegal();
 	void moveRightIfLegal();
+	void undoIfLegal();
 	void moveIfLegal(char direction);
 
 	// Undoes a move by moving the snake backwards so that the snakes tail is at lastTailPos.
 	// Works for undoing move and grow operations. Make sure lastTailPos is adjacent to the current tail
 	// Do not call if snake.size() <= 2 or errors will occur
-	void undoMoveSafe();
+	void undoMoveIfLegal(bool appleAlso = true);
 
 	void moveAppleRandomly();
 	void moveAppleTo(const Position& newApplePos);
-	bool appleIsEaten() const;
+
+	void print(std::ostream & os = std::cout) const;
 
 protected:
-	GAME_STATE gameState;
-	Board board;
-	Snake snake;
-	Apple apple;
-
-	// Used for undoing moves
-	std::vector<Apple> applePositions;
-	std::vector<Position> snakePositions;
+	Board m_board;
+	Snake m_snake;
+	Apple m_apple;
 };
 

@@ -3,21 +3,21 @@
 using namespace std;
 
 SnakeInterface::SnakeInterface(size_t boardWidth, size_t boardHeight) :
-	gameState{ boardWidth, boardHeight }
+	m_gameState{ boardWidth, boardHeight }
 {
 }
 
 void SnakeInterface::run()
 {
 	// 1.) --- Start from a clean game ---
-	gameState.reset();
+	m_gameState.reset();
 	controllerPtr->reset();
 
 	// 2.) --- Print opening board ---
-	image = cv::Mat::zeros(gameState.getNRows() * 40, gameState.getNCols() * 40, CV_8UC3);
-	gameState.getBoard().print(image);
+	image = cv::Mat::zeros(m_gameState.getNRows() * 40, m_gameState.getNCols() * 40, CV_8UC3);
+	m_gameState.board().print(image);
 	cv::imshow("Snake AI", image);
-	cv::waitKey(1);
+	cv::waitKey(1000);
 
 	// 3.) --- Wait until user/ai makes a (valid) move to start the game ---
 	//		-- User/AI should always be able to make a valid move at the --
@@ -25,10 +25,12 @@ void SnakeInterface::run()
 	char input = NULL;
 	do {
 		input = controllerPtr->getInput();
-	} while (!gameState.isMoveLegal(input) || !gameState.isMoveSafe(input));
+	} while (!m_gameState.isMoveLegal(input) || !m_gameState.isMoveSafe(input));
 
 	// 4.) --- Continue with game until its state becomes GAME_OVER or WIN ---
-	while (gameState.getCurrentState() == SnakeState::GAME_STATE::CONTINUE) {
+	bool isGameEnded = false;
+	bool isWarningPrinted = false;
+	while (isGameEnded == false) {
 		// 4-1.) --- Create a base image ---
 		cv::rectangle(image, cv::Point(0, 0), cv::Point(image.rows, image.cols), cv::Scalar(0, 0, 0));
 
@@ -36,44 +38,32 @@ void SnakeInterface::run()
 		char input = controllerPtr->getInput();
 
 		// 4-3.) --- Apply move ---
-		if (input == 'z') {
-			if (gameState.getSnake().size() > 2) {
-				gameState.undoMoveSafe();
-			}
+		if (m_gameState.isMoveLegal(input)) {
+			m_gameState.moveFast(input);
+			isWarningPrinted = false;
 		}
-		else {
-			if (gameState.isMoveLegal(input) && gameState.isMoveSafe(input)) {
-				auto currGameState = gameState.moveSnake(input);
-			}
+		else if (isWarningPrinted == false) {
+			cout << "Move " << input << " is Illegal\n";
+			isWarningPrinted = true;
 		}
 
 		// 4-4.) --- Check game state ---
-		switch (gameState.getCurrentState())
+		auto state = m_gameState.calcGameState();
+		switch (state)
 		{
-		case SnakeState::GAME_STATE::CONTINUE:
-			break;
-		case SnakeState::GAME_STATE::GAME_OVER:
-			std::cout << "GAME OVER\n";
-			return;
-			break;
-		case SnakeState::GAME_STATE::WON:
-			std::cout << "YOU WON!!!\n";
-			return;
-			break;
+		case SnakeGame::GAME_STATE::CONTINUE:														break;
+		case SnakeGame::GAME_STATE::GAME_OVER:	std::cout << "GAME OVER\n";		isGameEnded = true;	break;
+		case SnakeGame::GAME_STATE::WON:		std::cout << "YOU WON!!!\n";	isGameEnded = true;	break;
+		case SnakeGame::GAME_STATE::ERROR:		std::cout << "ERROR STATE\n";	isGameEnded = true;	break;
 		default:
 			std::cout << "Error: " << __FUNCTION__ << " line " << __LINE__
 				<< " new game state encountered: "
-				<< static_cast<int>(gameState.getCurrentState()) << '\n';
+				<< static_cast<int>(state) << '\n';
 			break;
 		}
 
-		// 4-4.) --- Check if we ate the apple ---
-		if (gameState.appleIsEaten()) {
-			gameState.moveAppleRandomly();
-		}
-
 		// 4-4.) --- Show next frame ---
-		gameState.getBoard().print(image);
+		m_gameState.board().print(image);
 		cv::imshow("Snake AI", image);
 		cv::waitKey(1);
 	}

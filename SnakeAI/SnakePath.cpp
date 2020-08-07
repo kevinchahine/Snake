@@ -2,10 +2,10 @@
 
 using namespace std;
 
-SnakePath::SnakePath(const SnakeState& startState) :
+SnakePath::SnakePath(const SnakeGame& startState) :
 	destinationState(startState) {}
 
-SnakePath::SnakePath(SnakeState&& startState) :
+SnakePath::SnakePath(SnakeGame&& startState) :
 	destinationState(move(startState)) {}
 
 std::ostream& operator<<(std::ostream& os, const SnakePath& path)
@@ -15,14 +15,14 @@ std::ostream& operator<<(std::ostream& os, const SnakePath& path)
 	return os;
 }
 
-const SnakeState& SnakePath::destinationSnakeState() const
+const SnakeGame& SnakePath::destinationSnakeState() const
 {
 	return destinationState;
 }
 
 bool SnakePath::isGoalState() const
 {
-	const Position & headPosition = destinationState.getSnake().head();
+	const Position & headPosition = destinationState.snake().head();
 	const Position& applePosition = destinationState.getApple();
 
 	return headPosition == applePosition;
@@ -38,7 +38,7 @@ void SnakePath::popMove()
 {
 	//char lastMove = this->front();
 
-	//destinationState.undoMoveSafe(lastMove);
+	//destinationState.undoMoveIfLegal(lastMove);
 	//stringstream ss;
 	//ss << "Don't use " << __FUNCTION__ << " until we make undo move methods\n";
 	//throw std::exception(ss.str().c_str());

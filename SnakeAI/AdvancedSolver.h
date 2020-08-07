@@ -9,10 +9,10 @@ template<class SolverA, class SolverB>
 class AdvancedSolver : public SolverBase
 {
 public:
-using UniaryOp = std::function<bool(const SnakeState&)>;
+using UniaryOp = std::function<bool(const SnakeGame&)>;
 
 public:
-	AdvancedSolver(const SnakeState& gameState, const UniaryOp & uniaryOp);
+	AdvancedSolver(const SnakeGame& m_gameState, const UniaryOp & uniaryOp);
 
 	virtual void reset() override;
 
@@ -26,10 +26,10 @@ protected:
 
 template<class SolverA, class SolverB>
 AdvancedSolver<SolverA, SolverB>::AdvancedSolver(
-	const SnakeState& gameState, const UniaryOp& uniaryOp) :
-	SolverBase(gameState),
-	solverAPtr(std::make_unique<SolverA>(gameState)),
-	solverBPtr(std::make_unique<SolverB>(gameState)),
+	const SnakeGame& m_gameState, const UniaryOp& uniaryOp) :
+	SolverBase(m_gameState),
+	solverAPtr(std::make_unique<SolverA>(m_gameState)),
+	solverBPtr(std::make_unique<SolverB>(m_gameState)),
 	op(uniaryOp)
 {}
 
@@ -43,7 +43,7 @@ void AdvancedSolver<SolverA, SolverB>::reset()
 template<class SolverA, class SolverB>
 char AdvancedSolver<SolverA, SolverB>::solve()
 {
-	if (op(gameState) == true) {
+	if (op(m_gameState) == true) {
 		return solverAPtr->solve();
 	}
 	else {

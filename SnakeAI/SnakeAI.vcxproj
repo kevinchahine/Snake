@@ -149,7 +149,7 @@
     <ClCompile Include="Snake.cpp" />
     <ClCompile Include="SnakeBoard.cpp" />
     <ClCompile Include="SnakePath.cpp" />
-    <ClCompile Include="SnakeState.cpp" />
+    <ClCompile Include="SnakeGame.cpp" />
     <ClCompile Include="SnakeInterface.cpp" />
     <ClCompile Include="SolverBase.cpp" />
     <ClCompile Include="UserController.cpp" />
@@ -178,7 +178,7 @@
     <ClInclude Include="Snake.h" />
     <ClInclude Include="SnakeBoard.h" />
     <ClInclude Include="SnakePath.h" />
-    <ClInclude Include="SnakeState.h" />
+    <ClInclude Include="SnakeGame.h" />
     <ClInclude Include="SnakeInterface.h" />
     <ClInclude Include="SolverBase.h" />
     <ClInclude Include="Solvers.hpp" />

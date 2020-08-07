@@ -7,8 +7,8 @@
 class HamiltonianBFSSolver : public AdvancedSolver<HamiltonianSolver, BestFirstSolver>
 {
 public:
-	HamiltonianBFSSolver(const SnakeState& gameState);
+	HamiltonianBFSSolver(const SnakeGame& m_gameState);
 
-	static bool uniaryOp(const SnakeState& gameState);
+	static bool uniaryOp(const SnakeGame& m_gameState);
 };
 

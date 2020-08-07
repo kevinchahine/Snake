@@ -5,7 +5,7 @@
 class AStarSolver : public AStarSolverTemplate<std::less<CostlySnakePath>> 
 {
 public:
-	AStarSolver(const SnakeState& gameState) :
-		AStarSolverTemplate<std::less<CostlySnakePath>>(gameState) {}
+	AStarSolver(const SnakeGame& m_gameState) :
+		AStarSolverTemplate<std::less<CostlySnakePath>>(m_gameState) {}
 
 };

@@ -33,8 +33,8 @@ private:
 template<typename SOLVER_T>
 PerformanceTest<SOLVER_T>::PerformanceTest(size_t nRows, size_t nCols, int delayMilliSec) :
 	snakeInterface(nRows, nCols),
-	solverPtr(std::make_unique<SOLVER_T>(snakeInterface.gameState)),
-	controllerPtr(std::make_unique<AIController>(snakeInterface.gameState, std::move(solverPtr), delayMilliSec))
+	solverPtr(std::make_unique<SOLVER_T>(snakeInterface.m_gameState)),
+	controllerPtr(std::make_unique<AIController>(snakeInterface.m_gameState, std::move(solverPtr), delayMilliSec))
 {
 	snakeInterface.setController(move(controllerPtr));
 }
@@ -46,14 +46,14 @@ void PerformanceTest<SOLVER_T>::run(size_t nGames)
 	
 	accumulator_set<double, features<tag::mean, tag::variance, tag::min, tag::max>> acc;
 
-	const size_t nCells = snakeInterface.gameState.getBoard().getNCells();
+	const size_t nCells = snakeInterface.m_gameState.board().getNCells();
 
 	for (size_t gameNumber = 0; gameNumber < nGames; gameNumber++) {
 		cout << typeid(SOLVER_T).name() << " run #" << gameNumber << '\n';
 
 		snakeInterface.run();
 
-		int points = (snakeInterface.gameState.getSnake().size() * 100.0 / nCells);
+		int points = (snakeInterface.m_gameState.snake().size() * 100.0 / nCells);
 
 		acc(points);
 	}

@@ -7,7 +7,7 @@
 
 #include <opencv2/opencv.hpp>
 
-#include "SnakeState.h"
+#include "SnakeGame.h"
 
 #include "ControllerBase.h"
 
@@ -20,7 +20,7 @@ public:
 
 	void setController(std::unique_ptr<ControllerBase>&& controllerPtr);
 	
-	SnakeState gameState;
+	SnakeGame m_gameState;
 
 private:
 	cv::Mat image;

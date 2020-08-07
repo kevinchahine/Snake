@@ -15,7 +15,7 @@ namespace UnitTestSnakeAI
 	public:
 		TEST_METHOD(Dimentions) 
 		{
-			SnakeState snake(4, 6);
+			SnakeGame snake(4, 6);
 
 			Assert::IsTrue(snake.getNRows() == 4);
 			Assert::IsTrue(snake.getNCols() == 6);
@@ -23,14 +23,14 @@ namespace UnitTestSnakeAI
 
 		TEST_METHOD(Init)
 		{
-			SnakeState snake(4, 4);
+			SnakeGame snake(4, 4);
 
 			snake.init();
 		}
 
 		TEST_METHOD(UndoMove)
 		{
-			SnakeState game(4, 4);
+			SnakeGame game(4, 4);
 			
 			Position snakeStartPos = Position(1, 1);
 			Position appleStartPos = Position(3, 3);
@@ -40,17 +40,17 @@ namespace UnitTestSnakeAI
 															// Tail		Head	Size
 			game.moveRightFast();							// (1, 1)	(1, 2)	2
 			game.moveRightFast();							// (1, 2)	(1, 3)	2
-			game.undoMoveSafe(Position(1, 1), appleStartPos);	// (1, 1)	(1, 2)	2
+			game.undoMoveIfLegal(Position(1, 1), appleStartPos);	// (1, 1)	(1, 2)	2
 
-			const Snake& snake = game.getSnake();
-			const Apple& apple = game.getApple();
-			const Board& board = game.getBoard();
+			const Snake& snake = game.snake();
+			const Apple& m_apple = game.getApple();
+			const Board& board = game.board();
 
 			Assert::IsTrue(snake.head() == Position(1, 2));
 			Assert::IsTrue(snake.tailTip() == Position(1, 1));
 			Assert::IsTrue(snake.size() == 2);
 
-			Assert::IsTrue(apple == Position(3, 3));
+			Assert::IsTrue(m_apple == Position(3, 3));
 
 			// --- Top Row ---
 			Assert::IsTrue(board(Position(0, 0)) == CELL::EMPTY);

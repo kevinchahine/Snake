@@ -5,7 +5,7 @@
 class DefaultSolver : public SolverBase
 {
 public:
-	DefaultSolver(const SnakeState& gameState);
+	DefaultSolver(const SnakeGame& m_gameState);
 
 	// Clears any data that might be used in solve.
 	virtual void reset() override;

@@ -5,15 +5,17 @@
 class HamiltonianSolver : public SolverBase
 {
 public:
-	HamiltonianSolver(const SnakeState& gameState);
+	HamiltonianSolver(const SnakeGame& m_gameState);
 
 	virtual void reset() override;
 
 	virtual char solve() override;
 
-	static bool isSolution(const SnakeState& game);
+	static bool isSolution(const SnakeGame& game);
 
 protected:
+	SnakeGame search() const;
+
 	void initializeCycle();
 
 	// Initializes cycle based on current snake state

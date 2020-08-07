@@ -2,10 +2,10 @@
 
 using namespace std;
 
-CostlySnakePath::CostlySnakePath(const SnakeState& startingState) :
+CostlySnakePath::CostlySnakePath(const SnakeGame& startingState) :
 	SnakePath(startingState) {}
 
-CostlySnakePath::CostlySnakePath(SnakeState&& startingState) :
+CostlySnakePath::CostlySnakePath(SnakeGame&& startingState) :
 	SnakePath(move(startingState)) {}
 
 bool CostlySnakePath::operator<(const CostlySnakePath& costlySnakePath) const
@@ -28,7 +28,7 @@ int CostlySnakePath::calcCostFromStartCost() const
 
 int CostlySnakePath::calcCostToDestination() const
 {
-	const Position& p1 = this->destinationSnakeState().getSnake().head();
+	const Position& p1 = this->destinationSnakeState().snake().head();
 	const Position& p2 = this->destinationSnakeState().getApple();
 
 	return static_cast<int>(

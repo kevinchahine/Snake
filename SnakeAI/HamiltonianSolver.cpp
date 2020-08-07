@@ -3,9 +3,9 @@
 using namespace std;
 using boost::container::static_vector;
 
-HamiltonianSolver::HamiltonianSolver(const SnakeState& gameState) :
-	SolverBase(gameState),
-	hamiltonianCycle(gameState.getBoard().getNRows(), gameState.getBoard().getNCols())
+HamiltonianSolver::HamiltonianSolver(const SnakeGame& m_gameState) :
+	SolverBase(m_gameState),
+	hamiltonianCycle(m_gameState.board().getNRows(), m_gameState.board().getNCols())
 {
 	initializeCycle();
 
@@ -14,10 +14,17 @@ HamiltonianSolver::HamiltonianSolver(const SnakeState& gameState) :
 
 void HamiltonianSolver::reset()
 {
+	// Remove. Creates Hamiltonian Cycle
+	cout << "Solving Hamiltonian Cycle\n";
+	SnakeGame game = search();
+	cout << "Heres the solution:\n";
+	game.board().print();
+	system("pause");
+
 	vector<char> solutionPath = initializeCycleDynamic();
 
-	Position pos = gameState.getSnake().head();
-	
+	Position pos = m_gameState.snake().head();
+
 	cout << "Did our job. Here's the solution:\n";
 	for (auto c : solutionPath) {
 		cout << c << '\t';
@@ -33,25 +40,26 @@ void HamiltonianSolver::reset()
 char HamiltonianSolver::solve()
 {
 	// 1.) Get the snake heads current position
-	Position head = gameState.getSnake().head();
+	Position head = m_gameState.snake().head();
 
 	// 2.) Match it up which the hamiltonian cycle and get the next move
 	char nextMove = hamiltonianCycle(head);
 
 	// 3.) Is it a valid move?
-	if (gameState.isMoveLegal(nextMove) && gameState.isMoveSafe(nextMove)) {
+	if (m_gameState.isMoveLegal(nextMove) && m_gameState.isMoveSafe(nextMove)) {
 		// Yes its legal and safe
 		return nextMove;
 	}
 	else {
+		cout << "!!! HamiltonianSolver::solve(). Could not use hamiltonian. Making another move instead\n";
 		// No, so make any legal and safe move instead
-		return gameState.getAnyLegalAndSafeMove();
+		return m_gameState.getAnyLegalAndSafeMove();
 	}
 }
 
-bool HamiltonianSolver::isSolution(const SnakeState& game)
+bool HamiltonianSolver::isSolution(const SnakeGame& game)
 {
-	const Snake & snake = game.getSnake();
+	const Snake& snake = game.snake();
 
 	const Position& head = snake.head();
 	const Position& tail = snake.tailTip();
@@ -62,9 +70,81 @@ bool HamiltonianSolver::isSolution(const SnakeState& game)
 	bool isGoal =
 		(snake.size() == game.getNCells()) &&								// Is every cell is filled?
 		((colDiff == 1 && rowDiff == 0) || (rowDiff == 1 && colDiff == 0))	// Is tail adjacent to head?
-		;	
+		;
 
 	return isGoal;
+}
+
+SnakeGame HamiltonianSolver::search() const
+{
+	using gamePtr = unique_ptr<SnakeGame>;
+
+	SnakeGame game = m_gameState;
+
+	queue<gamePtr> frontier;
+
+	frontier.push(make_unique<SnakeGame>(game));
+
+	do {
+		if (frontier.empty()) {
+			cout << "No solution\n";
+			system("pause");
+			return m_gameState; // No Solution 
+		}
+
+		gamePtr node = move(frontier.back());
+		frontier.pop();
+
+		node->board().show();
+		cv::waitKey(0);
+
+		if (isSolution(*node)) {
+			cout << "Yay. Solution was found\n";
+			return *node;
+		}
+
+		cout << "Starting with \n";
+		node->board().print();
+		//node->board().show("Starting with");
+		static_vector<char, 3> branches = node->getAllLegalAndSafeMoves();
+
+		cout << "--- Branch out: ---\n";
+		for (char leaf : branches) {
+			//cout << "\tWe can go " << leaf << "\n";
+
+			gamePtr nextNode = make_unique<SnakeGame>(*node);
+			cout << "nextNode = " << nextNode << '\t';
+
+			// Do forward checking
+
+			if (nextNode->isMoveLegal(leaf)) {
+				if (nextNode->isMoveSafe(leaf)) {
+					nextNode->growFast(leaf);
+
+				}
+				else {
+					cout << "From:\n";
+					nextNode->board().print();
+					cout << "Growing " << leaf << " is not safe\n";
+					system("pause");
+				}
+			}
+			else {
+				cout << "From:\n";
+				nextNode->board().print();
+				cout << "Growing " << leaf << " is not legal\n";
+				system("pause");
+			}
+
+			//nextNode->board().print();
+			//nextNode->board().show("NextNode");
+			//cv::waitKey(0);
+
+			frontier.push(move(nextNode));
+			cout << "Frontier.back() = " << frontier.back() << '\n';
+		}
+
+	} while (true);
 }
 
 void HamiltonianSolver::initializeCycle()
@@ -116,40 +196,48 @@ void HamiltonianSolver::initializeCycle()
 vector<char> HamiltonianSolver::initializeCycleDynamic()
 {
 	// Used for getting valid moves, and forward checking
-	SnakeState game = gameState;
-
-	// vvvvv remove this vvvvvvv
-	game.growFast(game.getAnyLegalAndSafeMove());
-	game.growFast(game.getAnyLegalAndSafeMove());
-	game.growFast(game.getAnyLegalAndSafeMove());
-	game.growFast(game.getAnyLegalAndSafeMove());
-	game.growFast(game.getAnyLegalAndSafeMove());
-	game.growFast(game.getAnyLegalAndSafeMove());
-	// ^^^^^ remove htis ^^^^^^^
+	SnakeGame game = m_gameState;
 
 	// Used for branching, backtracking and final solution
 	vector<static_vector<char, 3>> validMoves;
 	validMoves.reserve(game.getNCells());
 
 	// 1.) --- Initialize validMoves with the current snake state ---
-	initializeValidMoves(validMoves, game.getSnake());
+	initializeValidMoves(validMoves, game.snake());
+
+	validMoves.emplace_back(game.getAllLegalAndSafeMoves());
+	cout << "Starting with: ";
+	for (const auto& c : validMoves.back()) {
+		cout << c << ' ';
+	}
+	cout << '\n';
 
 	// 2.) --- Branch valid moves until a solution is found or branches run out ---
 	while (true) {
 		// remove vvvvv
 		static int i = 0;
 		if (i++ % 1 == 0) {
-			cv::Mat image = cv::Mat::zeros(gameState.getNRows() * 40, gameState.getNCols() * 40, CV_8UC3);
-			game.getBoard().print(image);
+			cv::Mat image = cv::Mat::zeros(game.getNRows() * 40, game.getNCols() * 40, CV_8UC3);
+			game.board().print(image);
 			cv::imshow("Hamiltonian Solver", image);
-			cv::waitKey(0);
+			for (const auto& branch : validMoves) {
+				if (branch.empty() == false)
+				{
+					cout << branch.back() << ' ';
+				}
+				else {
+					cout << "--- ";
+				}
+			}
+			cout << '\n';
+			cv::waitKey(750);
 		}
 		// remove ^^^^^^^^^
 
 		//cout << validMoves.size() << '\n';
 
-		// 2-1.) --- If validMoves is empty then there is no solution ---
-		if (validMoves.empty()) {
+		// 2-1.) --- If validMoves is < then the snake we started with then there is no solution ---
+		if (validMoves.size() < m_gameState.snake().size()) {
 			cout << "Hamiltonian Solver NO SOLUTION\n";
 			return vector<char>();	// No solution was found
 		}
@@ -166,12 +254,18 @@ vector<char> HamiltonianSolver::initializeCycleDynamic()
 			// finalize solution
 			vector<char> solutionPath;
 
-			solutionPath.resize(validMoves.size());
-			transform(
-				validMoves.begin(),
-				validMoves.end(),
-				solutionPath.begin(),
-				[](const static_vector<char, 3>& moveVec) { return moveVec.front(); });
+			for (const auto& a : validMoves) {
+				cout << a.back() << ' ';
+			}
+			cout << '\n';
+
+			//solutionPath.resize(validMoves.size());
+			//transform(
+			//	validMoves.begin(),
+			//	validMoves.end(),
+			//	solutionPath.begin(),
+			//	[](const static_vector<char, 3>& moveVec) { cout << moveVec.back() << ' '; return moveVec.back(); });
+			system("pause");
 
 			return solutionPath;
 		}
@@ -181,30 +275,39 @@ vector<char> HamiltonianSolver::initializeCycleDynamic()
 		// Are there any leaves to iterate 
 		if (leaves.empty()) { // Maybe this if should be first (2-0.) and contain a pop_back loop
 			// No more leaves. Back track
+			cout << "--- Back Tracking ---\n";
 			validMoves.pop_back();
-			
+
 			if (validMoves.empty() == false) {
-				if (validMoves.back().empty() == false) { 
-					validMoves.back().pop_back(); 
+				if (validMoves.back().empty() == false) {
+					validMoves.back().pop_back();
 				}
 			}
 
-			game.undoMoveSafe();
+			game.undoMoveIfLegal(false);
 		}
 		else {
+			cout << "--- Branching ---\n";
 			// Yes we have a few leaves. Search the last leaf.
 			char nextMove = leaves.back();
 
+			// Apply next move
 			cout << "Moving " << nextMove << "\n";
 			if (game.isMoveSafe(nextMove)) {
 				game.growFast(nextMove);
 			}
 			else {
 				cout << "Error can't move in that direction " << nextMove << '\n';
+				system("pause");
 			}
 
-			// Apply next move
+			// Branch out more moves
 			validMoves.emplace_back(game.getAllLegalAndSafeMoves());
+
+			cout << "Added " << validMoves.back().size() << " new branches: ";
+			for (const auto& c : validMoves.back()) {
+				cout << c << ' ';
+			}
 		}
 	} // end while (branch)
 }

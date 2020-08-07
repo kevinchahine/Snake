@@ -3,7 +3,7 @@
 Board::Board(
 	const Board::index& nRows, 
 	const Board::index& nCols) :
-	BoardTemplate<CELL>(nRows, nCols)
+	BoardTemplate<CELL>(nRows, nCols)	
 {}
 
 size_t Board::hashValue() const
@@ -42,7 +42,7 @@ void Board::print(std::ostream& os) const
 
 	for (Board::index row = 0; row < NROWS; row++) {
 		for (Board::index col = 0; col < NCOLS; col++) {
-			os << static_cast<int>((*this)[row][col]) << ' ';
+			os << (*this)[row][col];
 		}
 		os << '\n';
 	}
@@ -57,45 +57,98 @@ void Board::print(cv::Mat& image) const
 	const size_t CELL_WIDTH = image.cols / NROWS;
 	const size_t CELL_HEIGHT = image.rows / NCOLS;
 
-	for (Board::index row = 0; row < NROWS; row++) {
-		for (Board::index col = 0; col < NCOLS; col++) {
-			cv::Point topLeftOfCell(CELL_WIDTH * col + 2, CELL_HEIGHT * row + 2);
-			
-			cv::Scalar color{ 0, 255, 0 };
-			
-			switch ((*this)[row][col]) {
-			case CELL::EMPTY:	color = cellColor;	break;
-			case CELL::HEAD:	color = headColor;	break;
-			case CELL::TAIL:	color = tailColor;	break;
-			case CELL::APPLE:	color = appleColor;	break;
-			default:
-				std::stringstream ss;
-				ss << "Unknown cell value at (" 
-					<< row << ", " << col << ") equals "
-					<< static_cast<int>((*this)[row][col]);
+	cv::Point upperLeft;
+	cv::Point lowerRight;
 
-					throw std::exception(ss.str().c_str());
-			}
+	image = cv::Mat::zeros(image.size(), image.type());
 
-			cv::rectangle(
-				image,
-				topLeftOfCell,
-				topLeftOfCell + cv::Point(CELL_WIDTH - 4, CELL_HEIGHT - 4),
-				color,
-				-1);
+	// --- Print Dots between cells ---
+	for (size_t r = 0; r < NROWS + 1; r++) {
+		for (size_t c = 0; c < NCOLS + 1; c++) {
+			cv::Point point(CELL_WIDTH * c, CELL_HEIGHT * r);
 
-			// If its the head, draw eyes
-			if ((*this)[row][col] == CELL::HEAD) {
-				cv::circle(
-					image,
-					topLeftOfCell + cv::Point(CELL_HEIGHT * 0.5, CELL_WIDTH * 0.5),
-					CELL_HEIGHT * 0.15,
-					appleColor,
-					-1
-				);
-			}
+			cv::circle(image, point, 1, cv::Scalar(128, 128, 128));
 		}
 	}
+
+	// --- Print Snake ---
+	const Snake& s = *snakePtr;
+	Position prevCell = s[0];
+	for (size_t i = 1; i < s.size(); i++) {
+		Position currCell = s[i];
+
+		if (prevCell.upOne() == currCell) {				// DOWN
+			// Curr
+			// Prev
+
+			upperLeft = cv::Point(CELL_WIDTH * currCell.col() + 2, CELL_HEIGHT * currCell.row() + 2);
+			lowerRight = cv::Point(CELL_WIDTH * prevCell.col(), CELL_HEIGHT * prevCell.row()) +
+				cv::Point(CELL_WIDTH - 4, CELL_HEIGHT - 4);
+		}
+		else if (prevCell.downOne() == currCell) {		// UP 
+			// Prev
+			// Curr
+
+			upperLeft = cv::Point(CELL_WIDTH * prevCell.col() + 2, CELL_HEIGHT * prevCell.row() + 2);
+			lowerRight = cv::Point(CELL_WIDTH * currCell.col(), CELL_HEIGHT * currCell.row()) +
+							cv::Point(CELL_WIDTH - 4, CELL_HEIGHT - 4);
+		}
+		else if (prevCell.leftOne() == currCell) {		// RIGHT
+			// Curr Prev
+
+			upperLeft = cv::Point(CELL_WIDTH * currCell.col() + 2, CELL_HEIGHT * currCell.row() + 2);
+			lowerRight = cv::Point(CELL_WIDTH * prevCell.col(), CELL_HEIGHT * prevCell.row()) +
+				cv::Point(CELL_WIDTH - 4, CELL_HEIGHT - 4);
+		}
+		else if (prevCell.rightOne() == currCell) {		// LEFT
+			// Prev Curr
+
+			upperLeft = cv::Point(CELL_WIDTH * prevCell.col() + 2, CELL_HEIGHT * prevCell.row() + 2);
+			lowerRight = cv::Point(CELL_WIDTH * currCell.col(), CELL_HEIGHT * currCell.row()) +
+				cv::Point(CELL_WIDTH - 4, CELL_HEIGHT - 4);
+		}
+
+		// Draw Cell
+		cv::rectangle(
+			image,
+			upperLeft,
+			lowerRight,
+			tailColor,
+			-1);
+		prevCell = currCell;
+	}
+
+	// --- Print Head ---
+	const Position& head = snakePtr->head();
+	upperLeft = cv::Point(CELL_WIDTH * head.col() + 2, CELL_HEIGHT * head.row() + 2);
+	lowerRight = upperLeft + cv::Point(CELL_WIDTH - 6, CELL_HEIGHT - 6);
+	cv::rectangle(
+		image,
+		upperLeft,
+		lowerRight,
+		headColor,
+		-1);
+
+	// --- 3.) Print Apple ---
+	const Apple& m_apple = *applePtr;
+	upperLeft = cv::Point(CELL_WIDTH * m_apple.col() + 2, CELL_HEIGHT * m_apple.row() + 2);
+	lowerRight = upperLeft + cv::Point(CELL_WIDTH - 6, CELL_HEIGHT - 6);
+	cv::rectangle(
+		image,
+		upperLeft,
+		lowerRight,
+		appleColor,
+		-1);
+}
+
+void Board::show(const std::string & windowName) const
+{
+	cv::Mat image = cv::Mat::zeros(getNRows() * 40, getNCols() * 40, CV_8UC3);
+
+	print(image);
+
+	cv::imshow(windowName, image);
+	cv::waitKey(1);
 }
 
 void Board::clear()
@@ -110,19 +163,44 @@ void Board::clear()
 	}
 }
 
-void Board::paste(const Apple& apple)
+void Board::paste(const Apple& m_apple)
 {
-	(*this)(apple) = CELL::APPLE;
+	(*this)(m_apple) = CELL::APPLE;
 }
 
-void Board::paste(const Snake& snake)
+void Board::paste(const Snake& snakePtr)
 {
-	for (const auto& positionOnSnake : snake)
+	for (const auto& positionOnSnake : snakePtr)
 	{
 		(*this)(positionOnSnake) = CELL::TAIL;
 	}
 
-	(*this)(snake.head()) = CELL::HEAD;
+	(*this)(snakePtr.head()) = CELL::HEAD;
 }
 
+void Board::setSnake(const Snake& snake)
+{
+	snakePtr = &snake;
+}
 
+void Board::setApple(const Apple& m_apple)
+{
+	applePtr = &m_apple;
+}
+
+std::ostream& operator<<(std::ostream& os, const CELL& cell)
+{
+	switch (cell)
+	{
+	case CELL::EMPTY:	os << '.';	break;
+	case CELL::HEAD:	os << 'H';	break;
+	case CELL::TAIL:	os << 'T';	break;
+	case CELL::APPLE:	os << 'A';	break;
+	default:
+		std::cout << __FILE__ << " line " << __LINE__
+			<< " unknown case = " << static_cast<int>(cell) << '\n';
+		break;
+	}
+
+	return os;
+}
