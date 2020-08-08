@@ -84,14 +84,6 @@ public:
 	void undoFast();
 	void moveFast(char direction);
 
-	// === Forces growing. Does not account for eating m_apple. Not intended for regular gameplay ===
-	// === Use move***Fast() or move***IfLegal() for regular gameplay ===
-	void growUpFast();
-	void growDownFast();
-	void growLeftFast();
-	void growRightFast();
-	void growFast(char direction);
-
 	// === A Legal move will not hit any walls nor move backwards ===
 	void moveUpIfLegal();
 	void moveDownIfLegal();

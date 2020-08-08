@@ -393,63 +393,6 @@ void SnakeGame::moveFast(char direction)
 	}
 }
 
-void SnakeGame::growUpFast()
-{
-	m_snake.growUpFast();
-
-	m_board(m_snake.head()) = CELL::HEAD;
-	m_board(m_snake.neck()) = CELL::TAIL;
-
-	m_apple.logPosition();
-}
-
-void SnakeGame::growDownFast()
-{
-	m_snake.growDownFast();
-
-	m_board(m_snake.head()) = CELL::HEAD;
-	m_board(m_snake.neck()) = CELL::TAIL;
-
-	m_apple.logPosition();
-}
-
-void SnakeGame::growLeftFast()
-{
-	m_snake.growLeftFast();
-
-	m_board(m_snake.head()) = CELL::HEAD;
-	m_board(m_snake.neck()) = CELL::TAIL;
-
-	m_apple.logPosition();
-}
-
-void SnakeGame::growRightFast()
-{
-	m_snake.growRightFast();
-
-	m_board(m_snake.head()) = CELL::HEAD;
-	m_board(m_snake.neck()) = CELL::TAIL;
-
-	m_apple.logPosition();
-}
-
-void SnakeGame::growFast(char direction)
-{
-	switch (direction)
-	{
-	case 'w': growUpFast();		break;
-	case 's': growDownFast();	break;
-	case 'a': growLeftFast();	break;
-	case 'd': growRightFast();	break;
-	case 'z': undoFast();		break;
-	default:
-		std::stringstream ss;
-		ss << __FUNCTION__ << ": parameter move = " << direction
-			<< "Is not a possible move.";
-		throw std::exception(ss.str().c_str());
-	}
-}
-
 void SnakeGame::moveUpIfLegal()
 {
 	if (isMoveUpLegal())

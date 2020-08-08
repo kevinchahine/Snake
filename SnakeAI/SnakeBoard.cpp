@@ -144,7 +144,7 @@ void Board::print(cv::Mat& image) const
 void Board::show(const std::string & windowName) const
 {
 	cv::Mat image = cv::Mat::zeros(getNRows() * 40, getNCols() * 40, CV_8UC3);
-
+	
 	print(image);
 
 	cv::imshow(windowName, image);

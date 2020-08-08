@@ -20,8 +20,8 @@ void run()
 	cout << "--- Using " << typeid(*solverPtr).name() << " ---\n";
 
 	std::unique_ptr<ControllerBase> controllerPtr =
-		//std::make_unique<AIController>(gameInterface.m_gameState, std::move(solverPtr), 50);
-		std::make_unique<UserController>();
+		std::make_unique<AIController>(gameInterface.m_gameState, std::move(solverPtr), 50);
+		//std::make_unique<UserController>();
 
 	cout << "--- " << typeid(*controllerPtr).name() << " ---\n";
 
