@@ -113,9 +113,12 @@ public:
 	void growAnyLegal();
 	uint64_t hashValue() const;
 
+	size_t getNRows() const { return m_boardHeight; }
+	size_t getNCols() const { return m_boardWidth; }
+
 private:
-	size_t boardHeight;
-	size_t boardWidth;
+	size_t m_boardHeight;
+	size_t m_boardWidth;
 
 	std::vector<Position> snakePositions;
 };

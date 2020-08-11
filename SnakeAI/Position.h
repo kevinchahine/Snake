@@ -27,6 +27,8 @@ public:
 	Position rightOne() const;
 	Position oneToThe(char move) const;
 
+	char directionTo(const Position & dstPos) const;
+
 	index row() const;
 	void row(const index& row);
 	

@@ -3,8 +3,8 @@
 #include <algorithm>
 
 Snake::Snake(size_t boardHeight, size_t boardWidth) :
-	boardHeight(boardHeight),
-	boardWidth(boardWidth)
+	m_boardHeight(boardHeight),
+	m_boardWidth(boardWidth)
 {
 	this->push_back(Position(0, 0));
 	this->push_back(Position(0, 1));
@@ -96,8 +96,8 @@ const Position& Snake::tailTip() const
 
 void Snake::resetHeadRandom()
 {
-	int row = (rand() % boardHeight);
-	int col = (rand() % boardWidth);
+	int row = (rand() % m_boardHeight);
+	int col = (rand() % m_boardWidth);
 
 	resetHeadAt(Position(row, col));
 }
@@ -138,7 +138,7 @@ bool Snake::isMoveDownLegal() const
 	Position neckPosition = neck();
 
 	return
-		headPosition.row() < boardHeight - 1 &&
+		headPosition.row() < m_boardHeight - 1 &&
 		headPosition.row() != neckPosition.row() - 1;
 }
 
@@ -158,7 +158,7 @@ bool Snake::isMoveRightLegal() const
 	Position neckPosition = neck();
 
 	return
-		headPosition.col() < boardWidth - 1 &&
+		headPosition.col() < m_boardWidth - 1 &&
 		headPosition.col() != neckPosition.col() - 1;
 }
 
@@ -443,7 +443,7 @@ uint64_t Snake::hashValue() const
 	for (size_t snakeIndex = 0; snakeIndex < this->size(); snakeIndex++) {
 		const Position& pos = (*this)[snakeIndex];
 
-		size_t cellIndex = pos.row() * this->boardWidth + pos.col();
+		size_t cellIndex = pos.row() * this->m_boardWidth + pos.col();
 
 		hashValue += (cellIndex + 1) * (snakeIndex + 1);
 	}

@@ -11,6 +11,8 @@ class BoardTemplate : public boost::multi_array<T, 2>
 public:
 	BoardTemplate(const size_t& nRows, const size_t& nCols);
 
+	BoardTemplate(const size_t& nRows, const size_t& nCols, const T& value);
+
 	void print(std::ostream& os = std::cout) const;
 
 	size_t getNRows() const;
@@ -24,6 +26,23 @@ BoardTemplate<T>::BoardTemplate(
 	const size_t& nCols) :
 	boost::multi_array<T, 2>(boost::extents[nRows][nCols])
 {
+}
+
+template<typename T>
+BoardTemplate<T>::BoardTemplate(
+	const size_t& nRows, 
+	const size_t& nCols,
+	const T& value) :
+	boost::multi_array<T, 2>(boost::extents[nRows][nCols])
+{
+	const size_t NROWS = this->getNRows();
+	const size_t NCOLS = this->getNCols();
+
+	for (size_t row = 0; row < NROWS; row++) {
+		for (size_t col = 0; col < NCOLS; col++) {
+			(*this)[row][col] = value;
+		}
+	}
 }
 
 template<typename T>

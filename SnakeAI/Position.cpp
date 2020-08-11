@@ -12,8 +12,8 @@ Position::Position(int row, int col) :
 
 bool Position::operator==(const Position& position) const
 {
-	return 
-		(*this)[0] == position[0] && 
+	return
+		(*this)[0] == position[0] &&
 		(*this)[1] == position[1];
 }
 
@@ -49,6 +49,15 @@ Position Position::oneToThe(char move) const
 	}
 }
 
+char Position::directionTo(const Position& dstPos) const
+{
+	/**/ if (this->upOne() == dstPos)		return 'w';	// next cell is up    one from the curr cell
+	else if (this->downOne() == dstPos)		return 's';	// next cell is down  one from the curr cell
+	else if (this->leftOne() == dstPos)		return 'a';	// next cell is left  one from the curr cell
+	else if (this->rightOne() == dstPos)	return 'd';	// next cell is right one from the curr cell
+	else return '!';									// error
+}
+
 index Position::row() const
 {
 	return (*this)[0];
@@ -69,7 +78,7 @@ void Position::col(const index& col)
 	(*this)[1] = col;
 }
 
-std::ostream & operator<<(std::ostream& os, const Position& position)
+std::ostream& operator<<(std::ostream& os, const Position& position)
 {
 	os << '<' << position.row() << ", " << position.col() << '>';
 

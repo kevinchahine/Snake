@@ -13,6 +13,7 @@ using namespace boost::accumulators;
 #include <SnakeAI/PerformanceTest.h>
 
 #include "Run.h"
+#include "TestHamiltonianSolver.h"
 
 int main()
 {
@@ -40,7 +41,10 @@ int main()
 		//PerformanceTest<AStarSolver> benchAStar(N_ROWS, N_COLS, DELAY);
 		//benchAStar.run(N_SAMPLES);
 				
-		run();
+		//run();
+
+		//snake::test::generateSolution();
+
 	}
 	catch (std::exception & e) {
 		cout << "Exception caught in " << __FUNCTION__ << ": "

@@ -143,9 +143,11 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Run.cpp" />
+    <ClCompile Include="TestHamiltonianSolver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Run.h" />
+    <ClInclude Include="TestHamiltonianSolver.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

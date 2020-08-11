@@ -11,16 +11,17 @@ public:
 
 	virtual char solve() override;
 
-	static bool isSolution(const SnakeGame& game);
+	static bool isSolution(const Snake& game);
 
 protected:
+	static BoardTemplate<char> search(const Snake& snake);
+
+	static BoardTemplate<char> generateSolution(const Snake& snake);
 
 	void initializeCycle();
 
 protected:
 	BoardTemplate<char> hamiltonianCycle;
 
-	class UnitTestHamiltonianSolver;
-	friend UnitTestHamiltonianSolver;
 };
 
