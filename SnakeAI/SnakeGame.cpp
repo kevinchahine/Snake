@@ -2,6 +2,8 @@
 
 using namespace std;
 
+#include <opencv2/opencv.hpp>
+
 SnakeGame::SnakeGame(size_t boardHeight, size_t boardWidth) :
 	m_board{ boardHeight, boardWidth },
 	m_snake{ boardHeight, boardWidth },
@@ -500,6 +502,5 @@ void SnakeGame::print(ostream & os) const
 {
 	m_snake.print(os);
 	m_apple.print(os);
-	//m_board.print(os);
-	cout << __FUNCTION__ << "() not implemented\n";
+	m_board.print(os);
 }

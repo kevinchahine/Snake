@@ -6,6 +6,11 @@ Board::Board(
 	BoardTemplate<CELL>(nRows, nCols)	
 {}
 
+Board::Board(size_t nRows, size_t nCols) :
+	BoardTemplate<CELL>(nRows, nCols)
+{
+}
+
 size_t Board::hashValue() const
 {
 	size_t hashValue = 0;
@@ -72,51 +77,52 @@ void Board::print(cv::Mat& image) const
 	}
 
 	// --- Print Snake ---
-	const Snake& s = *snakePtr;
-	Position prevCell = s[0];
-	for (size_t i = 1; i < s.size(); i++) {
-		Position currCell = s[i];
+	if (snakePtr != nullptr) {
+		const Snake& s = *snakePtr;
+		Position prevCell = s[0];
+		for (size_t i = 1; i < s.size(); i++) {
+			Position currCell = s[i];
 
-		if (prevCell.upOne() == currCell) {				// DOWN
-			// Curr
-			// Prev
+			if (prevCell.upOne() == currCell) {				// DOWN
+				// Curr
+				// Prev
 
-			upperLeft = cv::Point(CELL_WIDTH * currCell.col() + 2, CELL_HEIGHT * currCell.row() + 2);
-			lowerRight = cv::Point(CELL_WIDTH * prevCell.col(), CELL_HEIGHT * prevCell.row()) +
-				cv::Point(CELL_WIDTH - 4, CELL_HEIGHT - 4);
+				upperLeft = cv::Point(CELL_WIDTH * currCell.col() + 2, CELL_HEIGHT * currCell.row() + 2);
+				lowerRight = cv::Point(CELL_WIDTH * prevCell.col(), CELL_HEIGHT * prevCell.row()) +
+					cv::Point(CELL_WIDTH - 4, CELL_HEIGHT - 4);
+			}
+			else if (prevCell.downOne() == currCell) {		// UP 
+				// Prev
+				// Curr
+
+				upperLeft = cv::Point(CELL_WIDTH * prevCell.col() + 2, CELL_HEIGHT * prevCell.row() + 2);
+				lowerRight = cv::Point(CELL_WIDTH * currCell.col(), CELL_HEIGHT * currCell.row()) +
+					cv::Point(CELL_WIDTH - 4, CELL_HEIGHT - 4);
+			}
+			else if (prevCell.leftOne() == currCell) {		// RIGHT
+				// Curr Prev
+
+				upperLeft = cv::Point(CELL_WIDTH * currCell.col() + 2, CELL_HEIGHT * currCell.row() + 2);
+				lowerRight = cv::Point(CELL_WIDTH * prevCell.col(), CELL_HEIGHT * prevCell.row()) +
+					cv::Point(CELL_WIDTH - 4, CELL_HEIGHT - 4);
+			}
+			else if (prevCell.rightOne() == currCell) {		// LEFT
+				// Prev Curr
+
+				upperLeft = cv::Point(CELL_WIDTH * prevCell.col() + 2, CELL_HEIGHT * prevCell.row() + 2);
+				lowerRight = cv::Point(CELL_WIDTH * currCell.col(), CELL_HEIGHT * currCell.row()) +
+					cv::Point(CELL_WIDTH - 4, CELL_HEIGHT - 4);
+			}
+
+			// Draw Cell
+			cv::rectangle(
+				image,
+				upperLeft,
+				lowerRight,
+				tailColor,
+				-1);
+			prevCell = currCell;
 		}
-		else if (prevCell.downOne() == currCell) {		// UP 
-			// Prev
-			// Curr
-
-			upperLeft = cv::Point(CELL_WIDTH * prevCell.col() + 2, CELL_HEIGHT * prevCell.row() + 2);
-			lowerRight = cv::Point(CELL_WIDTH * currCell.col(), CELL_HEIGHT * currCell.row()) +
-							cv::Point(CELL_WIDTH - 4, CELL_HEIGHT - 4);
-		}
-		else if (prevCell.leftOne() == currCell) {		// RIGHT
-			// Curr Prev
-
-			upperLeft = cv::Point(CELL_WIDTH * currCell.col() + 2, CELL_HEIGHT * currCell.row() + 2);
-			lowerRight = cv::Point(CELL_WIDTH * prevCell.col(), CELL_HEIGHT * prevCell.row()) +
-				cv::Point(CELL_WIDTH - 4, CELL_HEIGHT - 4);
-		}
-		else if (prevCell.rightOne() == currCell) {		// LEFT
-			// Prev Curr
-
-			upperLeft = cv::Point(CELL_WIDTH * prevCell.col() + 2, CELL_HEIGHT * prevCell.row() + 2);
-			lowerRight = cv::Point(CELL_WIDTH * currCell.col(), CELL_HEIGHT * currCell.row()) +
-				cv::Point(CELL_WIDTH - 4, CELL_HEIGHT - 4);
-		}
-
-		// Draw Cell
-		cv::rectangle(
-			image,
-			upperLeft,
-			lowerRight,
-			tailColor,
-			-1);
-		prevCell = currCell;
-	}
 
 	// --- Print Head ---
 	const Position& head = snakePtr->head();
@@ -128,17 +134,21 @@ void Board::print(cv::Mat& image) const
 		lowerRight,
 		headColor,
 		-1);
+	}
 
 	// --- 3.) Print Apple ---
-	const Apple& m_apple = *applePtr;
-	upperLeft = cv::Point(CELL_WIDTH * m_apple.col() + 2, CELL_HEIGHT * m_apple.row() + 2);
-	lowerRight = upperLeft + cv::Point(CELL_WIDTH - 6, CELL_HEIGHT - 6);
-	cv::rectangle(
-		image,
-		upperLeft,
-		lowerRight,
-		appleColor,
-		-1);
+	if (applePtr != nullptr)
+	{
+		const Apple& m_apple = *applePtr;
+		upperLeft = cv::Point(CELL_WIDTH * m_apple.col() + 2, CELL_HEIGHT * m_apple.row() + 2);
+		lowerRight = upperLeft + cv::Point(CELL_WIDTH - 6, CELL_HEIGHT - 6);
+		cv::rectangle(
+			image,
+			upperLeft,
+			lowerRight,
+			appleColor,
+			-1);
+	}
 }
 
 void Board::show(const std::string & windowName) const

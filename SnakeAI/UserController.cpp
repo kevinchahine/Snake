@@ -1,5 +1,6 @@
 #include "UserController.h"
 
+#include <iostream>
 #include <time.h>
 #include <Windows.h>
 #include <conio.h>	// for _kbhit() and _getch()

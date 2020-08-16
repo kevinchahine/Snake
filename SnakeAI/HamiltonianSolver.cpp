@@ -11,7 +11,7 @@ vector<static_vector<char, 3>> makeInitialStem(const Snake& snake)
 	const size_t N_COLS = snake.getNCols();
 
 	vector<static_vector<char, 3>> branches(N_ROWS * N_COLS, static_vector<char, 3>());
-	branches.resize(0);
+	branches.clear();
 
 	Position currCell = *snake.cbegin();
 	for (Snake::const_iterator snakeIt = snake.begin() + 1; snakeIt != snake.end(); snakeIt++) {
@@ -20,7 +20,7 @@ vector<static_vector<char, 3>> makeInitialStem(const Snake& snake)
 		branches.emplace_back();
 
 		branches.back().emplace_back(currCell.directionTo(nextCell));
-
+		cout << '.';
 		currCell = nextCell;
 	}
 
@@ -29,52 +29,73 @@ vector<static_vector<char, 3>> makeInitialStem(const Snake& snake)
 
 static void backTrack(
 	Snake& snake,
-	BoardTemplate<bool> board,
-	vector<static_vector<char, 3>> branches)
+	BoardTemplate<bool>& board,
+	vector<static_vector<char, 3>>& branches)
 {
-	// Do we have any branches to "prune"? We don't want to pop an empty vector.
-	if (branches.empty() == false) {
-		// Yes we have a branch.
+	//cout << '\t' << "bt branches.size() = " << branches.size() << '\n';
 
-		// Does this branch have any stems?
-		if (branches.back().empty() == false) {
-			// Yes it does have stems. Lets cut of the last one.
-			board(snake.head()) = false;
-			snake.undoFast();
-			branches.back().pop_back();
+	// Did we run out of branches?
+	if (branches.size() <= 1) {
+		// Yes there are no possible moves we can make. 
+		branches.clear();
+		return;
+	}
+	
+	if (branches.back().size() > 1) {
+		branches.back().pop_back();		// Remove the last move of the last branch
+	}
+	else {	// Did we removed the last move of the last branch?
+		///cout << '\t' << "back is empty\n";
+		board(snake.head()) = false;	// Remove the snakes head off the board
 
-			// Now that we cut off the last stem. We need to find a branch 
-			while (branches.empty() == false && branches.back().empty()) {
-				board(snake.head()) = false;
-				snake.undoFast();
-				branches.pop_back();
-			}
-		}
-		else {
-			// No it is a branch without stems "and therefore must be cut"
-			board(snake.head()) = false;
-			snake.undoFast();
-			branches.pop_back();
-		}
+		snake.undoFast();				// Move back the snake
+		// Yes. Now branches.back() has no more moves to try
+		branches.pop_back();
+
+		backTrack(snake, board, branches);
 	}
 }
 
-// ------------------------------------ CLASS FUNCTIONS -----------------------
+static_vector<char, 3> getAllValidMoves(const Snake& snake, const BoardTemplate<bool>& board)
+{
+	static_vector<char, 3> moves;
+
+	const Position& head = snake.head();
+
+	if (board.isInBound(head.upOne()) && board(head.upOne()) == false)	moves.push_back('w');
+	if (board.isInBound(head.downOne()) && board(head.downOne()) == false)	moves.push_back('s');
+	if (board.isInBound(head.leftOne()) && board(head.leftOne()) == false)	moves.push_back('a');
+	if (board.isInBound(head.rightOne()) && board(head.rightOne()) == false)	moves.push_back('d');
+
+	return moves;
+}
+
+// ------------------------------------ CLASS METHODS -------------------------
 
 HamiltonianSolver::HamiltonianSolver(const SnakeGame& m_gameState) :
 	SolverBase(m_gameState),
-	hamiltonianCycle(m_gameState.board().getNRows(), m_gameState.board().getNCols())
+	hamiltonianCycle(m_gameState.board().getNRows(), m_gameState.board().getNCols(), false)
 {
 }
 
 void HamiltonianSolver::reset()
 {
+	auto retOptional = search(m_gameState.snake());
 
+	// check if a valid solution was found
+	if (retOptional.is_initialized()) {
+		hamiltonianCycle = retOptional.get();
+	}
+	else {
+		cout << "HamiltonianSolver: no solution was found\n";
+		cin.get();
+	}
 }
 
 char HamiltonianSolver::solve()
 {
-	return 'x';
+	const Position& head = m_gameState.snake().head();
+	return hamiltonianCycle(head);
 }
 
 bool HamiltonianSolver::isSolution(const Snake& snake)
@@ -99,28 +120,118 @@ bool HamiltonianSolver::isSolution(const Snake& snake)
 	return isGoal;
 }
 
-BoardTemplate<char> HamiltonianSolver::search(const Snake& snake)
+boost::optional<BoardTemplate<char>> HamiltonianSolver::search(const Snake& snakeIn)
 {
+	Snake snake = snakeIn;
+
 	const size_t N_ROWS = snake.getNRows();
 	const size_t N_COLS = snake.getNCols();
 
+	Board b{ N_ROWS, N_COLS };	// For debugging 
+	b.setSnake(snake);
+
 	BoardTemplate<bool> board{ N_ROWS, N_COLS, false };
+	board.paste(snake);
 
 	vector<static_vector<char, 3>> branches = makeInitialStem(snake);
+	
+	branches.push_back(getAllValidMoves(snake, board));
+
+	// 5.) --- Apply next move ---
+	if (branches.back().empty() == false) {
+		char nextMove = branches.back().back();
+
+		snake.growFast(nextMove);
+		board(snake.head()) = true;
+	}
 
 	do {
+
+		// 6.) --- Debug ---
+		b.clear();		// empty out every cell
+		b.paste(snake);	// place snake on the board
+		b.show("Hamiltonian Cycle Solver");
+		
 		// 1.) --- Is Solution Found? ---
 		if (isSolution(snake)) {
 			return HamiltonianSolver::generateSolution(snake);
 		}
 
-		// 2.) --- Is Solution Possible ---
-		if (branches.back().size()) {
-			branches.pop_back();
+		// 2.) --- Is it still possible to find a solution? ---
+		if (branches.size() <= 1) {
+
+			// Its not possible return no solution
+			return boost::optional<BoardTemplate<char>>{};
 		}
 
-	} while (true);
+		// 2.) --- Do we have a move that we can try? ---
+		if (branches.back().empty()) {
+			// There are not moves on this branch. We need to backtrack.
+			//cout << "No more moves: Back track\n";
+			backTrack(snake, board, branches);
 
+			// 6.) --- Debug ---
+			b.clear();		// empty out every cell
+			b.paste(snake);	// place snake on the board
+			b.show("Hamiltonian Cycle Solver");
+
+			//cout << branches.size() << '\n';
+			//for (int i = 0; i < branches.size(); i++) {
+			//	const auto& b = branches[i];
+			//	cout << '[';
+			//	for (int j = 0; j < b.size(); j++) {
+			//		cout << b[j] << ' ';
+			//	}
+			//	cout << "]\n";
+			//}
+			//cout << '\n';
+			//cout << "Done backtracking\n"; 
+			//cin.get(); 
+			
+			// 5.) --- Apply next move ---
+			if (branches.empty() == false && branches.back().empty() == false) {
+				char nextMove = branches.back().back();
+
+				snake.growFast(nextMove);
+				board(snake.head()) = true;
+			}
+			
+			continue;
+		}
+
+		// 3.) --- Do forward checking ---
+		if (false) {
+			cout << "Forward Checking: Back track\n";
+			backTrack(snake, board, branches);
+			cout << "Done backtracking\n";
+
+			continue;
+		}
+
+		// 4.) --- Branch out from the current state ---
+		branches.push_back(getAllValidMoves(snake, board));
+
+		// 5.) --- Apply next move ---
+		if (branches.empty() == false && branches.back().empty() == false) {
+			char nextMove = branches.back().back();
+		
+			snake.growFast(nextMove);
+			board(snake.head()) = true;
+		}
+		
+		//cout << branches.size() << '\n';
+		//for (int i = 0; i < branches.size(); i++) {
+		//	const auto& b = branches[i];
+		//	cout << '[';
+		//	for (int j = 0; j < b.size(); j++) {
+		//		cout << b[j] << ' ';
+		//	}
+		//	cout << "]\n";
+		//}
+		//cout << '\n';
+		//cin.get();
+
+	} while (true);
 }
 
 BoardTemplate<char> HamiltonianSolver::generateSolution(const Snake& snake)

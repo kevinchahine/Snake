@@ -36,7 +36,7 @@ void snake::test::generateSolution()
 	board.paste(snake);
 	board.print();
 
-	auto pathBoard = HamiltonianSolver::generateSolution(snake);
+	//auto pathBoard = HamiltonianSolver::generateSolution(snake);
 
-	pathBoard.print();
+	//pathBoard.print();
 }

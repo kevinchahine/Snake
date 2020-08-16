@@ -2,6 +2,8 @@
 
 #include "SolverBase.h"
 
+#include <boost/optional/optional.hpp>
+
 class HamiltonianSolver : public SolverBase
 {
 public:
@@ -14,7 +16,8 @@ public:
 	static bool isSolution(const Snake& game);
 
 protected:
-	static BoardTemplate<char> search(const Snake& snake);
+	// Returns an empty board if no solution was found
+	static boost::optional<BoardTemplate<char>> search(const Snake& snake);
 
 	static BoardTemplate<char> generateSolution(const Snake& snake);
 

@@ -41,7 +41,7 @@ int main()
 		//PerformanceTest<AStarSolver> benchAStar(N_ROWS, N_COLS, DELAY);
 		//benchAStar.run(N_SAMPLES);
 				
-		//run();
+		run();
 
 		//snake::test::generateSolution();
 

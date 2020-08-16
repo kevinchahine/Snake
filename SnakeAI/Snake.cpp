@@ -17,7 +17,7 @@ bool Snake::operator==(const Position& position) const
 
 void Snake::print(std::ostream& os) const
 {
-	os << "Snake " << head() << ' ' << neck() << ' ' << tailTip()
+	os << "Snake (Head, Neck, Tail) (" << head() << ", " << neck() << ", " << tailTip() << ")"
 		<< "length = " << size() << ' '
 		<< snakePositions.size() << " undos available\n";
 }

@@ -5,9 +5,11 @@
 #include <memory>
 #include <vector>
 
-#include <opencv2/opencv.hpp>
-
 #include <boost/container/static_vector.hpp>
+
+//class Apple;
+//class Snake;
+//class SnakeBoard;
 
 #include "Apple.h"
 #include "Snake.h"
