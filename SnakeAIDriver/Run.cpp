@@ -2,8 +2,8 @@
 
 void run()
 {
-	const size_t N_ROWS = 4;
-	const size_t N_COLS = 4;
+	const size_t N_ROWS = 6;
+	const size_t N_COLS = 6;
 
 	SnakeInterface gameInterface{ N_ROWS, N_COLS };
 

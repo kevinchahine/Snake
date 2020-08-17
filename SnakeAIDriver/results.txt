@@ -1,0 +1,15 @@
+
+Hamiltonian Solver: (mSec)
+	search 0: 41246
+	search 1: 2
+	search 2: 3106
+	search 3: 41282
+	search 4: 3
+	search 5: 3
+	search 6: 252
+	search 7: 10537
+	search 8: 8
+	search 9: 7
+	mean: 9644.6
+	variance: 2.59599e+08
+	boardsize: 6x6

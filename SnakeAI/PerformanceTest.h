@@ -24,6 +24,8 @@ public:
 
 	void run(size_t nGames);
 
+	void search(size_t nGames);
+
 private:
 	SnakeInterface snakeInterface;
 	std::unique_ptr<SolverBase> solverPtr;
@@ -65,6 +67,44 @@ void PerformanceTest<SOLVER_T>::run(size_t nGames)
 		<< "sample runs: " << nGames << '\n'
 		<< "mean: " << meanVal << '\t' << meanVal << '%' << '\n'
 		<< "variance: " << varianceVal << '\t' << varianceVal << '%' << '\n'
+		//<< "min: " << min(acc) << '\n'
+		//<< "max: " << max(acc) << '\n'
+		<< "board size = " << nCells << '\n'
+		<< '\n';
+}
+
+template<typename SOLVER_T>
+void PerformanceTest<SOLVER_T>::search(size_t nGames)
+{
+	using std::cout;
+
+	const size_t nCells = snakeInterface.m_gameState.board().getNCells();
+
+	accumulator_set<double, features<tag::mean, tag::variance, tag::min, tag::max>> acc;
+
+	for (size_t gameNumber = 0; gameNumber < nGames; gameNumber++) {
+		cout << typeid(SOLVER_T).name() << " run #" << gameNumber << '\t';
+
+		const_cast<Snake&>(snakeInterface.m_gameState.snake()).resetHeadRandom();
+
+		clock_t startTime = clock();
+		auto solution = SOLVER_T::search(snakeInterface.m_gameState.snake());
+		clock_t endTime = clock();
+		
+		clock_t searchTime = endTime - startTime;
+
+		cout << "search time = " << searchTime << " mSec\n";
+
+		acc(searchTime);
+	}
+
+	double meanTime = mean(acc);
+	double varianceTime = variance(acc);
+
+	cout << "Performance Test <" << typeid(SOLVER_T).name() << ">\n"
+		<< "sample runs: " << nGames << '\n'
+		<< "mean: " << meanTime << '\n'
+		<< "variance: " << varianceTime << '\n'
 		//<< "min: " << min(acc) << '\n'
 		//<< "max: " << max(acc) << '\n'
 		<< "board size = " << nCells << '\n'

@@ -16,6 +16,7 @@ public:
 	static bool isSolution(const Snake& game);
 
 protected:
+public:
 	// Returns an empty board if no solution was found
 	static boost::optional<BoardTemplate<char>> search(const Snake& snake);
 
@@ -25,6 +26,5 @@ protected:
 
 protected:
 	BoardTemplate<char> hamiltonianCycle;
-
 };
 

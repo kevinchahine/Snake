@@ -13,7 +13,6 @@ using namespace boost::accumulators;
 #include <SnakeAI/PerformanceTest.h>
 
 #include "Run.h"
-#include "TestHamiltonianSolver.h"
 
 int main()
 {
@@ -23,7 +22,7 @@ int main()
 	try {
 		const size_t N_ROWS = 6;
 		const size_t N_COLS = 6;
-		const size_t N_SAMPLES = 5;
+		const size_t N_SAMPLES = 10;
 		const int DELAY = 1;
 
 		//PerformanceTest<DefaultSolver> benchDefault(N_ROWS, N_COLS, DELAY);
@@ -40,6 +39,9 @@ int main()
 		
 		//PerformanceTest<AStarSolver> benchAStar(N_ROWS, N_COLS, DELAY);
 		//benchAStar.run(N_SAMPLES);
+
+		//PerformanceTest<HamiltonianSolver> benchHamiltonian(N_ROWS, N_COLS, DELAY);
+		//benchHamiltonian.search(N_SAMPLES);
 				
 		run();
 
