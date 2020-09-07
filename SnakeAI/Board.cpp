@@ -1,4 +1,10 @@
-#include "SnakeBoard.h"
+#include "Board.h"
+
+#include <sstream>
+
+#include <opencv2/core/mat.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
 
 Board::Board(
 	const Board::index& nRows, 

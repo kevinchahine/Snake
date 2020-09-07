@@ -1,6 +1,7 @@
 #include "Snake.h"
 
 #include <algorithm>
+#include <sstream>
 
 Snake::Snake(size_t boardHeight, size_t boardWidth) :
 	m_boardHeight(boardHeight),

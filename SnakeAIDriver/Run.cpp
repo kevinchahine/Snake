@@ -1,5 +1,7 @@
 #include "Run.h"
 
+#include <opencv2/highgui.hpp>
+
 void run()
 {
 	const size_t N_ROWS = 6;
@@ -11,10 +13,10 @@ void run()
 		//std::make_unique<DefaultSolver>(gameInterface.m_gameState);
 		//std::make_unique<RandomSolver>(gameInterface.m_gameState);
 		//std::make_unique<BestFirstSolver>(gameInterface.m_gameState);
-		//std::make_unique<AStarSolver>(gameInterface.m_gameState);
+		std::make_unique<AStarSolver>(gameInterface.m_gameState);
 		//std::make_unique<ReverseAStarSolver>(gameInterface.m_gameState);
 		//std::make_unique<DepthFirstSearchSolver>(gameInterface.m_gameState);
-		std::make_unique<HamiltonianSolver>(gameInterface.m_gameState);
+		//std::make_unique<HamiltonianSolver>(gameInterface.m_gameState);
 		//std::make_unique<HamiltonianBFSSolver>(gameInterface.m_gameState);
 
 	cout << "--- Using " << typeid(*solverPtr).name() << " ---\n";

@@ -2,6 +2,8 @@
 
 using namespace std;
 
+#include "SnakeGame.h"
+
 bool Explored::contains(const SnakeGame& visitedSnakeState) const
 {
 	// 1.) Get hash that uniquely identifies the visited state.

@@ -1,12 +1,8 @@
 #pragma once
 
-#include <iostream>
-#include <iomanip>
-#include <string>
-#include <vector>
 #include <set>
 
-#include "SnakeGame.h"
+class SnakeGame;
 
 // Stores SnakeStates what were visited as hashValues
 class Explored : public std::set<uint64_t>

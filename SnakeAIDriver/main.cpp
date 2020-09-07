@@ -7,6 +7,8 @@ using namespace std;
 #include <boost/accumulators/statistics.hpp>
 using namespace boost::accumulators;
 
+#include <opencv2/highgui.hpp>
+
 #include <SnakeAI/SnakeInterface.h>
 #include <SnakeAI/Controllers.hpp>
 #include <SnakeAI/Solvers.hpp>

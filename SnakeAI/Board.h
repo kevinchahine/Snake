@@ -1,10 +1,8 @@
 #pragma once
 
 #include <iostream>
-#include <string>
-#include <sstream>
 
-#include <opencv2/opencv.hpp>
+#include <opencv2/core/types.hpp>
 
 #include "BoardTemplate.h"
 #include "Snake.h"

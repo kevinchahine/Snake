@@ -2,10 +2,9 @@
 
 #include <iostream>
 #include <memory>
-#include <stack>		// remove
 #include <time.h>
 
-#include <opencv2/opencv.hpp>
+#include <opencv2/core/mat.hpp>
 
 #include "SnakeGame.h"
 

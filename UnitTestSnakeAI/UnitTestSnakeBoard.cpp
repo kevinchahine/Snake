@@ -3,7 +3,7 @@
 
 #include <sstream>
 
-#include <SnakeAI/SnakeBoard.h>
+#include <SnakeAI/Board.h>
 
 using namespace std;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;

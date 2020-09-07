@@ -28,6 +28,7 @@ int CostlySnakePath::calcCostFromStartCost() const
 
 int CostlySnakePath::calcCostToDestination() const
 {
+	// Calculate Manhattan Distance from Snake Head to Apple
 	const Position& p1 = this->destinationSnakeState().snake().head();
 	const Position& p2 = this->destinationSnakeState().getApple();
 
@@ -45,7 +46,7 @@ uint64_t CostlySnakePath::hashValue() const
 {
 	uint64_t hash = 0;
 
-	for (int i = 0; i < this->SnakePath::size(); i++) {
+	for (uint64_t i = 0; i < this->SnakePath::size(); i++) {
 		char move = this->SnakePath::at(i);
 
 		uint64_t id = 0;

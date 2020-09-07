@@ -1,0 +1,15 @@
+=== AStarSolver - Undoable ===
+
+Required Containers:			Required Changes:
+	CostlySnakePath				Needs to be rewriten
+	Explored					none
+	Frontier					rewrite into a vector<static_vector<Move | Position, 3>> just like in HamiltonianSolver
+	SnakeGame					needs undo
+	Snake						already has undo
+	Apple						already has undo
+	Board						none
+
+Indepth:
+	Frontier:
+		
+		

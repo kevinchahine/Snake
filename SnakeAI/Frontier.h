@@ -47,7 +47,6 @@ void Frontier<C>::pushIfUnique(T&& costlySnakePath)
 	if (matchingPathIt == this->std::set<uint64_t>::end()) {
 		// 1-1.) No. There is no matching path. Add new path to frontier
 		this->std::priority_queue<CostlySnakePath, std::vector<CostlySnakePath>, C>::push(std::forward<T>(costlySnakePath));
-		//this->std::priority_queue<CostlySnakePath, std::vector<CostlySnakePath>, C>::push(std::forward<T>(costlySnakePath));
 		this->std::set<uint64_t>::insert(hash);
 	}
 }

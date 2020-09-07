@@ -2,6 +2,10 @@
 
 using namespace std;
 
+#include <opencv2/core/mat.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
+
 SnakeInterface::SnakeInterface(size_t boardWidth, size_t boardHeight) :
 	m_gameState{ boardWidth, boardHeight }
 {

@@ -1,5 +1,7 @@
 #include "AIController.h"
 
+#include <opencv2/highgui.hpp>
+
 using namespace std;
 
 AIController::AIController(SnakeGame& m_gameState, std::unique_ptr<SolverBase>&& solverPtr, int delayMilliSec) :

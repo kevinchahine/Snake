@@ -55,9 +55,6 @@
     <ClCompile Include="Snake.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
-    <ClCompile Include="SnakeBoard.cpp">
-      <Filter>GameEngine</Filter>
-    </ClCompile>
     <ClCompile Include="SnakeInterface.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
@@ -92,6 +89,9 @@
       <Filter>Solvers</Filter>
     </ClCompile>
     <ClCompile Include="SnakeGame.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Board.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -130,9 +130,6 @@
       <Filter>GameEngine</Filter>
     </ClInclude>
     <ClInclude Include="Snake.h">
-      <Filter>GameEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="SnakeBoard.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
     <ClInclude Include="SnakeInterface.h">
@@ -178,6 +175,9 @@
       <Filter>Solvers</Filter>
     </ClInclude>
     <ClInclude Include="SnakeGame.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Board.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
   </ItemGroup>

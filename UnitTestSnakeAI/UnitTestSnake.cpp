@@ -5,7 +5,7 @@
 #include <vector>
 
 #include <SnakeAI/Snake.h>
-#include <SnakeAI/SnakeBoard.h>
+#include <SnakeAI/Board.h>
 
 using namespace std;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;

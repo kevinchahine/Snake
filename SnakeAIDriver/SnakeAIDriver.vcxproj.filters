@@ -16,6 +16,9 @@
     <Filter Include="Benchmark Tests">
       <UniqueIdentifier>{3dc3cdc7-e05f-4e22-915f-03e52e656e28}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Notes">
+      <UniqueIdentifier>{0a2bd64b-eac6-4ce0-b12a-3d3101b7d03b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -34,5 +37,10 @@
     <Text Include="results.txt">
       <Filter>Benchmark Tests</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AStartSolver Undoable.txt">
+      <Filter>Notes</Filter>
+    </None>
   </ItemGroup>
 </Project>

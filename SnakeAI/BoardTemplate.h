@@ -5,6 +5,7 @@
 
 #include <boost/multi_array.hpp>
 
+#include "Position.h"
 #include "Snake.h"
 
 template<typename T>

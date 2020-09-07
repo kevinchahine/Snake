@@ -4,6 +4,10 @@ using namespace std;
 
 #include <opencv2/opencv.hpp>
 
+#include "Apple.h"
+#include "Snake.h"
+#include "Board.h"
+
 SnakeGame::SnakeGame(size_t boardHeight, size_t boardWidth) :
 	m_board{ boardHeight, boardWidth },
 	m_snake{ boardHeight, boardWidth },

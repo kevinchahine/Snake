@@ -40,7 +40,7 @@ void AStarSolverTemplate<C>::reset()
 	// Delete solution contents so that next time we'll have to solve
 	// a fresh solution
 	// Don't know why this is giving a access error
-	///this->solutionPath.clear();
+	this->solutionPath.clear();
 }
 
 template<typename C>
@@ -61,8 +61,6 @@ char AStarSolverTemplate<C>::solve()
 
 	// 3.) Check for errors
 	if (nextMove == 'x') {
-		//cout << "AStar: Oh no. No good move was found.\n"
-		//	<< "Just do any legal and safe move instead.\n";
 		nextMove = m_gameState.getAnyLegalAndSafeMove();
 	}
 
@@ -107,6 +105,10 @@ SnakePath AStarSolverTemplate<C>::search(const SnakeGame& start)
 			//system("pause");
 			return node;
 		}
+
+		// *** Do some forward checking ***
+		// *** Check to see if theres a clear path to tail (maybe too slow O(d ^ (3 + 3))***
+		// *** Check for holes (holes are not detremental but are bad as snake gets bigger) ***
 
 		// 3-4.) Expand the roads from node to get all possible paths.
 		for (char safeAndLegalMove : node.destinationSnakeState().getAllLegalAndSafeMoves()) {

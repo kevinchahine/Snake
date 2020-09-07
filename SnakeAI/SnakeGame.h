@@ -7,13 +7,11 @@
 
 #include <boost/container/static_vector.hpp>
 
-//class Apple;
-//class Snake;
-//class SnakeBoard;
+class Apple;
+class Snake;
 
-#include "Apple.h"
-#include "Snake.h"
-#include "SnakeBoard.h"
+#include "Position.h"
+#include "Board.h"
 
 #include "ControllerBase.h"
 
