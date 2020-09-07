@@ -77,7 +77,6 @@ public:
 	bool isMoveDownLegal() const;
 	bool isMoveLeftLegal() const;
 	bool isMoveRightLegal() const;
-	bool isUndoLegal() const;
 	bool isMoveLegal(char direction) const;
 	char getAnyLegalMove() const;
 
@@ -85,7 +84,6 @@ public:
 	void moveDownFast();
 	void moveLeftFast();
 	void moveRightFast();
-	void undoFast();
 	void moveFast(char direction);
 	
 	// Move if it will not hit wall or the snakes neck
@@ -93,7 +91,6 @@ public:
 	void moveDownIfLegal();
 	void moveLeftIfLegal();
 	void moveRightIfLegal();
-	void undoIfLegal();
 	void moveIfLegal(char direction);
 	void moveAnyLegal();
 	
@@ -115,10 +112,8 @@ public:
 	size_t getNRows() const { return m_boardHeight; }
 	size_t getNCols() const { return m_boardWidth; }
 
-private:
+public:
 	size_t m_boardHeight;
 	size_t m_boardWidth;
-
-	std::vector<Position> snakePositions;
 };
 

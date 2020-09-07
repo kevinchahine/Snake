@@ -93,6 +93,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,6 +153,9 @@
     <ClCompile Include="SnakeGame.cpp" />
     <ClCompile Include="SnakeInterface.cpp" />
     <ClCompile Include="SolverBase.cpp" />
+    <ClCompile Include="UndoableApple.cpp" />
+    <ClCompile Include="UndoableSnake.cpp" />
+    <ClCompile Include="UndoableSnakeGame.cpp" />
     <ClCompile Include="UserController.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -182,6 +186,9 @@
     <ClInclude Include="SnakeInterface.h" />
     <ClInclude Include="SolverBase.h" />
     <ClInclude Include="Solvers.hpp" />
+    <ClInclude Include="UndoableApple.h" />
+    <ClInclude Include="UndoableSnake.h" />
+    <ClInclude Include="UndoableSnakeGame.h" />
     <ClInclude Include="UserController.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

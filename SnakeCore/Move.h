@@ -7,8 +7,7 @@ namespace snake
 	class Move
 	{
 		
-
-		friend std::ostream& operator<<(std::ostream& os, const Move& move);
+		//friend std::ostream& operator<<(std::ostream& os, const Move& move);
 
 	protected:
 		// 'w' - up

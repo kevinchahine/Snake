@@ -5,7 +5,7 @@ using boost::container::static_vector;
 
 // ------------------------------------ STAND ALONE FUNCTIONS -----------------
 
-vector<static_vector<char, 3>> makeInitialStem(const Snake& snake)
+vector<static_vector<char, 3>> makeInitialStem(const UndoableSnake& snake)
 {
 	const size_t N_ROWS = snake.getNRows();
 	const size_t N_COLS = snake.getNCols();
@@ -14,7 +14,7 @@ vector<static_vector<char, 3>> makeInitialStem(const Snake& snake)
 	branches.clear();
 
 	Position currCell = *snake.cbegin();
-	for (Snake::const_iterator snakeIt = snake.begin() + 1; snakeIt != snake.end(); snakeIt++) {
+	for (UndoableSnake::const_iterator snakeIt = snake.begin() + 1; snakeIt != snake.end(); snakeIt++) {
 		const Position& nextCell = *snakeIt;
 
 		branches.emplace_back();
@@ -56,7 +56,7 @@ bool forwardChecking(const BoardTemplate<bool>& board)
 }
 
 static void backTrack(
-	Snake& snake,
+	UndoableSnake& snake,
 	BoardTemplate<bool>& board,
 	vector<static_vector<char, 3>>& branches)
 {
@@ -84,7 +84,7 @@ static void backTrack(
 	}
 }
 
-static_vector<char, 3> getAllValidMoves(const Snake& snake, const BoardTemplate<bool>& board)
+static_vector<char, 3> getAllValidMoves(const UndoableSnake& snake, const BoardTemplate<bool>& board)
 {
 	static_vector<char, 3> moves;
 
@@ -134,8 +134,8 @@ bool HamiltonianSolver::isSolution(const Snake& snake)
 	const Position& head = snake.head();
 	const Position& tail = snake.tailTip();
 
-	int colDiff = abs(head.col() - tail.col());
-	int rowDiff = abs(head.row() - tail.row());
+	int64_t colDiff = abs(head.col() - tail.col());
+	int64_t rowDiff = abs(head.row() - tail.row());
 
 	bool isGoal =
 		(snake.size() == N_ROWS * N_COLS) &&								// Is every cell is filled?
@@ -150,7 +150,7 @@ bool HamiltonianSolver::isSolution(const Snake& snake)
 
 boost::optional<BoardTemplate<char>> HamiltonianSolver::search(const Snake& snakeIn)
 {
-	Snake snake = snakeIn;
+	UndoableSnake snake = snakeIn;
 
 	const size_t N_ROWS = snake.getNRows();
 	const size_t N_COLS = snake.getNCols();

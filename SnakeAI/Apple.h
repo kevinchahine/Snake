@@ -19,13 +19,5 @@ public:
 
 	void moveTo(size_t row, size_t col);
 	void moveTo(const Position& pos);
-	void logPosition();
-
-	bool isUndoLegal() const;
-	void undoFast();
-	void undoIfLegal();
-
-private:
-	std::vector<Position> applePositions;
 };
 

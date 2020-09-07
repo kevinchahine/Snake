@@ -94,6 +94,15 @@
     <ClCompile Include="Board.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
+    <ClCompile Include="UndoableApple.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="UndoableSnake.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="UndoableSnakeGame.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AStarSolver.h">
@@ -178,6 +187,15 @@
       <Filter>GameEngine</Filter>
     </ClInclude>
     <ClInclude Include="Board.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="UndoableApple.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="UndoableSnake.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="UndoableSnakeGame.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
   </ItemGroup>

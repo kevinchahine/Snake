@@ -1,14 +1,10 @@
-#include "SnakeGame.h"
+#include "UndoableSnakeGame.h"
 
 using namespace std;
 
 #include <opencv2/opencv.hpp>
 
-#include "Apple.h"
-#include "Snake.h"
-#include "Board.h"
-
-SnakeGame::SnakeGame(size_t boardHeight, size_t boardWidth) :
+UndoableGame::UndoableGame(size_t boardHeight, size_t boardWidth) :
 	m_board{ boardHeight, boardWidth },
 	m_snake{ boardHeight, boardWidth },
 	m_apple{  }
@@ -19,31 +15,38 @@ SnakeGame::SnakeGame(size_t boardHeight, size_t boardWidth) :
 	init();
 }
 
-bool SnakeGame::operator==(const SnakeGame& left) const
+UndoableGame::UndoableGame(const SnakeGame& snakeGame) :
+	m_board(snakeGame.board()),
+	m_snake(snakeGame.snake()),
+	m_apple(snakeGame.getApple())
+{
+}
+
+bool UndoableGame::operator==(const UndoableGame& left) const
 {
 	return m_board.hashValue() == m_board.hashValue();
 }
 
-bool SnakeGame::operator<(const SnakeGame& left) const
+bool UndoableGame::operator<(const UndoableGame& left) const
 {
 	return m_board.hashValue() < left.m_board.hashValue();
 }
 
-size_t SnakeGame::operator()() const
+size_t UndoableGame::operator()() const
 {
 	// return the hash value (functor) of board.
 	// make sure board is up to date with the snake and m_apple
 	return m_board.hashValue();
 }
 
-void SnakeGame::init()
+void UndoableGame::init()
 {
 	reset();
 
 	print();
 }
 
-void SnakeGame::reset()
+void UndoableGame::reset()
 {
 	m_board.clear();
 
@@ -58,7 +61,7 @@ void SnakeGame::reset()
 	moveAppleRandomly();
 }
 
-void SnakeGame::reset(const Position& snakeStartingPos, const Position& appleStartingPos)
+void UndoableGame::reset(const Position& snakeStartingPos, const Position& appleStartingPos)
 {
 	m_board.clear();
 
@@ -72,22 +75,22 @@ void SnakeGame::reset(const Position& snakeStartingPos, const Position& appleSta
 	moveAppleTo(appleStartingPos);
 }
 
-const Board::index& SnakeGame::getNRows() const
+const Board::index& UndoableGame::getNRows() const
 {
 	return m_board.getNRows();
 }
 
-const Board::index& SnakeGame::getNCols() const
+const Board::index& UndoableGame::getNCols() const
 {
 	return m_board.getNCols();
 }
 
-size_t SnakeGame::getNCells() const
+size_t UndoableGame::getNCells() const
 {
 	return m_board.getNCells();
 }
 
-SnakeGame::GAME_STATE SnakeGame::calcGameState()
+UndoableGame::GAME_STATE UndoableGame::calcGameState()
 {
 	GAME_STATE state = GAME_STATE::CONTINUE;
 
@@ -116,56 +119,71 @@ SnakeGame::GAME_STATE SnakeGame::calcGameState()
 	return state;
 }
 
-const Board& SnakeGame::board() const
+const Board& UndoableGame::board() const
 {
 	return m_board;
 }
 
-const Snake& SnakeGame::snake() const
+const Snake& UndoableGame::snake() const
 {
 	return m_snake;
 }
 
-const Apple& SnakeGame::getApple() const
+const Apple& UndoableGame::getApple() const
 {
 	return m_apple;
 }
 
 // ========================== IS MOVE LEGAL ===================================
 
-bool SnakeGame::isMoveUpLegal() const
+bool UndoableGame::isMoveUpLegal() const
 {
 	return m_snake.isMoveUpLegal();
 }
 
-bool SnakeGame::isMoveDownLegal() const
+bool UndoableGame::isMoveDownLegal() const
 {
 	return m_snake.isMoveDownLegal();
 }
 
-bool SnakeGame::isMoveLeftLegal() const
+bool UndoableGame::isMoveLeftLegal() const
 {
 	return m_snake.isMoveLeftLegal();
 }
 
-bool SnakeGame::isMoveRightLegal() const
+bool UndoableGame::isMoveRightLegal() const
 {
 	return m_snake.isMoveRightLegal();
 }
 
-bool SnakeGame::isMoveLegal(char direction) const
+bool UndoableGame::isUndoLegal() const
 {
-	return m_snake.isMoveLegal(direction);
+	/*cout << "m_snake : " << m_snake.isUndoLegal() << '\n'
+		<< "m_apple : " << m_apple.isUndoLegal() << '\n';*/
+	return m_snake.isUndoLegal() && m_apple.isUndoLegal();
 }
 
-char SnakeGame::getAnyLegalMove() const
+bool UndoableGame::isMoveLegal(char direction) const
+{
+	// Are we doing an undo?
+	if (direction != 'z') {
+		// No undo just a regular move
+		return m_snake.isMoveLegal(direction);
+	}
+	else {
+		// Yes its an undo
+		return isUndoLegal();
+	}
+}
+
+char UndoableGame::getAnyLegalMove() const
 {
 	return m_snake.getAnyLegalMove();
 }
 
 // ========================== IS MOVE SAFE ====================================
 
-bool SnakeGame::isMoveUpSafe() const
+bool UndoableGame::isMoveUpSafe() const
 {
 	Position head = m_snake.head();
 
@@ -173,7 +191,7 @@ bool SnakeGame::isMoveUpSafe() const
 		m_board(head.upOne()) != CELL::TAIL;
 }
 
-bool SnakeGame::isMoveDownSafe() const
+bool UndoableGame::isMoveDownSafe() const
 {
 	Position head = m_snake.head();
 
@@ -181,7 +199,7 @@ bool SnakeGame::isMoveDownSafe() const
 		m_board(head.downOne()) != CELL::TAIL;
 }
 
-bool SnakeGame::isMoveLeftSafe() const
+bool UndoableGame::isMoveLeftSafe() const
 {
 	Position head = m_snake.head();
 
@@ -189,7 +207,7 @@ bool SnakeGame::isMoveLeftSafe() const
 		m_board(head.leftOne()) != CELL::TAIL;
 }
 
-bool SnakeGame::isMoveRightSafe() const
+bool UndoableGame::isMoveRightSafe() const
 {
 	Position head = m_snake.head();
 
@@ -197,7 +215,7 @@ bool SnakeGame::isMoveRightSafe() const
 		m_board(head.rightOne()) != CELL::TAIL;
 }
 
-bool SnakeGame::isMoveSafe(char direction) const
+bool UndoableGame::isMoveSafe(char direction) const
 {
 	switch (direction)
 	{
@@ -205,6 +223,7 @@ bool SnakeGame::isMoveSafe(char direction) const
 	case 's':	return isMoveDownSafe();
 	case 'a':	return isMoveLeftSafe();
 	case 'd':	return isMoveRightSafe();
+	case 'z':	return isUndoLegal();
 	default:	return false;
 		/*default:
 			std::stringstream ss;
@@ -214,7 +233,7 @@ bool SnakeGame::isMoveSafe(char direction) const
 	}
 }
 
-char SnakeGame::getAnySafeMove() const
+char UndoableGame::getAnySafeMove() const
 {
 	if (isMoveUpSafe()) return 'w';
 	else if (isMoveDownSafe()) return 's';
@@ -227,7 +246,7 @@ char SnakeGame::getAnySafeMove() const
 	}
 }
 
-char SnakeGame::getAnyLegalAndSafeMove() const
+char UndoableGame::getAnyLegalAndSafeMove() const
 {
 	if (isMoveUpLegal() && isMoveUpSafe()) return 'w';
 	else if (isMoveDownLegal() && isMoveDownSafe()) return 's';
@@ -241,7 +260,7 @@ char SnakeGame::getAnyLegalAndSafeMove() const
 	}
 }
 
-boost::container::static_vector<char, 3> SnakeGame::getAllLegalAndSafeMoves() const
+boost::container::static_vector<char, 3> UndoableGame::getAllLegalAndSafeMoves() const
 {
 	boost::container::static_vector<char, 3> moves;
 
@@ -255,7 +274,7 @@ boost::container::static_vector<char, 3> SnakeGame::getAllLegalAndSafeMoves() co
 
 // ========================== MOVE FAST =======================================
 
-void SnakeGame::moveUpFast()
+void UndoableGame::moveUpFast()
 {
 	Position tailTip = m_snake.tailTip();
 
@@ -270,9 +289,15 @@ void SnakeGame::moveUpFast()
 
 	m_board(m_snake.head()) = CELL::HEAD;
 	m_board(m_snake.neck()) = CELL::TAIL;
+
+	m_apple.logPosition();
+
+	//m_board.clear();
+	//m_board.paste(m_snake);
+	//m_board.paste(m_apple);
 }
 
-void SnakeGame::moveDownFast()
+void UndoableGame::moveDownFast()
 {
 	Position tailTip = m_snake.tailTip();
 
@@ -287,9 +312,15 @@ void SnakeGame::moveDownFast()
 
 	m_board(m_snake.head()) = CELL::HEAD;
 	m_board(m_snake.neck()) = CELL::TAIL;
+
+	m_apple.logPosition();
+
+	//m_board.clear();
+	//m_board.paste(m_snake);
+	//m_board.paste(m_apple);
 }
 
-void SnakeGame::moveLeftFast()
+void UndoableGame::moveLeftFast()
 {
 	Position tailTip = m_snake.tailTip();
 
@@ -304,9 +335,15 @@ void SnakeGame::moveLeftFast()
 
 	m_board(m_snake.head()) = CELL::HEAD;
 	m_board(m_snake.neck()) = CELL::TAIL;
+
+	m_apple.logPosition();
+
+	//m_board.clear();
+	//m_board.paste(m_snake);
+	//m_board.paste(m_apple);
 }
 
-void SnakeGame::moveRightFast()
+void UndoableGame::moveRightFast()
 {
 	Position tailTip = m_snake.tailTip();
 
@@ -321,9 +358,34 @@ void SnakeGame::moveRightFast()
 
 	m_board(m_snake.head()) = CELL::HEAD;
 	m_board(m_snake.neck()) = CELL::TAIL;
+
+	m_apple.logPosition();
+
+	//m_board.clear();
+	//m_board.paste(m_snake);
+	//m_board.paste(m_apple);
 }
 
-void SnakeGame::moveFast(char direction)
+void UndoableGame::undoFast()
+{
+	// Must be done before undoing snake 
+	m_board(m_snake.head()) = CELL::EMPTY;
+
+	// Move snake back to where it was before
+	m_snake.undoFast();
+	m_board(m_snake.head()) = CELL::HEAD;
+	m_board(m_snake.tailTip()) = CELL::TAIL;
+
+	// Move apple back to where it was before
+	m_apple.undoFast();
+	m_board(m_apple) = CELL::APPLE;
+
+	//m_board.clear();
+	//m_board.paste(m_snake);
+	//m_board.paste(m_apple);
+}
+
+void UndoableGame::moveFast(char direction)
 {
 	switch (direction)
 	{
@@ -331,6 +393,7 @@ void SnakeGame::moveFast(char direction)
 	case 's': moveDownFast();	break;
 	case 'a': moveLeftFast();	break;
 	case 'd': moveRightFast();	break;
+	case 'z': undoFast();		break;
 	default:
 		std::stringstream ss;
 		ss << __FUNCTION__ << ": parameter move = " << direction
@@ -339,31 +402,37 @@ void SnakeGame::moveFast(char direction)
 	}
 }
 
-void SnakeGame::moveUpIfLegal()
+void UndoableGame::moveUpIfLegal()
 {
 	if (isMoveUpLegal())
 		moveUpFast();
 }
 
-void SnakeGame::moveDownIfLegal()
+void UndoableGame::moveDownIfLegal()
 {
 	if (isMoveDownLegal())
 		moveDownFast();
 }
 
-void SnakeGame::moveLeftIfLegal()
+void UndoableGame::moveLeftIfLegal()
 {
 	if (isMoveLeftLegal())
 		moveLeftFast();
 }
 
-void SnakeGame::moveRightIfLegal()
+void UndoableGame::moveRightIfLegal()
 {
 	if (isMoveRightLegal())
 		moveRightFast();
 }
 
-void SnakeGame::moveIfLegal(char direction)
+void UndoableGame::undoIfLegal()
+{
+	if (isUndoLegal())
+		undoFast();
+}
+
+void UndoableGame::moveIfLegal(char direction)
 {
 	switch (direction)
 	{
@@ -371,6 +440,7 @@ void SnakeGame::moveIfLegal(char direction)
 	case 's': moveDownIfLegal();	break;
 	case 'a': moveLeftIfLegal();	break;
 	case 'd': moveRightIfLegal();	break;
+	case 'z': undoIfLegal();		break;
 	default:
 		std::stringstream ss;
 		ss << __FUNCTION__ << ": parameter move = " << direction
@@ -379,7 +449,14 @@ void SnakeGame::moveIfLegal(char direction)
 	}
 }
 
-void SnakeGame::moveAppleRandomly()
+void UndoableGame::undoMoveIfLegal(bool appleAlso)
+{
+	if (isUndoLegal()) {
+		undoFast();
+	}
+}
+
+void UndoableGame::moveAppleRandomly()
 {
 	// --- Remove m_apple from cell, but only if it is occupied by an m_apple ---
 	// This way in case cell is occupied by the snake's head, we won't
@@ -412,7 +489,7 @@ void SnakeGame::moveAppleRandomly()
 	m_board(m_apple) = CELL::APPLE;
 }
 
-void SnakeGame::moveAppleTo(const Position& newApplePos)
+void UndoableGame::moveAppleTo(const Position& newApplePos)
 {
 	// --- Remove m_apple from cell, but only if it is occupied by an m_apple ---
 	// This way in case cell is occupied by the snake's head, we won't
@@ -428,7 +505,7 @@ void SnakeGame::moveAppleTo(const Position& newApplePos)
 	m_board(m_apple) = CELL::APPLE;
 }
 
-void SnakeGame::print(ostream & os) const
+void UndoableGame::print(ostream& os) const
 {
 	m_snake.print(os);
 	m_apple.print(os);

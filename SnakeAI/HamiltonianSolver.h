@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SolverBase.h"
+#include "UndoableSnakeGame.h"
 
 #include <boost/optional/optional.hpp>
 

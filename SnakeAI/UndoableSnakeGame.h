@@ -7,15 +7,18 @@
 
 #include <boost/container/static_vector.hpp>
 
-class Apple;
-class Snake;
+class UndoableApple;
+class UndoableSnake;
 
 #include "Position.h"
+#include "UndoableApple.h"
+#include "UndoableSnake.h"
 #include "Board.h"
+#include "SnakeGame.h"
 
 #include "ControllerBase.h"
 
-class SnakeGame
+class UndoableGame
 {
 public:
 	enum class GAME_STATE : uint8_t {
@@ -24,23 +27,23 @@ public:
 		WON,
 		ERROR,
 	};
+	
+	UndoableGame(size_t boardWidth, size_t boardHeight);
+	UndoableGame(const SnakeGame& snakeGame);
+	UndoableGame(const UndoableGame&) = default;
+	UndoableGame(UndoableGame&&) noexcept = default;
+	~UndoableGame() noexcept = default;
+	UndoableGame& operator=(const UndoableGame&) = default;
+	UndoableGame& operator=(UndoableGame&&) noexcept = default;
 
-public:
-	SnakeGame(size_t boardWidth, size_t boardHeight);
-	SnakeGame(const SnakeGame&) = default;
-	SnakeGame(SnakeGame&&) noexcept = default;
-	~SnakeGame() noexcept = default;
-	SnakeGame& operator=(const SnakeGame&) = default;
-	SnakeGame& operator=(SnakeGame&&) noexcept = default;
-
-	bool operator==(const SnakeGame& left) const;
-	bool operator<(const SnakeGame& left) const;
+	bool operator==(const UndoableGame& left) const;
+	bool operator<(const UndoableGame& left) const;
 	size_t operator()() const;
 
 	void init();
 
 	void reset();
-	void reset(const Position& snakeStartingPos, const Position & appleStartingPos);
+	void reset(const Position& snakeStartingPos, const Position& appleStartingPos);
 
 	const Board::index& getNRows() const;
 	const Board::index& getNCols() const;
@@ -57,6 +60,7 @@ public:
 	bool isMoveDownLegal() const;
 	bool isMoveLeftLegal() const;
 	bool isMoveRightLegal() const;
+	bool isUndoLegal() const;
 	bool isMoveLegal(char direction) const;
 	char getAnyLegalMove() const;
 
@@ -79,6 +83,7 @@ public:
 	void moveDownFast();
 	void moveLeftFast();
 	void moveRightFast();
+	void undoFast();
 	void moveFast(char direction);
 
 	// === A Legal move will not hit any walls nor move backwards ===
@@ -86,16 +91,22 @@ public:
 	void moveDownIfLegal();
 	void moveLeftIfLegal();
 	void moveRightIfLegal();
+	void undoIfLegal();
 	void moveIfLegal(char direction);
+
+	// Undoes a move by moving the snake backwards so that the snakes tail is at lastTailPos.
+	// Works for undoing move and grow operations. Make sure lastTailPos is adjacent to the current tail
+	// Do not call if snake.size() <= 2 or errors will occur
+	void undoMoveIfLegal(bool appleAlso = true);
 
 	void moveAppleRandomly();
 	void moveAppleTo(const Position& newApplePos);
 
-	void print(std::ostream & os = std::cout) const;
+	void print(std::ostream& os = std::cout) const;
 
 protected:
 	Board m_board;
-	Snake m_snake;
-	Apple m_apple;
+	UndoableSnake m_snake;
+	UndoableApple m_apple;
 };
 
