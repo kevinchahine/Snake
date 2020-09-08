@@ -22,10 +22,7 @@ const SnakeGame& SnakePath::destinationSnakeState() const
 
 bool SnakePath::isGoalState() const
 {
-	const Position & headPosition = destinationState.snake().head();
-	const Position& applePosition = destinationState.getApple();
-
-	return headPosition == applePosition;
+	return destinationState.getGameState() == SnakeGame::GAME_STATE::JUST_ATE;
 }
 
 void SnakePath::pushMove(char move)

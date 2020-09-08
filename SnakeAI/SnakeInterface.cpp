@@ -52,10 +52,11 @@ void SnakeInterface::run()
 		}
 
 		// 4-4.) --- Check game state ---
-		auto state = m_gameState.calcGameState();
+		auto state = m_gameState.getGameState();
 		switch (state)
 		{
 		case SnakeGame::GAME_STATE::CONTINUE:														break;
+		case SnakeGame::GAME_STATE::JUST_ATE:	std::cout << "JUST ATE\n";							break;
 		case SnakeGame::GAME_STATE::GAME_OVER:	std::cout << "GAME OVER\n";		isGameEnded = true;	break;
 		case SnakeGame::GAME_STATE::WON:		std::cout << "YOU WON!!!\n";	isGameEnded = true;	break;
 		case SnakeGame::GAME_STATE::ERROR:		std::cout << "ERROR STATE\n";	isGameEnded = true;	break;

@@ -19,7 +19,8 @@ class SnakeGame
 {
 public:
 	enum class GAME_STATE : uint8_t {
-		CONTINUE,
+		CONTINUE,	// Still going, but snake did not eat apple in previous turn
+		JUST_ATE,	// Means snake ate apple in previous turn.
 		GAME_OVER,
 		WON,
 		ERROR,
@@ -46,7 +47,7 @@ public:
 	const Board::index& getNCols() const;
 	size_t getNCells() const;
 
-	GAME_STATE calcGameState();
+	GAME_STATE getGameState() const;
 
 	const Board& board() const;
 	const Snake& snake() const;
@@ -94,8 +95,12 @@ public:
 	void print(std::ostream & os = std::cout) const;
 
 protected:
+	GAME_STATE calcGameState();
+
+protected:
 	Board m_board;
 	Snake m_snake;
 	Apple m_apple;
+	GAME_STATE m_state = GAME_STATE::CONTINUE;
 };
 

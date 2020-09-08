@@ -87,33 +87,9 @@ size_t SnakeGame::getNCells() const
 	return m_board.getNCells();
 }
 
-SnakeGame::GAME_STATE SnakeGame::calcGameState()
+SnakeGame::GAME_STATE SnakeGame::getGameState() const
 {
-	GAME_STATE state = GAME_STATE::CONTINUE;
-
-	// Did we bite our selves?
-	if (m_snake.isBittingItself()) {
-		state = GAME_STATE::GAME_OVER;
-	}
-	// Did we hit a wall?
-	// Is it even possible to hit a wall? Hitting a wall is not a legal move and will cause a runtime error
-	// else if (false) {
-	// 	m_gameState = GAME_STATE::GAME_OVER;
-	// }
-	// Did we eat the m_apple?
-	else if (m_snake.head() == m_apple) {
-		// Yes. We need to move m_apple to a random location 
-		state = GAME_STATE::CONTINUE;
-	}
-
-	// Did we win? Did we cover every cell?
-	// *** Not else if, because we have to eat the last m_apple to win ***
-	if (m_snake.size() == m_board.num_elements()) {
-		// Yes we won.
-		state = GAME_STATE::WON;
-	}
-
-	return state;
+	return m_state;
 }
 
 const Board& SnakeGame::board() const
@@ -262,10 +238,13 @@ void SnakeGame::moveUpFast()
 	if (m_snake.head().upOne() == m_apple) {
 		m_snake.growUpFast();
 		moveAppleRandomly();
+		m_state = GAME_STATE::JUST_ATE;
 	}
 	else {
 		m_snake.moveUpFast();
 		m_board(tailTip) = CELL::EMPTY;
+		m_state = GAME_STATE::CONTINUE;// calcGameState();
+
 	}
 
 	m_board(m_snake.head()) = CELL::HEAD;
@@ -279,10 +258,13 @@ void SnakeGame::moveDownFast()
 	if (m_snake.head().downOne() == m_apple) {
 		m_snake.growDownFast();
 		moveAppleRandomly();
+		m_state = GAME_STATE::JUST_ATE;
 	}
 	else {
 		m_snake.moveDownFast();
 		m_board(tailTip) = CELL::EMPTY;
+		m_state = GAME_STATE::CONTINUE;// calcGameState();
+
 	}
 
 	m_board(m_snake.head()) = CELL::HEAD;
@@ -296,10 +278,13 @@ void SnakeGame::moveLeftFast()
 	if (m_snake.head().leftOne() == m_apple) {
 		m_snake.growLeftFast();
 		moveAppleRandomly();
+		m_state = GAME_STATE::JUST_ATE;
 	}
 	else {
 		m_snake.moveLeftFast();
 		m_board(tailTip) = CELL::EMPTY;
+		m_state = GAME_STATE::CONTINUE;// calcGameState();
+
 	}
 
 	m_board(m_snake.head()) = CELL::HEAD;
@@ -313,10 +298,12 @@ void SnakeGame::moveRightFast()
 	if (m_snake.head().rightOne() == m_apple) {
 		m_snake.growRightFast();
 		moveAppleRandomly();
+		m_state = GAME_STATE::JUST_ATE;
 	}
 	else {
 		m_snake.moveRightFast();
 		m_board(tailTip) = CELL::EMPTY;
+		m_state = GAME_STATE::CONTINUE;// calcGameState();
 	}
 
 	m_board(m_snake.head()) = CELL::HEAD;
@@ -433,4 +420,45 @@ void SnakeGame::print(ostream & os) const
 	m_snake.print(os);
 	m_apple.print(os);
 	m_board.print(os);
+
+	os << "State: ";
+	switch (m_state)
+	{
+	case SnakeGame::GAME_STATE::CONTINUE:	os << "Continue      ";	break;
+	case SnakeGame::GAME_STATE::JUST_ATE:	os << "Just Ate      ";	break;
+	case SnakeGame::GAME_STATE::GAME_OVER:	os << "Game Over     ";	break;
+	case SnakeGame::GAME_STATE::WON:		os << "Won           ";	break;
+	case SnakeGame::GAME_STATE::ERROR:		os << "Error         ";	break;
+	default:								os << "Invalid State ";	break;
+	}
+	os << '\n';
+}
+
+SnakeGame::GAME_STATE SnakeGame::calcGameState()
+{
+	GAME_STATE state = GAME_STATE::CONTINUE;
+
+	// Did we bite our selves?
+	if (m_snake.isBittingItself()) {
+		state = GAME_STATE::GAME_OVER;
+	}
+	// Did we hit a wall?
+	// Is it even possible to hit a wall? Hitting a wall is not a legal move and will cause a runtime error anyway
+	// else if (false) {
+	// 	m_gameState = GAME_STATE::GAME_OVER;
+	// }
+	// Did we eat the m_apple?
+	else if (m_snake.head() == m_apple) {
+		// Yes. We need to move m_apple to a random location 
+		state = GAME_STATE::JUST_ATE;
+	}
+
+	// Did we win? Did we cover every cell?
+	// *** Not else if, because we have to eat the last m_apple to win ***
+	if (m_snake.size() == m_board.num_elements()) {
+		// Yes we won.
+		state = GAME_STATE::WON;
+	}
+
+	return state;
 }

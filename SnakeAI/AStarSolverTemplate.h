@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <queue>
 
 #include "SolverBase.h"
@@ -47,13 +48,13 @@ template<typename C>
 char AStarSolverTemplate<C>::solve()
 {
 	// 1.) Do we need to search for another solution path?
-	if (solutionPath.pathLength() > 0) {
-		// Nope. We still have moves to make in our solution path
-	}
-	else {
-		// Yes. We used up our solution path. We need so solve another one.
+	//if (solutionPath.pathLength() > 0) {
+	//	// Nope. We still have moves to make in our solution path
+	//}
+	//else {
+	//	// Yes. We used up our solution path. We need so solve another one.
 		solutionPath = search(m_gameState);
-	}
+	//}
 
 	// 2.) Grab the next move from the solution path
 	char nextMove = solutionPath.peekNextMove();
@@ -61,6 +62,8 @@ char AStarSolverTemplate<C>::solve()
 
 	// 3.) Check for errors
 	if (nextMove == 'x') {
+		m_gameState.print(std::cout);
+		std::cout << "AStar Very bad. Could not find a solution. Making any legal and safe move\n";
 		nextMove = m_gameState.getAnyLegalAndSafeMove();
 	}
 
@@ -88,7 +91,7 @@ SnakePath AStarSolverTemplate<C>::search(const SnakeGame& start)
 		// 3-1.) Did we run out of paths to try?
 		if (frontier.isEmpty()) {
 			// Yes, return empty path
-			//cout << "Frontier is empty. No path to goal was found.\n";
+			std::cout << "AStar Frontier is empty. No path to goal was found.\n";
 			return SnakePath(start);	// no solution
 		}
 
@@ -100,7 +103,7 @@ SnakePath AStarSolverTemplate<C>::search(const SnakeGame& start)
 		// 3-3.) Is this the goal state?
 		if (node.isGoalState()) {
 			// Yes, return node as the solution.
-			//cout << "!!!Solution has been found. Yay :) !!!\n";
+			std::cout << "AStar solution has been found!!!\n";
 			//cout << "Solution = " << node << '\n';
 			//system("pause");
 			return node;
@@ -108,7 +111,7 @@ SnakePath AStarSolverTemplate<C>::search(const SnakeGame& start)
 
 		// *** Do some forward checking ***
 		// *** Check to see if theres a clear path to tail (maybe too slow O(d ^ (3 + 3))***
-		// *** Check for holes (holes are not detremental but are bad as snake gets bigger) ***
+		// *** Check for holes (holes are not detremental but become worse as snake gets bigger) ***
 
 		// 3-4.) Expand the roads from node to get all possible paths.
 		for (char safeAndLegalMove : node.destinationSnakeState().getAllLegalAndSafeMoves()) {
@@ -123,7 +126,7 @@ SnakePath AStarSolverTemplate<C>::search(const SnakeGame& start)
 			const SnakeGame& childDestination = childNode.destinationSnakeState();
 
 			// --- Now we have a path and we know where it leads us ---
-			// --- Before we add this new path to the frontier, 1st check to see if we should. ---
+			// --- But before we add this new path to the frontier, 1st check to see if we should. ---
 
 			// 3-4-3.) Have we explored the destination city already and
 			// is it already in the frontier? If so we should not add it.
