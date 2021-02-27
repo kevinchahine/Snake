@@ -1,2 +1,2 @@
 # Snake
-The game of Snake
+The game of Snake and AI agent
